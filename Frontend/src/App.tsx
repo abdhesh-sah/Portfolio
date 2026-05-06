@@ -12,8 +12,8 @@ const loadFramerFeatures = () => import("#src/lib/framer-features").then(res => 
 import { pageTransition, withReducedMotion } from "#src/lib/animation";
 import { useTheme } from "#src/components/theme-provider";
 import { CommandPalette } from "#src/components/CommandPalette";
-import { PersonaSelector } from "#src/components/PersonaSelector";
-import { VoiceControl } from "#src/components/VoiceControl";
+
+
 
 // ─── Chunk-Load Error Boundary ────────────────────────────────────────────
 // Catches React.lazy() failures (network blips, Render redeployment with
@@ -138,10 +138,7 @@ function ConditionalPublicFloaters() {
   if (isAdmin || isAdminLogin) return null;
 
   return (
-    <>
-      <PersonaSelector />
-      <VoiceControl />
-    </>
+    <></>
   );
 }
 

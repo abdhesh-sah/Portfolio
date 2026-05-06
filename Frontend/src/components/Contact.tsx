@@ -9,8 +9,6 @@ import { useState, useEffect } from "react";
 import { Mail, MapPin, Phone, Send, CheckCircle, Github, Linkedin, Terminal, Copy, Check } from "lucide-react";
 import { Button } from "#src/components/ui/button";
 import { AvailabilityCalendar } from "./AvailabilityCalendar";
-import { ScopeWizard } from "./ScopeWizard";
-import { HireMeChat } from "./HireMeChat";
 
 // Cyber Input Component
 const CyberInput = ({
@@ -136,19 +134,7 @@ const DataCard = ({ icon: Icon, label, value, href, delay }: { icon: React.Eleme
 export default function Contact() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [cooldown, setCooldown] = useState(0);
-  const [formMode, setFormMode] = useState<"message" | "project" | "wizard">("message");
 
-  useEffect(() => {
-    const handleSetMode = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      const mode = customEvent.detail;
-      if (['message', 'project', 'wizard'].includes(mode)) {
-        setFormMode(mode as "message" | "project" | "wizard");
-      }
-    };
-    window.addEventListener('set-contact-mode', handleSetMode);
-    return () => window.removeEventListener('set-contact-mode', handleSetMode);
-  }, []);
   const { mutate: sendMessage, isPending, error: apiError } = useSendMessage();
   const { data: settings } = useSiteSettings();
 
@@ -196,9 +182,6 @@ export default function Contact() {
 
   return (
     <section id="contact" className="section-container relative overflow-hidden py-16 md:py-24">
-      {/* Background Grid */}
-
-
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <m.div
@@ -289,7 +272,7 @@ export default function Contact() {
                   <div className="w-3 h-3 rounded-full bg-green-500/50" />
                 </div>
                 <div className="text-[10px] font-mono text-muted-foreground">
-                  {formMode === "message" ? "hire_me_bot.exe" : formMode === "wizard" ? "scope_ai.exe" : "project_inquiry.exe"}
+                  contact_terminal.exe
                 </div>
               </div>
 
@@ -316,7 +299,6 @@ export default function Contact() {
                       </m.div>
                       <h3 className="text-2xl font-bold text-foreground mb-2">Transmission Successful</h3>
                       <p className="text-muted-foreground mb-4 font-mono text-sm">Target received packet. Awaiting response.</p>
-                      {/* Auto-dismiss countdown bar */}
                       <div className="w-48 h-1 bg-foreground/10 rounded-full overflow-hidden mb-6">
                         <m.div
                           initial={{ width: "100%" }}
@@ -332,128 +314,64 @@ export default function Contact() {
                   ) : null}
                 </AnimatePresence>
 
-                {/* Form Mode Toggle */}
-                <div className="flex flex-col sm:flex-row p-1 bg-foreground/5 rounded-lg mb-8 border border-border w-full sm:w-fit mx-auto md:mx-0 gap-1 sm:gap-0">
-                  <button
-                    onClick={() => setFormMode("message")}
-                    className={`px-4 py-2.5 sm:py-2 text-[10px] sm:text-xs font-mono uppercase tracking-widest rounded-md transition-all flex-1 sm:flex-none ${formMode === "message" ? "bg-cyan-500 text-black shadow-[0_0_15px_rgba(6,182,212,0.3)]" : "text-muted-foreground hover:text-foreground"}`}
-                  >
-                    AI Chat <span className="ml-1 text-[8px] bg-white/10 px-1 rounded">NEW</span>
-                  </button>
-                  <button
-                    onClick={() => setFormMode("project")}
-                    className={`px-4 py-2.5 sm:py-2 text-[10px] sm:text-xs font-mono uppercase tracking-widest rounded-md transition-all flex-1 sm:flex-none ${formMode === "project" ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/50" : "text-muted-foreground hover:text-foreground"}`}
-                  >
-                    Project Request
-                  </button>
-                  <button
-                    onClick={() => setFormMode("wizard")}
-                    className={`px-4 py-2.5 sm:py-2 text-[10px] sm:text-xs font-mono uppercase tracking-widest rounded-md transition-all flex-1 sm:flex-none ${formMode === "wizard" ? "bg-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.3)]" : "text-muted-foreground hover:text-foreground"}`}
-                  >
-                    Scope AI <span className="ml-1 text-[8px] bg-white/10 px-1 rounded">BETA</span>
-                  </button>
-                </div>
+                <m.div
+                  key="form"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 
-                <AnimatePresence mode="wait">
-                  {formMode === "wizard" ? (
-                    <m.div
-                      key="wizard"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <CyberInput id="name" label="Identity" autoComplete="name" register={form.register} error={form.formState.errors.name?.message} required />
+                      <CyberInput id="email" label="Return Address" type="email" autoComplete="email" register={form.register} error={form.formState.errors.email?.message} required />
+                    </div>
+
+                    <CyberInput id="subject" label="Header / Subject" autoComplete="subject" register={form.register} error={form.formState.errors.subject?.message} required />
+
+                    <CyberInput id="message" label="Packet Payload" isTextarea register={form.register} error={form.formState.errors.message?.message} required />
+
+
+                    {/* Honeypot field for spam protection */}
+                    <div className="absolute left-[-9999px] opacity-0" aria-hidden="true">
+                      <input type="text" tabIndex={-1} autoComplete="off" {...form.register("_bnt_id" as keyof InsertMessage)} />
+                    </div>
+
+                    {apiError && (
+                      <div role="alert" aria-live="assertive" className="p-3 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 text-sm font-mono flex items-start gap-2">
+                        <span className="shrink-0 mt-0.5">! ERROR:</span>
+                        <span>
+                          {apiError instanceof Error && apiError.message.includes("429")
+                            ? "Too many messages sent. Please wait 15 minutes before trying again."
+                            : apiError instanceof Error 
+                              ? apiError.message 
+                              : "Transmission failed. Try again."}
+                        </span>
+                      </div>
+                    )}
+
+                    <Button
+                      type="submit"
+                      disabled={isPending || cooldown > 0}
+                      className="w-full h-14 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-mono uppercase tracking-widest rounded-lg relative overflow-hidden group"
                     >
-                      <ScopeWizard />
-                    </m.div>
-                  ) : formMode === "message" ? (
-                    <m.div
-                      key="hire-chat"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                    >
-                      <HireMeChat onSuccess={() => setShowSuccess(true)} />
-                    </m.div>
-                  ) : (
-                    <m.div
-                      key="form"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                    >
-                      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                      {isPending ? (
+                        <span className="flex items-center gap-2">
+                          <span className="animate-spin text-lg">/</span> UPLOADING...
+                        </span>
+                      ) : cooldown > 0 ? (
+                        <span className="flex items-center gap-2 text-xs sm:text-sm">
+                          TRANSMISSION_COOLDOWN [{cooldown}s]
+                        </span>
+                      ) : (
+                        <span className="relative z-10 flex items-center gap-2 group-hover:gap-4 transition-all text-xs sm:text-sm">
+                          INITIATE_TRANSMISSION <Send className="w-4 h-4" />
+                        </span>
+                      )}
 
-                        <div className="grid md:grid-cols-2 gap-6">
-                          <CyberInput id="name" label="Identity" autoComplete="name" register={form.register} error={form.formState.errors.name?.message} required />
-                          <CyberInput id="email" label="Return Address" type="email" autoComplete="email" register={form.register} error={form.formState.errors.email?.message} required />
-                        </div>
-
-                        <CyberInput id="subject" label={formMode === "project" ? "Project Name" : "Header / Subject"} autoComplete="subject" register={form.register} error={form.formState.errors.subject?.message} required />
-
-                        <AnimatePresence mode="wait">
-                          {formMode === "project" && (
-                            <m.div
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: "auto" }}
-                              exit={{ opacity: 0, height: 0 }}
-                              className="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-hidden"
-                            >
-                              <div className="space-y-6">
-                                <CyberInput id="projectType" label="Project Type" register={form.register} error={form.formState.errors.projectType?.message} />
-                                <CyberInput id="budget" label="Budget Range" register={form.register} error={form.formState.errors.budget?.message} />
-                              </div>
-                              <div className="md:col-span-1">
-                                <CyberInput id="timeline" label="Timeline / Deadline" register={form.register} error={form.formState.errors.timeline?.message} />
-                              </div>
-                            </m.div>
-                          )}
-                        </AnimatePresence>
-
-                        <CyberInput id="message" label={formMode === "project" ? "Project Details & Goals" : "Packet Payload"} isTextarea register={form.register} error={form.formState.errors.message?.message} required />
-
-
-                        {/* Honeypot field for spam protection */}
-                        <div className="absolute left-[-9999px] opacity-0" aria-hidden="true">
-                          <input type="text" tabIndex={-1} autoComplete="off" {...form.register("_bnt_id" as keyof InsertMessage)} />
-                        </div>
-
-                        {apiError && (
-                          <div role="alert" aria-live="assertive" className="p-3 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 text-sm font-mono flex items-start gap-2">
-                            <span className="shrink-0 mt-0.5">! ERROR:</span>
-                            <span>
-                              {apiError instanceof Error && apiError.message.includes("429")
-                                ? "Too many messages sent. Please wait 15 minutes before trying again."
-                                : apiError instanceof Error 
-                                  ? apiError.message 
-                                  : "Transmission failed. Try again."}
-                            </span>
-                          </div>
-                        )}
-
-                        <Button
-                          type="submit"
-                          disabled={isPending || cooldown > 0}
-                          className="w-full h-14 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-mono uppercase tracking-widest rounded-lg relative overflow-hidden group"
-                        >
-                          {isPending ? (
-                            <span className="flex items-center gap-2">
-                              <span className="animate-spin text-lg">/</span> UPLOADING...
-                            </span>
-                          ) : cooldown > 0 ? (
-                            <span className="flex items-center gap-2 text-xs sm:text-sm">
-                              TRANSMISSION_COOLDOWN [{cooldown}s]
-                            </span>
-                          ) : (
-                            <span className="relative z-10 flex items-center gap-2 group-hover:gap-4 transition-all text-xs sm:text-sm">
-                              {formMode === "project" ? "INITIALIZE_PROJECT_INQUIRY" : "INITIATE_TRANSMISSION"} <Send className="w-4 h-4" />
-                            </span>
-                          )}
-
-                          <div className="absolute inset-0 bg-white/10 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300" />
-                        </Button>
-                      </form>
-                    </m.div>
-                  )}
-                </AnimatePresence>
+                      <div className="absolute inset-0 bg-white/10 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300" />
+                    </Button>
+                  </form>
+                </m.div>
               </div>
 
               {/* Footer Bar */}

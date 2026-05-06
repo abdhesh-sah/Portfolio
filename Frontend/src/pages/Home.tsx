@@ -9,7 +9,7 @@ import { useScrollStore } from "#src/hooks/use-scroll-store";
 import { useSiteSettings } from "#src/hooks/use-site-settings";
 import { DEFAULT_SECTION_ORDER } from "#shared";
 import React from "react";
-import { usePersona } from "#src/hooks/use-persona";
+
 
 // Lazy-load below-the-fold sections to reduce initial bundle
 const About = lazy(() => import("#src/components/About"));
@@ -160,7 +160,6 @@ const ShortcutHint = () => {
 export default function Home() {
   const { data: settings } = useSiteSettings();
   const { progress } = useScrollStore();
-  const { persona } = usePersona();
   useHashScroll();
 
   // section mapping to components
@@ -181,21 +180,13 @@ export default function Home() {
     "github-heatmap": <SafeSection name="Github Heatmap"><GithubHeatmap /></SafeSection>,
   }), []);
 
-  // Define persona-specific order overrides
-  const PERSONA_ORDERS: Record<string, string[]> = {
-    recruiter: ['hero', 'live-activity', 'github-heatmap', 'experience', 'skills', 'about', 'projects', 'testimonials', 'contact', 'reading-list'],
-    client: ['hero', 'live-activity', 'github-heatmap', 'services', 'whyhireme', 'testimonials', 'projects', 'experience', 'contact', 'reading-list'],
-    developer: ['hero', 'live-activity', 'github-heatmap', 'mindset', 'practice', 'about', 'skills', 'projects', 'experience', 'contact', 'reading-list'],
-  };
-
   // Build section order: admin-saved order takes priority, fall back to defaults
   // Always ensures any new sections from DEFAULT_SECTION_ORDER are included
     const sectionOrder = useMemo(() => {
-        // 1. Start with persona override if it exists, otherwise admin order, otherwise defaults
-        const personaOrder = persona !== 'default' ? PERSONA_ORDERS[persona] : null;
+        // 1. Start with admin order, otherwise defaults
         const adminOrder = settings?.sectionOrder as string[] | undefined;
         
-        const baseOrder = personaOrder ? [...personaOrder] : (adminOrder?.length ? [...adminOrder] : [...DEFAULT_SECTION_ORDER]);
+        const baseOrder = adminOrder?.length ? [...adminOrder] : [...DEFAULT_SECTION_ORDER];
 
         // 2. Append any sections from defaults that aren't already in the base order
         DEFAULT_SECTION_ORDER.forEach((id: string) => {
@@ -218,7 +209,8 @@ export default function Home() {
         // 4. Always ensure hero is first
         const withoutHero = baseOrder.filter((id: string) => id !== "hero");
         return ["hero", ...withoutHero];
-    }, [settings?.sectionOrder, persona]);
+    }, [settings?.sectionOrder]);
+
 
 
   const sectionVisibility = (settings?.sectionVisibility as Record<string, boolean>) || {};

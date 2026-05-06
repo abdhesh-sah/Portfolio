@@ -2,7 +2,6 @@ import React from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { ClientPortal } from "./ClientPortal";
-import { ScopeWizard } from "./ScopeWizard";
 import { Sketchpad } from "./Sketchpad";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -52,16 +51,6 @@ describe("Frontend Components Sanity", () => {
         );
         expect(screen.getByText(/Client Portal/i)).toBeDefined();
         expect(screen.getByPlaceholderText(/Paste your token here/i)).toBeDefined();
-    });
-
-    it("should render ScopeWizard and allow navigation", () => {
-        render(
-            <QueryClientProvider client={queryClient}>
-                <ScopeWizard />
-            </QueryClientProvider>
-        );
-        expect(screen.getByText(/Scope_Analyzer/i)).toBeDefined();
-        expect(screen.getByText(/Project Identity/i)).toBeDefined();
     });
 
     it("should render Sketchpad with toolbar", () => {
