@@ -20,7 +20,7 @@ interface CaseStudyData {
 export const CaseStudyList: React.FC = () => {
     const { data: studies = [], isLoading } = useQuery({
         queryKey: QUERY_KEYS.caseStudies.all,
-        queryFn: () => apiFetch('/case-studies'),
+        queryFn: () => apiFetch('/api/v1/case-studies'),
     });
 
     if (isLoading) {
@@ -68,7 +68,7 @@ export const CaseStudyViewer: React.FC<{ slug: string }> = ({ slug }) => {
     const { data, isLoading, error } = useQuery({
         queryKey: QUERY_KEYS.caseStudies.detail(slug),
         queryFn: async () => {
-            const res = await apiFetch(`/case-studies/${slug}`);
+            const res = await apiFetch(`/api/v1/case-studies/${slug}`);
             return res?.data as CaseStudyData;
         },
     });

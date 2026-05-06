@@ -6,11 +6,13 @@ import { asyncHandler } from "../lib/async-handler.js";
 import { validateBody } from "../middleware/validate.js";
 import { recordAudit } from "../lib/audit.js";
 import { syncSeedData } from "../lib/sync-seed.js";
+import { cachePublic } from "../middleware/cache.js";
 
 export function registerSettingsRoutes(app: Router) {
     // GET /settings - Publicly get site settings
     app.get(
         "/settings",
+        cachePublic(600),
         asyncHandler(async (_req, res) => {
             const settings = await settingsService.getSettings();
             res.json(settings);

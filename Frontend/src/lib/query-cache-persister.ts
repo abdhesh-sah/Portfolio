@@ -28,6 +28,8 @@ const CACHEABLE_KEYS = new Set([
   "services",
   "testimonials",
   "articles",
+  "settings",
+  "case-studies",
 ]);
 
 /* ---------------------------------- */
