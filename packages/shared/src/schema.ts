@@ -105,7 +105,7 @@ export const messagesTable = pgTable("messages", {
   deletedAt: timestamp("deletedAt"), // Soft delete
   consentStatus: varchar("consentStatus", { length: 50 }).$type<"given" | "pending" | "withdrawn" | "declined">().notNull().default("pending"),
   consentGiven: boolean("consentGiven").notNull().default(false),
-}, (table) => {
+}, (_table) => {
   return {
     consentCheck: check("messages_consent_consistency", sql`("consentStatus" = 'given' AND "consentGiven" = true) OR ("consentStatus" IN ('pending', 'declined', 'withdrawn') AND "consentGiven" = false)`),
   };
@@ -483,7 +483,7 @@ export const siteSettingsTable = pgTable("site_settings", {
   guestbookHeading: varchar("guestbookHeading", { length: 255 }).default("Guestbook"),
   contactHeading: varchar("contactHeading", { length: 255 }).default("Get In Touch"),
   singletonGuard: integer("singleton_guard").notNull().default(1).unique(),
-}, (table) => {
+}, (_table) => {
   return {
     singletonGuardCheck: check("site_settings_singleton_guard_check", sql`"singleton_guard" = 1`),
   };

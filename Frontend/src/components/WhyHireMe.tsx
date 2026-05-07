@@ -1,7 +1,7 @@
 import { m, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { fadeLeft, fadeUpLarge, fadeDown, scaleXReveal, scaleIn, bobble, hoverScale } from "#src/lib/animation";
-import { CheckCircle2, Award, Zap, ShieldCheck, Download, ArrowRight, Sparkles, Target, TrendingUp, Terminal } from "lucide-react";
+import { Download, ArrowRight, Sparkles, Target, TrendingUp, Terminal, ShieldCheck } from "lucide-react";
 import { Button } from "#src/components/ui/button";
 import { useProjects, useSkills, useArticles, useExperiences } from "#src/hooks/use-portfolio";
 import { useSiteSettings } from "#src/hooks/use-site-settings";

@@ -10,7 +10,7 @@ import { experienceService } from "./services/experience.service.js";
 import { settingsService } from "./services/settings.service.js";
 import { testimonialService } from "./services/testimonial.service.js";
 import { portfolioServiceService } from "./services/portfolio-service.service.js";
-import type { Project, InsertProject, InsertSiteSettings } from "@portfolio/shared";
+import type { Project, InsertProject, InsertSiteSettings, InsertTestimonial, InsertService } from "@portfolio/shared";
 
 import seedData from "./seed-data.json" with { type: "json" };
 import { logger } from "./lib/logger.js";
@@ -206,7 +206,7 @@ export async function seedDatabase() {
           logSeed(`Testimonial already exists, skipping: ${t.name} `);
           continue;
         }
-        await testimonialService.create(t as any);
+        await testimonialService.create(t as InsertTestimonial);
         logSeed(`Seeded testimonial: ${t.name} `);
       } catch (err) {
         logSeed(`Failed to seed testimonial: ${t.name} - ${err} `, "error");
@@ -221,7 +221,7 @@ export async function seedDatabase() {
           logSeed(`Service already exists, skipping: ${s.title} `);
           continue;
         }
-        await portfolioServiceService.create(s as any);
+        await portfolioServiceService.create(s as InsertService);
         logSeed(`Seeded service: ${s.title} `);
       } catch (err) {
         logSeed(`Failed to seed service: ${s.title} - ${err} `, "error");
