@@ -65,7 +65,7 @@ export function InstallPrompt() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="fixed bottom-20 left-4 right-4 md:left-auto md:right-6 md:w-80 z-50 rounded-xl border border-primary/20 bg-background/95 backdrop-blur-md shadow-lg p-4"
+          className="fixed bottom-20 left-4 right-4 md:left-auto md:right-6 md:w-80 z-50 rounded-xl border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md shadow-lg p-4"
           role="dialog"
           aria-label="Install app"
         >

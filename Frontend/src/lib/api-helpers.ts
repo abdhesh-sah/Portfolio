@@ -2,7 +2,7 @@ export const API_BASE_URL = (() => {
     let url: string;
 
     // If running on localhost (dev or e2e), always use relative paths 
-    if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
+    if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === "[::1]")) {
         url = "";
     } else if (import.meta.env.DEV) {
         url = "";

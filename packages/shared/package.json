@@ -33,7 +33,7 @@
     "scripts": {
         "build": "tsc",
         "dev": "tsc -w",
-        "lint": "eslint src --ext .ts",
+        "lint": "eslint src",
         "type-check": "tsc --noEmit",
         "test": "npm run type-check",
         "clean": "rimraf dist"

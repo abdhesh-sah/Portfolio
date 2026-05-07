@@ -17,16 +17,7 @@ const STATUS_COLORS: Record<string, { badge: string; dot: string }> = {
 
 const DEFAULT_STATUS_COLOR = { badge: 'bg-gray-500/15 text-gray-400 border-gray-500/30', dot: 'bg-gray-400' };
 
-const CATEGORY_COLORS: Record<string, string> = {
-  Foundations: 'border-cyan-500/20 bg-cyan-500/5',
-  Frontend: 'border-purple-500/20 bg-purple-500/5',
-  Backend: 'border-pink-500/20 bg-pink-500/5',
-  Tools: 'border-amber-500/20 bg-amber-500/5',
-  Languages: 'border-emerald-500/20 bg-emerald-500/5',
-  Architecture: 'border-blue-500/20 bg-blue-500/5',
-};
 
-const DEFAULT_CATEGORY_COLOR = 'border-border bg-foreground/5';
 
 export function SkillsListView({ skillNodes }: SkillsListViewProps) {
   // Dynamically derive categories from the actual skills
@@ -82,7 +73,7 @@ export function SkillsListView({ skillNodes }: SkillsListViewProps) {
             whileInView={fadeUp.animate}
             viewport={{ once: true }}
             transition={{ duration: DURATION.fast, delay: catIdx * STAGGER.normal }}
-            className={`rounded-xl border ${CATEGORY_COLORS[category] || DEFAULT_CATEGORY_COLOR} overflow-hidden`}
+            className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md overflow-hidden"
             role="listitem"
           >
             {/* Category Header */}
@@ -160,7 +151,7 @@ export function SkillsListView({ skillNodes }: SkillsListViewProps) {
                                 transition={{ duration: DURATION.fast, ease: EASE.easeInOut }}
                                 className="overflow-hidden"
                               >
-                                <div className="ml-11 mr-3 mb-2 px-3 py-2.5 rounded-lg bg-foreground/[0.03] border border-border text-xs">
+                                <div className="ml-11 mr-3 mb-2 px-3 py-2.5 rounded-lg bg-primary/5 border border-primary/10 text-xs">
                                   {skill.mastery !== undefined && (
                                     <div className="mb-3">
                                       <div className="flex justify-between items-center mb-1 text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">

@@ -4,10 +4,12 @@ import { fetchAndParse } from "./_fetch-helper";
 import { QUERY_KEYS } from "#src/lib/query-keys";
 import { usePersona } from "../use-persona";
 
+import seedData from "../../../../Backend/src/seed-data.json";
+
 export function useProjects(sortBy: string = "default") {
   const { isDevMode } = usePersona();
 
-  return useQuery({
+  const query = useQuery({
     queryKey: [...QUERY_KEYS.projects.list(sortBy), isDevMode],
     queryFn: async () => {
       const projects = await fetchAndParse(
@@ -19,6 +21,11 @@ export function useProjects(sortBy: string = "default") {
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
+
+  return {
+    ...query,
+    data: query.data || (seedData.projects as unknown as Project[]),
+  };
 }
 
 export function useProjectById(id: number | null) {

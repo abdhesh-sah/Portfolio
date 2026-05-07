@@ -6,7 +6,7 @@ import { useProjects, useSkills, useExperiences } from "#src/hooks/use-portfolio
 import { useSiteSettings } from "#src/hooks/use-site-settings";
 import { OptimizedImage } from "#src/components/OptimizedImage";
 import { Skeleton } from "#src/components/ui/skeleton";
-import CodingActivity from "#src/components/CodingActivity";
+
 
 
 // 3D Tilt Card Component
@@ -88,7 +88,7 @@ const AnimatedCounter = ({ value, suffix = "", label, icon: Icon }: { value: num
       className="relative group p-[1px] rounded-2xl bg-gradient-to-br from-cyan-500/20 to-purple-500/20"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className="relative p-6 h-full bg-card/80 backdrop-blur-sm rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-2 group-hover:border-cyan-500/30 transition-all">
+      <div className="relative p-6 h-full bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md rounded-2xl border border-primary/20 flex flex-col items-center justify-center gap-2 group-hover:border-cyan-500/30 transition-all">
         <div className="p-3 rounded-full bg-white/5 group-hover:bg-cyan-500/20 group-hover:text-cyan-400 transition-colors shadow-lg group-hover:shadow-cyan-500/20">
           <Icon className="w-5 h-5" />
         </div>
@@ -110,7 +110,7 @@ const InfoCard = ({ icon: Icon, label, value, color = "cyan" }: { icon: React.El
     >
       <div className={`absolute inset-0 bg-gradient-to-br ${color === "cyan" ? "from-cyan-500/20" : "from-purple-500/20"} to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-xl blur-lg`} />
 
-      <div className="h-full bg-foreground/5 border border-border rounded-xl p-4 flex items-center gap-4 hover:border-foreground/20 transition-all relative overflow-hidden group-hover:translate-x-1">
+      <div className="h-full bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md border border-primary/20 rounded-xl p-4 flex items-center gap-4 hover:border-primary/50 transition-all relative overflow-hidden group-hover:translate-x-1">
 
         {/* Scanline */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
@@ -331,15 +331,7 @@ export default function About() {
               )}
             </m.div>
 
-            {/* Live Coding Metrics */}
-            <m.div
-              initial={fadeUp.initial}
-              whileInView={fadeUp.animate}
-              viewport={{ once: true }}
-              className="mt-8"
-            >
-              <CodingActivity />
-            </m.div>
+
 
             {/* Info Cards Grid */}
             <m.div 
@@ -379,7 +371,7 @@ export default function About() {
           viewport={{ once: true }}
           className="mt-16 md:mt-20 max-w-4xl mx-auto"
         >
-          <div className="bg-card/50 p-6 md:p-12 rounded-3xl border border-border/50 relative overflow-hidden">
+          <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md p-6 md:p-12 rounded-3xl border border-primary/20 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-5">
               <Calendar className="w-32 h-32 text-white" />
             </div>

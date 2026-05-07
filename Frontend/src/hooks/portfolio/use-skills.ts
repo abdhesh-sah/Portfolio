@@ -1,11 +1,13 @@
-import { api } from "#shared";
+import { api, type Skill, type Mindset } from "#shared";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchAndParse } from "./_fetch-helper";
 import { QUERY_KEYS } from "#src/lib/query-keys";
 import { API_BASE_URL } from "#src/lib/api-helpers";
 
+import seedData from "../../../../Backend/src/seed-data.json";
+
 export function useSkills() {
-  return useQuery({
+  const query = useQuery({
     queryKey: QUERY_KEYS.skills.all,
     queryFn: () =>
       fetchAndParse(
@@ -15,6 +17,11 @@ export function useSkills() {
       ),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
+
+  return {
+    ...query,
+    data: query.data || (seedData.skills as unknown as Skill[]),
+  };
 }
 
 export function useEndorseSkill() {
@@ -47,7 +54,7 @@ export function useSkillConnections() {
 }
 
 export function useMindset() {
-  return useQuery({
+  const query = useQuery({
     queryKey: QUERY_KEYS.mindset.all,
     queryFn: () =>
       fetchAndParse(
@@ -57,4 +64,9 @@ export function useMindset() {
       ),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
+
+  return {
+    ...query,
+    data: query.data || (seedData.mindsets as unknown as Mindset[]),
+  };
 }

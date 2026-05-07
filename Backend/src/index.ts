@@ -24,6 +24,7 @@ import { randomUUID } from "crypto";
 
 const app = express();
 let isReady = false;
+let keepAliveInterval: ReturnType<typeof setInterval> | null = null;
 app.set("trust proxy", env.TRUST_PROXY);
 const httpServer = createServer(app);
 
@@ -57,6 +58,8 @@ const allowedOrigins = [
     "http://localhost:4173",
     "http://127.0.0.1:4173",
     "http://127.0.0.1:5173",
+    "http://[::1]:5173",
+    "http://[::1]:4173",
     "http://localhost:3000",
     "http://localhost:8080",
   ] : []),
@@ -96,7 +99,7 @@ app.use(
     }
 
     const isAllowed = allowedOrigins.includes(origin) ||
-      (process.env.NODE_ENV !== "production" && (origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:"))) ||
+      (process.env.NODE_ENV !== "production" && (origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:") || origin.startsWith("http://[::1]:"))) ||
       (process.env.BACKEND_RENDER_URL ? origin === process.env.BACKEND_RENDER_URL : false);
 
     if (isAllowed) {
@@ -286,6 +289,13 @@ app.get("/api/v1/health", async (_req: Request, res: Response) => {
 function setupGracefulShutdown() {
   const shutdown = async (signal: string) => {
     logger.info({ context: "shutdown" }, `${signal} received, shutting down...`);
+
+    // Stop keep-alive self-ping
+    if (keepAliveInterval) {
+      clearInterval(keepAliveInterval);
+      keepAliveInterval = null;
+      logger.info({ context: "shutdown" }, "Keep-alive cron stopped");
+    }
 
     httpServer.close(() => {
       logger.info({ context: "shutdown" }, "HTTP server closed");
@@ -478,6 +488,29 @@ async function startServer() {
 
     isReady = true;
     logger.info({ context: "startup" }, "Server fully ready");
+
+    // ── Step 7: Start keep-alive cron (production only) ──
+    // Self-ping every 10 minutes to prevent Render free-tier from sleeping.
+    if (process.env.NODE_ENV === "production") {
+      const KEEP_ALIVE_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
+      const selfUrl = process.env.BACKEND_RENDER_URL
+        ? `https://${process.env.BACKEND_RENDER_URL}/api/v1/keep-alive`
+        : `http://localhost:${port}/api/v1/keep-alive`;
+
+      keepAliveInterval = setInterval(async () => {
+        try {
+          const res = await fetch(selfUrl);
+          const data = await res.json() as { status: string; db: string };
+          logger.info({ context: "cron", status: data.status, db: data.db }, "Keep-alive ping sent");
+        } catch (err) {
+          logger.warn({ context: "cron", error: err }, "Keep-alive ping failed");
+        }
+      }, KEEP_ALIVE_INTERVAL_MS);
+
+      // Don't let the interval prevent graceful shutdown
+      keepAliveInterval.unref();
+      logger.info({ context: "startup", intervalMs: KEEP_ALIVE_INTERVAL_MS }, "Keep-alive cron started");
+    }
   } catch (error) {
     logger.fatal({ context: "startup", error }, `STARTUP FAILED`);
     process.exit(1);

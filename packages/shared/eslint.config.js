@@ -17,6 +17,8 @@ export default [
         rules: {
             ...ts.configs.recommended.rules,
             "@typescript-eslint/no-explicit-any": "error",
+            "@typescript-eslint/no-unused-expressions": "off",
+            "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
         },
     },
 ];
