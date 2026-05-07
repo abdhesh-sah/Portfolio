@@ -93,7 +93,7 @@ test.describe("Advanced Production Hardening - Resilience & Security", () => {
       await route.fulfill({ status: 200, body: JSON.stringify({ success: true }) });
     });
 
-    const submitBtn = page.locator('button[type="submit"]:has-text("INITIALIZE")');
+    const submitBtn = page.locator('button[type="submit"]:has-text("INITIATE")');
     await expect(submitBtn).toBeEnabled();
     await submitBtn.click();
     
