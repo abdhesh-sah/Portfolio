@@ -11,8 +11,8 @@ import { API_BASE_URL } from "#src/lib/api-helpers";
  */
 export type ServerStatus = "checking" | "online" | "waking" | "offline";
 
-const HEALTH_URL = `${API_BASE_URL}/health`;
-const COLD_START_TIMEOUT_MS = 3_000; // treat >3 s as "waking up"
+const HEALTH_URL = `${API_BASE_URL}/api/v1/health`;
+const COLD_START_TIMEOUT_MS = 10_000; // 10s — Render cold starts can be slow
 const POLL_INTERVAL_MS = 5_000;      // retry every 5 s when not online
 
 /**
@@ -37,6 +37,7 @@ async function pingHealth(signal?: AbortSignal): Promise<{ ok: boolean; slow: bo
       method: "GET",
       signal: controller.signal,
       cache: "no-store",
+      credentials: "include", // Match other API calls for CORS consistency
     });
     clearTimeout(slowTimer);
     return { ok: res.ok, slow: false }; // If it reached here, it wasn't a timeout
