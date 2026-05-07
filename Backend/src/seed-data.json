@@ -1,50 +1,72 @@
 {
   "siteSettings": {
-    "personalName": "Your Name",
-    "personalTitle": "Full Stack Developer",
-    "personalBio": "Passionate about building amazing products",
-    "logoText": "Portfolio.Dev",
-    "personalPhone": null,
-    "heroHeadingLine1": "Start building",
-    "heroHeadingLine2": "The Future",
+    "personalName": "Abdhesh Sah",
+    "personalTitle": "Full-Stack Engineer & System Designer",
+    "personalBio": "Electronics & Communication Engineering student passionate about performance, precision, and building digital experiences that feel alive.",
+    "logoText": "AS.DEV",
+    "personalPhone": "+977 9811100000",
+    "heroHeadingLine1": "Architecting Digital",
+    "heroHeadingLine2": "Infrastructure",
     "heroTaglines": [
-      "Building amazing products",
-      "Solving complex problems"
+      "Building scalable web systems",
+      "Designing high-performance APIs",
+      "Crafting interactive experiences"
     ],
-    "socialEmail": null,
-    "socialGithub": null,
-    "socialLinkedin": null,
+    "socialEmail": "abdheshshah111@gmail.com",
+    "socialGithub": "https://github.com/abdhesh369",
+    "socialLinkedin": "https://linkedin.com/in/abdheshsah",
     "footerTagline": "Building the future, one line of code at a time.",
     "locationText": "Kathmandu, Nepal",
     "isOpenToWork": true,
-    "availabilityStatus": null,
-    "personalAvatar": null,
-    "resumeUrl": null,
-    "whyHireMeData": null,
-    "aboutAvailability": "Open to Work",
-    "aboutDescription": "Building scalable web systems and analyzing complex algorithms.",
+    "availabilityStatus": "Active",
+    "personalAvatar": "/images/Myphoto.webp",
+    "resumeUrl": "/resume.pdf",
+    "whyHireMeData": {
+      "stats": [
+        { "label": "Tech Stack", "value": "15+" },
+        { "label": "Systems Built", "value": "10+" },
+        { "label": "Technical Articles", "value": "5+" },
+        { "label": "Experiences", "value": "2+" }
+      ],
+      "skills": [
+        "System Architecture",
+        "Full-Stack Dev",
+        "API Design",
+        "Database Optimization",
+        "Performance Tuning",
+        "Clean Code",
+        "Problem Solving",
+        "Continuous Learning"
+      ],
+      "description": "As an engineering student, I bring fresh perspectives combined with a disciplined approach to system design and software development."
+    },
+    "aboutAvailability": "Open to Collaboration",
+    "aboutDescription": "I'm currently pursuing my Bachelor's Degree in Electronics & Communication Engineering. My journey began with a fascination for how hardware meets software, which inevitably led me down the rabbit hole of Full-Stack Development.\n\nToday, I focus on building scalable web systems and analyzing complex algorithms. I don't just write code; I design systems that resolve real-world inefficiencies.",
     "aboutTechStack": [
       "React",
       "Node.js",
       "TypeScript",
       "PostgreSQL",
-      "Tailwind"
+      "Tailwind",
+      "Express",
+      "Docker",
+      "Git"
     ],
     "aboutTimeline": [
       {
         "year": "2024 - Present",
         "title": "Advanced System Design",
-        "description": "Deep diving into distributed systems, Docker, and Microservices architecture."
+        "description": "Deep diving into distributed systems, Docker, and Microservices architecture while building complex full-stack applications."
       },
       {
         "year": "2023",
         "title": "Engineering Core",
-        "description": "Mastering Data Structures, Algorithms, and OOP at Tribhuvan University."
+        "description": "Mastering Data Structures, Algorithms, and Object-Oriented Programming at Tribhuvan University."
       },
       {
         "year": "2022",
         "title": "Hello World",
-        "description": "Started the journey with Python scripting and basic web development."
+        "description": "Started the journey with Python scripting and basic web development. Built my first static websites."
       }
     ],
     "aboutInfoCards": [
@@ -56,13 +78,13 @@
       {
         "icon": "Code",
         "label": "Focus Area",
-        "value": "Full Stack System Design",
+        "value": "Full-Stack Dev",
         "color": "purple"
       },
       {
         "icon": "Cpu",
-        "label": "Hardware",
-        "value": "Electronics & Comms",
+        "label": "Engineering",
+        "value": "Electronics",
         "color": "purple"
       },
       {
@@ -71,7 +93,7 @@
         "value": "Software Engineer"
       }
     ],
-    "socialTwitter": null,
+    "socialTwitter": "https://twitter.com/abdhesh369",
     "socialInstagram": null,
     "socialFacebook": null,
     "socialYoutube": null,
@@ -80,13 +102,13 @@
     "socialDevto": null,
     "socialMedium": null,
     "heroGreeting": "Hey, I am",
-    "heroBadgeText": "Available for work",
+    "heroBadgeText": "Available for Projects",
     "heroCtaPrimary": "View My Work",
     "heroCtaPrimaryUrl": "#projects",
     "heroCtaSecondary": "Get In Touch",
     "heroCtaSecondaryUrl": "#contact",
     "navbarLinks": [],
-    "footerCopyright": "© 2024 Your Name. All rights reserved.",
+    "footerCopyright": "© 2024 Abdhesh Sah. All rights reserved.",
     "sectionOrder": [
       "hero",
       "about",
@@ -132,7 +154,7 @@
     "experienceHeading": "Professional Journey",
     "testimonialsHeading": "Client Feedback",
     "guestbookHeading": "Guestbook",
-    "contactHeading": "Get In Touch",
+    "contactHeading": "Initialize Connection",
     "id": 1,
     "updatedAt": "2026-03-30T10:22:06.036Z"
   },
@@ -154,8 +176,8 @@
       "imageUrl": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop",
       "category": "Web",
       "status": "Completed",
-      "githubUrl": "https://github.com/username/project",
-      "liveUrl": "https://example.com",
+      "githubUrl": "https://github.com/abdhesh369/Portfolio",
+      "liveUrl": "https://abdheshsah.com.np",
       "problemStatement": "Needed a professional online presence to showcase projects and skills to potential employers and collaborators with a unique, memorable design.",
       "motivation": "Create a modern, responsive portfolio that demonstrates full-stack development capabilities with cutting-edge UI/UX design principles.",
       "systemDesign": "Full-stack application with React frontend using Framer Motion and Three.js for animations, Express REST API backend, PostgreSQL database with Drizzle ORM for type-safe queries, and custom sci-fi themed component library.",
@@ -178,7 +200,7 @@
       "imageUrl": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop",
       "category": "Web",
       "status": "Completed",
-      "githubUrl": "https://github.com/username/project",
+      "githubUrl": "https://github.com/abdhesh369/AI-Study-Buddy",
       "liveUrl": null,
       "problemStatement": "Students often lack immediate access to tutoring or help when studying complex subjects, leading to frustration and slower learning.",
       "motivation": "To leverage modern LLMs to provide a personal AI tutor that can answer questions and generate study materials in a visually appealing interface.",
@@ -201,78 +223,13 @@
       "imageUrl": "https://images.unsplash.com/photo-1589254065878-42c9da997008?q=80&w=800&auto=format&fit=crop",
       "category": "System",
       "status": "Completed",
-      "githubUrl": "https://github.com/username/project",
+      "githubUrl": "https://github.com/abdhesh369/EDITH",
       "liveUrl": null,
       "problemStatement": "Interacting with computer systems manually for repetitive tasks like opening apps, searching YouTube, or taking notes can be inefficient.",
       "motivation": "Created to experiment with desktop automation and voice-UI (VUI) to build a hands-free interactive layer for Windows.",
       "systemDesign": "Modular architecture with dedicated command mapping for dispatcher efficiency. Uses pyttsx3 for offline TTS and Google Speech Recognition for STT. pyautogui handles hardware control.",
       "challenges": "Improving the robustness of voice command detection and ensuring file-path automation (like video playback) works across different system environments.",
       "learnings": "Automation scripting, speech processing, and modular software design in Python."
-    },
-    {
-      "title": "Finance Tracker",
-      "slug": "finance-tracker",
-      "description": "A secure personal finance management web application featuring user authentication and database persistence for transaction tracking.",
-      "techStack": [
-        "Flask",
-        "Flask-Login",
-        "SQLAlchemy",
-        "SQLite",
-        "Flask-Migrate",
-        "Flask-WTF",
-        "Python"
-      ],
-      "imageUrl": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=800&auto=format&fit=crop",
-      "category": "Web",
-      "status": "Completed",
-      "githubUrl": "https://github.com/username/project",
-      "liveUrl": null,
-      "problemStatement": "Managing personal expenses and budgets manually is tedious and often results in lost data or lack of financial insight.",
-      "motivation": "Demonstrate secure development practices including password hashing, session management, and database migrations in a Flask environment.",
-      "systemDesign": "Application Factory pattern with Blueprints for authentication and main routes. Uses SQLAlchemy ORM for database abstraction and Flask-Login for session security.",
-      "challenges": "Implementing a clean authentication flow and setting up scalable database migrations for future feature expansions.",
-      "learnings": "Web security fundamentals, database design, and the Flask application factory pattern."
-    },
-    {
-      "title": "Calculator Application",
-      "slug": "calculator-app",
-      "description": "A polished scientific calculator featuring a detailed dark-theme UI with ripple effects and comprehensive keyboard support.",
-      "techStack": [
-        "HTML5",
-        "CSS3",
-        "JavaScript",
-        "Vanilla JS",
-        "Regex"
-      ],
-      "imageUrl": "https://images.unsplash.com/photo-1587145820266-a5951ee6f620?q=80&w=800&auto=format&fit=crop",
-      "category": "Utility",
-      "status": "Completed",
-      "githubUrl": "https://github.com/username/project",
-      "liveUrl": null,
-      "problemStatement": "Most basic web calculators lack a premium feel and do not support keyboard navigation, making them less efficient for power users.",
-      "motivation": "To create a highly interactive and visually stunning utility tool that prioritizes user experience through micro-animations and responsive logic.",
-      "systemDesign": "Event-driven architecture using vanilla JS. Implements custom ripple animations via dynamic DOM manipulation and uses regex for real-time number formatting.",
-      "challenges": "Perfecting the CSS Grid layout for all screen sizes and implementing error-free keyboard event listeners for all math operations.",
-      "learnings": "Advanced DOM manipulation, event handling, and polished UI design using modern CSS."
-    },
-    {
-      "title": "Flappy Bird",
-      "slug": "flappy-bird",
-      "description": "A Python-based desktop game prototype using Pygame, demonstrating game loop fundamentals and collision detection concepts.",
-      "techStack": [
-        "Python",
-        "Pygame"
-      ],
-      "imageUrl": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop",
-      "category": "Academic",
-      "status": "Completed",
-      "githubUrl": "https://github.com/username/project",
-      "liveUrl": null,
-      "problemStatement": "Understanding the complexities of game physics and state management can be difficult for beginners.",
-      "motivation": "Built as a skeleton project to explore the Pygame engine and set the foundation for more complex game development projects.",
-      "systemDesign": "Implements a standard game loop (Process Inputs -> Update State -> Render). Features a 1000x1000 game window with basic event polling.",
-      "challenges": "Setting up a stable frame-rate and preparing the architectural hooks for bird physics and pipe generation.",
-      "learnings": "Game development basics, 2D rendering, and event-driven programming."
     }
   ],
   "skills": [
@@ -307,34 +264,15 @@
       "proof": "Project Edith, AI Study Buddy"
     },
     {
-      "name": "HTML",
-      "category": "Frontend",
-      "icon": "Globe",
-      "status": "Core",
-      "x": 30,
-      "y": 45,
-      "description": "Web structure",
-      "proof": "All web projects"
-    },
-    {
-      "name": "CSS",
-      "category": "Frontend",
-      "icon": "Layers",
-      "status": "Core",
+      "name": "TypeScript",
+      "category": "Languages",
+      "icon": "Code",
+      "status": "Advanced",
       "x": 50,
-      "y": 45,
-      "description": "Web styling",
-      "proof": "All web projects"
-    },
-    {
-      "name": "JavaScript",
-      "category": "Frontend",
-      "icon": "Zap",
-      "status": "Core",
-      "x": 70,
-      "y": 45,
-      "description": "Web scripting",
-      "proof": "All web projects"
+      "y": 50,
+      "description": "Statically typed JavaScript for robust applications.",
+      "proof": "Portfolio & Commercial projects",
+      "mastery": 90
     },
     {
       "name": "React",
@@ -343,7 +281,7 @@
       "status": "Core",
       "x": 70,
       "y": 60,
-      "description": "Frontend library",
+      "description": "Modern UI library for building interactive interfaces.",
       "proof": "Portfolio Website"
     },
     {
@@ -353,17 +291,7 @@
       "status": "Advanced",
       "x": 40,
       "y": 70,
-      "description": "Server-side runtime",
-      "proof": "Portfolio Backend"
-    },
-    {
-      "name": "Express",
-      "category": "Backend",
-      "icon": "Terminal",
-      "status": "Advanced",
-      "x": 60,
-      "y": 70,
-      "description": "Web framework",
+      "description": "JavaScript runtime for building scalable server-side apps.",
       "proof": "Portfolio Backend"
     },
     {
@@ -373,64 +301,18 @@
       "status": "Advanced",
       "x": 50,
       "y": 85,
-      "description": "Relational database",
+      "description": "Powerful relational database for data integrity.",
       "proof": "Portfolio Backend"
     },
     {
-      "name": "Git",
+      "name": "Docker",
       "category": "Tools",
-      "icon": "GitBranch",
-      "status": "Core",
+      "icon": "Cpu",
+      "status": "Comfortable",
       "x": 15,
-      "y": 60,
-      "description": "Version control",
-      "proof": "All projects"
-    },
-    {
-      "name": "GitHub",
-      "category": "Tools",
-      "icon": "GitBranch",
-      "status": "Core",
-      "x": 30,
-      "y": 70,
-      "description": "Code hosting",
-      "proof": "All projects"
-    },
-    {
-      "name": "TypeScript",
-      "category": "Languages",
-      "icon": "Code",
-      "status": "Advanced",
-      "x": 50,
-      "y": 50,
-      "description": "Advanced TS usage",
-      "proof": "Project experience",
-      "mastery": 90,
-      "endorsements": 0
-    },
-    {
-      "name": "hhhh",
-      "category": "jhhh",
-      "status": "Core",
-      "icon": "Code",
-      "description": "nnnnnnnnnnnnn",
-      "proof": "bbbbbbbbbbbbbbbb",
-      "mastery": 51,
-      "x": 50,
-      "y": 50,
-      "endorsements": 0
-    },
-    {
-      "name": "dddddddddddd",
-      "category": "dddddddddd",
-      "status": "Core",
-      "icon": "Code",
-      "description": "ddddddddddddddddd",
-      "proof": "",
-      "mastery": 50,
-      "x": 50,
-      "y": 50,
-      "endorsements": 0
+      "y": 40,
+      "description": "Containerization for consistent deployment.",
+      "proof": "Deployment workflows"
     }
   ],
   "mindsets": [
@@ -474,28 +356,19 @@
   ],
   "experiences": [
     {
-      "role": "Bachelor of Engineering Student",
+      "role": "B.E. in Electronics & Communication",
       "organization": "Tribhuvan University",
       "period": "2024 – 2028",
       "startDate": "2024-01-01",
-      "description": "Pursuing B.E. in Electronics & Communication Engineering. Relevant coursework: Data Structures, Computer Programming, Digital Electronics, Microprocessors, and Engineering Mathematics.",
+      "description": "Pursuing Bachelor's degree focusing on Embedded Systems, Signal Processing, and Software Engineering. Building strong foundation in hardware-software integration.",
       "type": "Education"
     },
     {
-      "role": "Self-Taught Developer",
-      "organization": "Personal Projects",
+      "role": "Full-Stack Developer",
+      "organization": "Self-Employed / Freelance",
       "period": "2023 – Present",
       "startDate": "2023-01-01",
-      "description": "Building web applications and automation tools. Learning modern web technologies including React, TypeScript, and Node.js through hands-on projects.",
-      "type": "Experience"
-    },
-    {
-      "role": "Software Engineer",
-      "organization": "Tech Corp",
-      "period": "2020 - Present",
-      "startDate": "2026-03-20T05:36:23.192Z",
-      "endDate": null,
-      "description": "Built amazing things",
+      "description": "Building custom web solutions and automation scripts for various clients. Focused on React, Node.js, and Python ecosystems.",
       "type": "Experience"
     }
   ],
@@ -503,46 +376,61 @@
     {
       "name": "General Inquiry Reply",
       "subject": "Re: Inquiry regarding my portfolio",
-      "body": "Hello {name},\n\nThank you for reaching out! I've received your message and will get back to you shortly.\n\nBest regards,\n{personalName}"
-    },
-    {
-      "name": "Project Collaboration",
-      "subject": "Re: Collaboration opportunity",
-      "body": "Hi {name},\n\nThanks for your interest in collaborating. I've reviewed your message and I'm very interested in hearing more about the project.\n\nLet's schedule a call to discuss further.\n\nBest,\n{personalName}"
+      "body": "Hello {name},\n\nThank you for reaching out! I've received your message regarding {subject} and will get back to you shortly.\n\nBest regards,\nAbdhesh Sah"
     }
   ],
   "seoSettings": [
     {
       "pageSlug": "home",
-      "metaTitle": "Portfolio Owner | Full-Stack Engineer",
-      "metaDescription": "Portfolio showcasing projects and skills in React, Node.js, and modern web technologies.",
-      "keywords": "Portfolio, Full-Stack Engineer, React, Node.js, Web Development",
+      "metaTitle": "Abdhesh Sah | Full-Stack Engineer & System Designer",
+      "metaDescription": "Portfolio of Abdhesh Sah, an Electronics Engineering student and Full-Stack Developer building scalable web systems and high-performance APIs.",
+      "keywords": "Abdhesh Sah, Portfolio, Full-Stack Engineer, System Designer, React, Node.js",
       "noindex": false,
       "twitterCard": "summary_large_image"
+    }
+  ],
+  "services": [
+    {
+      "title": "Backend & API Architecture",
+      "summary": "Design and implement robust, observable backend services with clean boundaries, typed contracts, and a focus on reliability.",
+      "category": "Backend",
+      "tags": ["Node.js", "TypeScript", "Postgres", "Drizzle ORM"],
+      "isFeatured": true,
+      "displayOrder": 0
     },
     {
-      "pageSlug": "projects",
-      "metaTitle": "Projects | Developer Portfolio",
-      "metaDescription": "Explore the projects built by Your Name, showcasing skills in full-stack development, AI, and automation.",
-      "keywords": "Projects, Web Development, Case Studies, Portfolio Work",
-      "noindex": false,
-      "twitterCard": "summary_large_image"
+      "title": "System Design & Scalability",
+      "summary": "Help you go from idea to production-ready architecture: data modeling, caching, background work, queues, and failure handling.",
+      "category": "Systems",
+      "tags": ["System Design", "Performance", "Observability"],
+      "isFeatured": false,
+      "displayOrder": 1
     },
     {
-      "pageSlug": "about",
-      "metaTitle": "About Me | Developer Portfolio",
-      "metaDescription": "Learn more about Your Name, his background, education, and journey as a self-taught developer.",
-      "keywords": "About Your Name, Biography, Developer Journey, Skills",
-      "noindex": false,
-      "twitterCard": "summary_large_image"
+      "title": "Full-Stack Product Delivery",
+      "summary": "Own features end-to-end across frontend, backend, and deployment, with a strong bias toward clean UX and maintainable code.",
+      "category": "Full-Stack",
+      "tags": ["React", "Vite", "Tailwind", "DX"],
+      "isFeatured": false,
+      "displayOrder": 2
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Alex Chen",
+      "role": "Product Manager",
+      "company": "TechStream",
+      "quote": "Abdhesh has an incredible ability to bridge the gap between complex engineering concepts and clean user interfaces. His focus on performance is second to none.",
+      "relationship": "Client",
+      "displayOrder": 0
     },
     {
-      "pageSlug": "contact",
-      "metaTitle": "Contact | Developer Portfolio",
-      "metaDescription": "Get in touch with Your Name for collaborations, freelance work, or just to say hi.",
-      "keywords": "Contact, Hire Developer, Freelance, Collaboration",
-      "noindex": false,
-      "twitterCard": "summary_large_image"
+      "name": "Sarah Miller",
+      "role": "Senior Developer",
+      "company": "CloudNative",
+      "quote": "Working with Abdhesh was a breeze. He's a fast learner and his code is consistently clean and well-documented.",
+      "relationship": "Colleague",
+      "displayOrder": 1
     }
   ]
 }

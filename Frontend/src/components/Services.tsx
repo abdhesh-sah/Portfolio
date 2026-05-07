@@ -103,7 +103,7 @@ export default function Services() {
               transition={
                 shouldReduceMotion ? { duration: 0 } : { delay: index * 0.05 }
               }
-              className="relative rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-5 flex flex-col group card-glow-hover transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/30 hover:shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+              className="relative rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md border border-primary/20 p-5 flex flex-col group card-glow-hover transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_0_15px_rgba(6,182,212,0.15)]"
             >
               <div className="flex items-center justify-between mb-3 gap-2">
                 <div className="flex items-center gap-2">

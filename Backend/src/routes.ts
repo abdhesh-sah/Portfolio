@@ -28,7 +28,7 @@ import { registerCaseStudyRoutes } from "./routes/case-studies.js";
 import { registerClientRoutes } from "./routes/clients.js";
 import { registerSketchpadRoutes } from "./routes/sketchpad.js";
 import { registerCoverLetterRoutes } from "./routes/cover-letter.js";
-import { registerActivityRoutes } from "./routes/activity.js";
+
 import subscribersRouter from "./routes/subscribers.js";
 import { testRouter } from "./routes/test.js";
 import ogRouter from "./routes/og.js";
@@ -109,7 +109,7 @@ export function registerRoutes(app: Express) {
   registerSketchpadRoutes(v1Router);
   // MF-6: AI Cover Letter
   registerCoverLetterRoutes(v1Router);
-  registerActivityRoutes(v1Router);
+
 
   // Admin audit log
   v1Router.use("/admin", auditLogRoutes);

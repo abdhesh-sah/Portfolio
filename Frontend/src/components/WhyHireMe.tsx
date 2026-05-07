@@ -73,88 +73,7 @@ const SkillBar = ({ skill, level, delay, color }: { skill: string; level: number
   );
 };
 
-interface Point {
-  title: string;
-  description: string;
-  icon: React.ElementType;
-}
 
-// Point Card with Hover Effects
-const PointCard = ({ point, index }: { point: Point; index: number }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <m.div
-      initial={fadeUpLarge.initial}
-      whileInView={fadeUpLarge.animate}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="relative group"
-    >
-      {/* Glow Effect */}
-      <m.div
-        animate={{ opacity: isHovered ? 0.6 : 0 }}
-        className="absolute -inset-2 bg-gradient-to-r from-primary/30 to-purple-500/30 rounded-3xl blur-xl"
-      />
-
-      <div className="relative p-8 bg-card/80 backdrop-blur-sm rounded-2xl border border-border hover:border-cyan-500/50 transition-all duration-300 h-full hover:shadow-[0_0_30px_rgba(6,182,212,0.15)]">
-        {/* Icon */}
-        <m.div
-          animate={{
-            rotate: isHovered ? 360 : 0,
-            scale: isHovered ? 1.1 : 1
-          }}
-          transition={{ duration: 0.5 }}
-          className="p-4 bg-primary/10 rounded-2xl text-primary w-fit mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300"
-        >
-          <point.icon className="w-7 h-7" />
-        </m.div>
-
-        {/* Content */}
-        <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors">
-          {point.title}
-        </h3>
-        <p className="text-muted-foreground leading-relaxed">
-          {point.description}
-        </p>
-
-        {/* Hover Indicator */}
-        <m.div
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : -10 }}
-          className="absolute bottom-8 right-8"
-        >
-          <ArrowRight className="w-5 h-5 text-primary" />
-        </m.div>
-      </div>
-    </m.div>
-  );
-};
-
-const defaultPoints = [
-  {
-    title: "Strong Fundamentals",
-    description: "Solid foundation in electronics, communication engineering, and core computer science principles that enable me to understand systems at a deeper level.",
-    icon: Award,
-  },
-  {
-    title: "Honest Representation",
-    description: "Clear and truthful showcase of my current technical abilities and project experiences. What you see is what you get.",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Growth Mindset",
-    description: "High willingness to learn new technologies and adapt to evolving engineering challenges. I thrive on continuous improvement.",
-    icon: Zap,
-  },
-  {
-    title: "Disciplined Practice",
-    description: "Consistent daily practice in coding and system design to maintain high-quality output and stay sharp.",
-    icon: CheckCircle2,
-  },
-];
 
 const defaultSkills = [
   { skill: "Problem Solving", level: 85, color: "bg-gradient-to-r from-violet-500 to-purple-500" },
@@ -174,12 +93,7 @@ export default function WhyHireMe() {
   const resumeUrl = settings?.resumeUrl || "/resume.pdf";
   const resumeFileName = resumeUrl.split('/').pop() || "Resume.pdf";
 
-  // Use dynamic data if available, otherwise fall back to local constants
-  const dynamicPoints = settings?.whyHireMeData?.stats?.map((stat: { label: string; value: string }) => ({
-    title: stat.label,
-    description: stat.value,
-    icon: CheckCircle2 // Fallback icon since we don't store icon names in DB yet
-  })) || defaultPoints;
+
 
   const dynamicSkills = settings?.whyHireMeData?.skills?.map((s: string | { skill: string; level: number; color?: string }, i: number) => ({
     skill: typeof s === 'string' ? s : s.skill,
@@ -226,7 +140,7 @@ export default function WhyHireMe() {
           initial={fadeUpLarge.initial}
           whileInView={fadeUpLarge.animate}
           viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 p-8 bg-card/80 backdrop-blur-sm rounded-3xl border border-border mb-12"
+          className="grid grid-cols-2 md:grid-cols-4 gap-8 p-8 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md rounded-3xl border border-primary/20 mb-12"
         >
           <AnimatedCounter value={allSkills?.length ?? 0} suffix="+" label="Tech Stack" />
           <AnimatedCounter value={projects?.length ?? 0} suffix="+" label="Systems Built" />
@@ -234,12 +148,7 @@ export default function WhyHireMe() {
           <AnimatedCounter value={experiences?.length ?? 0} suffix="+" label="Experiences" />
         </m.div>
 
-        {/* Points Grid */}
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {dynamicPoints.map((point: Point, index: number) => (
-            <PointCard key={index} point={point} index={index} />
-          ))}
-        </div>
+
 
         {/* Skills Section */}
         <m.div
@@ -248,28 +157,67 @@ export default function WhyHireMe() {
           viewport={{ once: true }}
           className="grid md:grid-cols-2 gap-12 mb-12"
         >
-          {/* Soft Skills */}
-          <div className="p-8 bg-card/80 backdrop-blur-sm rounded-3xl border border-border">
-            <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-foreground">
-              <Target className="w-5 h-5 text-primary" />
+          {/* Core Competencies */}
+          <div className="p-8 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md rounded-3xl border border-primary/20 h-full">
+            <h3 className="text-xl font-bold mb-8 flex items-center gap-2 text-foreground">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Target className="w-5 h-5 text-primary" />
+              </div>
               Core Competencies
             </h3>
-            {dynamicSkills.slice(0, 4).map((s: { skill: string; level: number; color: string }, i: number) => (
-              <SkillBar key={i} {...s} delay={i * 0.1} />
-            ))}
+            <div className="space-y-6">
+              {dynamicSkills.slice(0, 4).map((s: { skill: string; level: number; color: string }, i: number) => (
+                <SkillBar key={i} {...s} delay={i * 0.1} />
+              ))}
+            </div>
+            
+            <div className="mt-8 p-4 rounded-2xl bg-primary/5 border border-primary/10 italic text-sm text-muted-foreground">
+              "Technical excellence is not an act, but a habit of disciplined engineering."
+            </div>
           </div>
 
           {/* What Sets Me Apart */}
-          <div className="p-8 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-3xl border border-primary/20">
-            <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-foreground">
-              <TrendingUp className="w-5 h-5 text-primary" />
-              What Sets Me Apart
+          <div className="p-8 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md rounded-3xl border border-primary/20 h-full">
+            <h3 className="text-xl font-bold mb-8 flex items-center gap-2 text-foreground">
+              <div className="p-2 bg-purple-500/10 rounded-lg">
+                <TrendingUp className="w-5 h-5 text-purple-500" />
+              </div>
+              Professional Mindset
             </h3>
-            <ul className="space-y-4">
-              {dynamicSkills.map((s: { skill: string; level: number; color: string }, i: number) => (
-                <SkillBar key={i} {...s} delay={i * 0.1} />
+            <div className="grid gap-4">
+              {dynamicSkills.slice(4, 8).map((s: { skill: string; level: number; color: string }, i: number) => (
+                <m.div
+                  key={i}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="flex items-center gap-4 p-4 rounded-2xl bg-foreground/5 border border-border/50 group hover:bg-primary/5 hover:border-primary/30 transition-all cursor-default"
+                >
+                  <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                  <div className="flex-grow">
+                    <div className="flex justify-between items-center mb-1">
+                      <h4 className="font-bold text-foreground group-hover:text-primary transition-colors text-sm">{s.skill}</h4>
+                      <span className="text-[10px] font-mono text-muted-foreground px-2 py-0.5 rounded-full bg-foreground/10 uppercase tracking-wider">Active</span>
+                    </div>
+                    <div className="w-full h-1 bg-muted rounded-full overflow-hidden">
+                       <m.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "100%" }}
+                        transition={{ duration: 1.5, delay: i * 0.1 }}
+                        className="h-full bg-primary/30 rounded-full" 
+                       />
+                    </div>
+                  </div>
+                </m.div>
               ))}
-            </ul>
+            </div>
+            
+            <div className="mt-6 flex items-center gap-3 text-xs text-muted-foreground px-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
+              <span>Verified through real-world implementation</span>
+            </div>
           </div>
         </m.div>
 
@@ -280,7 +228,7 @@ export default function WhyHireMe() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <div className="p-8 bg-card/80 backdrop-blur-sm rounded-3xl border border-border">
+          <div className="p-8 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md rounded-3xl border border-primary/20">
             <h3 className="text-xl font-bold mb-8 flex items-center justify-center gap-2 text-center text-foreground">
               <Terminal className="w-5 h-5 text-primary" />
               Development Stack

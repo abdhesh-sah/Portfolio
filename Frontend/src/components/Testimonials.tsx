@@ -93,9 +93,9 @@ export default function Testimonials() {
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
                             transition={{ duration: 0.5, ease: "easeOut" }}
-                            className="relative rounded-[2.5rem] p-8 md:p-14 border border-border/50 overflow-hidden group shadow-2xl"
+                            className="relative rounded-[2.5rem] p-8 md:p-14 border border-border/50 overflow-hidden group shadow-2xl backdrop-blur-md"
                             style={{
-                                background: "linear-gradient(145deg, hsl(var(--card) / 0.8) 0%, hsl(var(--card) / 0.95) 100%)",
+                                background: "linear-gradient(145deg, hsl(var(--card) / 0.4) 0%, hsl(var(--card) / 0.6) 100%)",
                             }}
                         >
                             {/* Accent line */}
@@ -119,7 +119,7 @@ export default function Testimonials() {
                                                 className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
                                             />
                                         ) : (
-                                            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center text-3xl font-bold text-foreground bg-muted border border-border">
+                                            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center text-3xl font-bold text-foreground bg-primary/5 backdrop-blur-md border border-primary/20 shadow-inner">
                                                 {current.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                                             </div>
                                         )}
@@ -153,7 +153,7 @@ export default function Testimonials() {
                     <div className="flex items-center justify-center gap-4 mt-10">
                         <button
                             onClick={() => { setIsAutoPlaying(false); setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length); }}
-                            className="w-12 h-12 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted hover:border-primary/30 transition-all"
+                            className="w-12 h-12 rounded-full bg-card/20 backdrop-blur-sm border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card/40 hover:border-primary/30 transition-all"
                             aria-label="Previous testimonial"
                         >
                             <ChevronLeft size={20} />
@@ -172,7 +172,7 @@ export default function Testimonials() {
 
                         <button
                             onClick={() => { setIsAutoPlaying(false); setCurrentIndex((prev) => (prev + 1) % testimonials.length); }}
-                            className="w-12 h-12 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted hover:border-primary/30 transition-all"
+                            className="w-12 h-12 rounded-full bg-card/20 backdrop-blur-sm border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card/40 hover:border-primary/30 transition-all"
                             aria-label="Next testimonial"
                         >
                             <ChevronRight size={20} />

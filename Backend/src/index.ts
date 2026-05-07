@@ -58,6 +58,8 @@ const allowedOrigins = [
     "http://localhost:4173",
     "http://127.0.0.1:4173",
     "http://127.0.0.1:5173",
+    "http://[::1]:5173",
+    "http://[::1]:4173",
     "http://localhost:3000",
     "http://localhost:8080",
   ] : []),
@@ -97,7 +99,7 @@ app.use(
     }
 
     const isAllowed = allowedOrigins.includes(origin) ||
-      (process.env.NODE_ENV !== "production" && (origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:"))) ||
+      (process.env.NODE_ENV !== "production" && (origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:") || origin.startsWith("http://[::1]:"))) ||
       (process.env.BACKEND_RENDER_URL ? origin === process.env.BACKEND_RENDER_URL : false);
 
     if (isAllowed) {

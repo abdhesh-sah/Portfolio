@@ -8,6 +8,8 @@ import { skillConnectionService } from "./services/skill-connection.service.js";
 import { mindsetService } from "./services/mindset.service.js";
 import { experienceService } from "./services/experience.service.js";
 import { settingsService } from "./services/settings.service.js";
+import { testimonialService } from "./services/testimonial.service.js";
+import { portfolioServiceService } from "./services/portfolio-service.service.js";
 import type { Project, InsertProject, InsertSiteSettings } from "@portfolio/shared";
 
 import seedData from "./seed-data.json" with { type: "json" };
@@ -195,6 +197,37 @@ export async function seedDatabase() {
     }
 
     logSeed(`Experiences: ${successCount} seeded (${failCount} failed)`);
+
+    const testimonialList = seedData.testimonials;
+    const currentTestimonials = await testimonialService.getAll();
+    for (const t of testimonialList) {
+      try {
+        if (currentTestimonials.find(ex => ex.name === t.name)) {
+          logSeed(`Testimonial already exists, skipping: ${t.name} `);
+          continue;
+        }
+        await testimonialService.create(t as any);
+        logSeed(`Seeded testimonial: ${t.name} `);
+      } catch (err) {
+        logSeed(`Failed to seed testimonial: ${t.name} - ${err} `, "error");
+      }
+    }
+
+    const serviceList = seedData.services;
+    const currentServices = await portfolioServiceService.getAll();
+    for (const s of serviceList) {
+      try {
+        if (currentServices.find(ex => ex.title === s.title)) {
+          logSeed(`Service already exists, skipping: ${s.title} `);
+          continue;
+        }
+        await portfolioServiceService.create(s as any);
+        logSeed(`Seeded service: ${s.title} `);
+      } catch (err) {
+        logSeed(`Failed to seed service: ${s.title} - ${err} `, "error");
+      }
+    }
+
     logSeed("Database seeding completed successfully!");
   } catch (err) {
     logSeed(`Database seeding failed: ${err} `, "error");

@@ -82,7 +82,7 @@ export function SkillsListView({ skillNodes }: SkillsListViewProps) {
             whileInView={fadeUp.animate}
             viewport={{ once: true }}
             transition={{ duration: DURATION.fast, delay: catIdx * STAGGER.normal }}
-            className={`rounded-xl border ${CATEGORY_COLORS[category] || DEFAULT_CATEGORY_COLOR} overflow-hidden`}
+            className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md overflow-hidden"
             role="listitem"
           >
             {/* Category Header */}
@@ -160,7 +160,7 @@ export function SkillsListView({ skillNodes }: SkillsListViewProps) {
                                 transition={{ duration: DURATION.fast, ease: EASE.easeInOut }}
                                 className="overflow-hidden"
                               >
-                                <div className="ml-11 mr-3 mb-2 px-3 py-2.5 rounded-lg bg-foreground/[0.03] border border-border text-xs">
+                                <div className="ml-11 mr-3 mb-2 px-3 py-2.5 rounded-lg bg-primary/5 border border-primary/10 text-xs">
                                   {skill.mastery !== undefined && (
                                     <div className="mb-3">
                                       <div className="flex justify-between items-center mb-1 text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">

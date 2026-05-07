@@ -17,13 +17,7 @@ export const StatPanel = ({
     return (
         <m.div
             className={`absolute ${position === 'left' ? 'left-3 md:left-4' : 'right-3 md:right-4'} 
-        bottom-3 md:bottom-4 w-40 md:w-52 p-3 md:p-4 rounded-xl z-20`}
-            style={{
-                background: 'linear-gradient(135deg, rgba(15, 10, 35, 0.8) 0%, rgba(25, 15, 45, 0.75) 100%)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(100, 100, 160, 0.25)',
-                boxShadow: '0 10px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
-            }}
+        bottom-3 md:bottom-4 w-40 md:w-52 p-3 md:p-4 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md rounded-xl border border-primary/20 shadow-lg z-20`}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

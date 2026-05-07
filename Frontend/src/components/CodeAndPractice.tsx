@@ -189,7 +189,7 @@ export default function CodeAndPractice() {
             className="relative"
           >
             <div className="absolute inset-0 bg-primary/5 rounded-3xl -rotate-2" />
-            <div className="relative bg-card/80 backdrop-blur-sm p-8 rounded-3xl border border-white/10 shadow-xl overflow-hidden">
+            <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md p-8 rounded-3xl border border-primary/20 shadow-xl overflow-hidden">
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
@@ -243,7 +243,7 @@ export default function CodeAndPractice() {
               <div className="mt-8 pt-8 border-t border-border/50">
                 <div className="relative group min-h-[128px]">
                   {!reducedMotion && <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>}
-                  <div className="relative bg-card/50 rounded-lg p-1">
+                  <div className="relative bg-primary/5 backdrop-blur-sm rounded-lg p-1 border border-primary/10">
                     {isContributionsLoading ? (
                       <div className="w-full h-32 animate-pulse bg-white/5 rounded-lg flex items-center justify-center">
                         <Github className="w-8 h-8 text-white/10 animate-bounce" />

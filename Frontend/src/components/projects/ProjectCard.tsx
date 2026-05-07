@@ -84,7 +84,7 @@ export function ProjectCard({ project, showPinBadge = true, healthStatus = "none
 
         {/* Card Body */}
         <div
-          className="relative rounded-2xl overflow-hidden flex flex-col h-full bg-card/90 border border-border transition-all duration-300 group-hover:border-primary/50"
+          className="relative rounded-2xl overflow-hidden flex flex-col h-full bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md border border-primary/20 transition-all duration-300 group-hover:border-primary/50"
           style={{
             boxShadow: isHovered
               ? `0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px ${catColor.glow}`

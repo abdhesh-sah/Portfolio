@@ -49,7 +49,7 @@ const PrincipleCard = ({
           borderColor: isActive ? "rgba(124,58,237,0.5)" : "rgba(0,0,0,0.1)",
           boxShadow: isActive ? "0 20px 40px -10px rgba(124,58,237,0.3)" : "0 0 0 0 transparent"
         }}
-        className={`relative p-8 bg-card/80 backdrop-blur-sm rounded-2xl border-2 transition-all duration-300 h-full group ${isActive ? 'border-primary/50' : 'border-border hover:border-primary/30'}`}
+        className={`relative p-8 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md rounded-2xl border-2 transition-all duration-300 h-full group ${isActive ? 'border-primary/50' : 'border-primary/20 hover:border-primary/50'}`}
       >
         {/* Number badge */}
         <div className="absolute -top-3 -left-3 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-bold shadow-lg">
@@ -99,7 +99,7 @@ const DetailPanel = ({ principle }: { principle: Omit<Mindset, "icon"> & { icon:
     exit={expand.exit}
     className="overflow-hidden"
   >
-    <div className="p-8 bg-gradient-to-br from-primary/10 via-card to-primary/5 rounded-3xl border border-primary/20 mt-6">
+    <div className="p-8 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md rounded-3xl border border-primary/20 mt-6">
       <div className="flex items-start gap-6">
         <div className="p-4 bg-primary/20 rounded-2xl">
           {(() => {

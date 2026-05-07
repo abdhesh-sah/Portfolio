@@ -896,8 +896,8 @@ const siteSettingsBaseSchema = z.object({
   personalName: z.string().max(255).nullish(),
   personalTitle: z.string().max(255).nullish(),
   personalBio: z.string().max(5000).nullish(),
-  personalAvatar: z.string().url().max(500).nullable().optional().or(z.literal("").transform(() => null)),
-  resumeUrl: z.string().max(500).nullable().optional().or(z.literal("").transform(() => null)),
+  personalAvatar: z.string().max(500).nullable().optional().refine(isValidUrl, { message: "Invalid URL or path" }).or(z.literal("").transform(() => null)),
+  resumeUrl: z.string().max(500).nullable().optional().refine(isValidUrl, { message: "Invalid URL or path" }).or(z.literal("").transform(() => null)),
   whyHireMeData: z.object({
     description: z.string(),
     skills: z.array(z.string()),

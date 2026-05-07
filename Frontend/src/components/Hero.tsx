@@ -137,28 +137,43 @@ import { LiveVisitorCount } from "./LiveVisitorCount";
 
 
 const CharacterReveal = ({ text, delay = 0, className = "" }: { text: string; delay?: number, className?: string }) => {
+  const words = text.split(" ");
+  let charIndex = 0;
+
   return (
-    <span className={`inline-flex flex-wrap ${className}`}>
-      {text.split("").map((char, i) => (
-        <span key={i} className="overflow-hidden inline-flex">
-          <m.span
-            variants={{
-                hidden: { y: "110%", opacity: 0 },
-                visible: { y: 0, opacity: 1 }
-            }}
-            initial="hidden"
-            animate="visible"
-            transition={{
-              delay: delay + i * 0.03,
-              duration: 0.8,
-              ease: [0.22, 1, 0.36, 1]
-            }}
-            className="inline-block"
-          >
-            {char === " " ? "\u00A0" : char}
-          </m.span>
-        </span>
-      ))}
+    <span className={`inline-flex flex-wrap gap-x-[0.2em] ${className}`}>
+      {words.map((word, wordIdx) => {
+        const characters = word.split("");
+        const wordStartIdx = charIndex;
+        charIndex += characters.length + 1; // +1 for the space
+
+        return (
+          <span key={wordIdx} className="inline-flex whitespace-nowrap">
+            {characters.map((char, i) => (
+              <span key={i} className="overflow-hidden inline-flex">
+                <m.span
+                  variants={{
+                    hidden: { y: "110%", opacity: 0 },
+                    visible: { y: 0, opacity: 1 }
+                  }}
+                  initial="hidden"
+                  animate="visible"
+                  transition={{
+                    delay: delay + (wordStartIdx + i) * 0.03,
+                    duration: 0.8,
+                    ease: [0.22, 1, 0.36, 1]
+                  }}
+                  className="inline-block"
+                >
+                  {char}
+                </m.span>
+              </span>
+            ))}
+            {/* Add a space if not the last word */}
+            {wordIdx < words.length - 1 && <span className="inline-block">&nbsp;</span>}
+          </span>
+        );
+      })}
     </span>
   );
 };

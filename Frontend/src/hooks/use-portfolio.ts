@@ -22,7 +22,7 @@ export {
   useAuth,
   useAnalyticsSummary,
   useVitalsSummary,
-  useCodingActivity,
+
   useEmailTemplates,
   useGuestbook,
   useSubmitGuestbook,

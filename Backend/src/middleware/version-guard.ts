@@ -11,33 +11,29 @@ import { logger } from "../lib/logger.js";
  */
 
 const ALLOWED_V1_PREFIXES = [
-    "/api/v1/",
+    "/v1/",
     "/health",
     "/ping",
-    "/api/v1/debug-sentry"
+    "/v1/debug-sentry"
 ];
 
 export function versionGuard(req: Request, res: Response, next: NextFunction): void {
     const path = req.path;
     
-    // Only apply to paths starting with /api
-    if (!path.startsWith("/api")) {
-        next();
-        return;
-    }
-
-    const isAllowed = ALLOWED_V1_PREFIXES.some(prefix => path.startsWith(prefix));
+    // Since this is mounted at /api, req.path is already relative to /api.
+    // We want to ensure it starts with /v1/
+    const isAllowed = path.startsWith("/v1/") || path === "/v1" || ALLOWED_V1_PREFIXES.some(prefix => path.startsWith(prefix));
 
     if (!isAllowed) {
         logger.warn({
             context: "version-guard",
-            path: req.path,
+            path: req.originalUrl,
             requestId: req.id,
         }, "Blocked request to unsupported API version");
 
         res.status(404).json({
             error: {
-                message: `Unsupported API version or route: ${path}. Only v1 is currently supported.`,
+                message: `Unsupported API version or route: ${req.originalUrl}. Only v1 is currently supported.`,
                 status: 404
             }
         });

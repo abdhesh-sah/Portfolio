@@ -215,7 +215,7 @@ export default function Contact() {
         <div className="grid lg:grid-cols-5 gap-12 items-start">
           {/* Contact Info Panel */}
           <div className="lg:col-span-2 space-y-8">
-            <div className="p-6 rounded-2xl border border-border bg-card/80 backdrop-blur-sm relative overflow-hidden">
+            <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md border border-primary/20 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-4 opacity-20">
                 <Terminal className="w-24 h-24 text-cyan-500" />
               </div>
@@ -232,7 +232,7 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl border border-border bg-card/80 backdrop-blur-sm">
+            <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md border border-primary/20">
               <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
                 <div className="w-1 h-6 bg-purple-500 rounded-full" />
                 Social Uplink
@@ -249,7 +249,7 @@ export default function Contact() {
               whileInView={fadeUp.animate}
               viewport={{ once: true }}
               transition={{ delay: 0.6 }}
-              className="p-6 rounded-2xl border border-border bg-card/80 backdrop-blur-sm"
+              className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-md border border-primary/20"
             >
               <AvailabilityCalendar />
             </m.div>
@@ -263,7 +263,7 @@ export default function Contact() {
             className="lg:col-span-3 relative"
           >
             {/* Terminal Frame */}
-            <div className="relative bg-background/90 backdrop-blur-xl rounded-2xl border border-border p-1 shadow-2xl">
+            <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-transparent backdrop-blur-xl rounded-2xl border border-primary/20 p-1 shadow-2xl">
               {/* Header Bar */}
               <div className="bg-foreground/5 px-4 py-2 rounded-t-xl flex items-center justify-between border-b border-border/50">
                 <div className="flex gap-2">

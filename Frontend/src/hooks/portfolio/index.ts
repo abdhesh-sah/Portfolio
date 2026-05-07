@@ -11,7 +11,7 @@ export { useTestimonials } from "./use-testimonials";
 export { useMessages, useSendMessage } from "./use-contact";
 export { useSubscribe, useUnsubscribe, useAdminSubscribers } from "./use-subscribers";
 export { useAdminChatLogs } from "../admin/use-admin-chat";
-export { useAnalyticsSummary, useVitalsSummary, useCodingActivity } from "./use-analytics";
+export { useAnalyticsSummary, useVitalsSummary } from "./use-analytics";
 export { useEmailTemplates } from "./use-email-templates";
 export { useLogin } from "./use-auth";
 export { useAuth } from "../auth-context";
