@@ -319,14 +319,63 @@ export default function Contact() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    {/* Mode Toggles */}
+                    <div className="flex gap-4 mb-8">
+                      <button
+                        type="button"
+                        onClick={() => form.setValue("subject", "Quick Message")}
+                        className={`flex-1 py-3 px-4 rounded-xl border font-mono text-[10px] uppercase tracking-widest transition-all ${
+                          form.watch("subject") !== "Project Request"
+                            ? "bg-cyan-500/10 border-cyan-500/50 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)]"
+                            : "bg-foreground/5 border-border text-muted-foreground hover:border-foreground/20"
+                        }`}
+                      >
+                        Quick Message
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => form.setValue("subject", "Project Request")}
+                        className={`flex-1 py-3 px-4 rounded-xl border font-mono text-[10px] uppercase tracking-widest transition-all ${
+                          form.watch("subject") === "Project Request"
+                            ? "bg-purple-500/10 border-purple-500/50 text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.1)]"
+                            : "bg-foreground/5 border-border text-muted-foreground hover:border-foreground/20"
+                        }`}
+                      >
+                        Project Request
+                      </button>
+                    </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
                       <CyberInput id="name" label="Identity" autoComplete="name" register={form.register} error={form.formState.errors.name?.message} required />
                       <CyberInput id="email" label="Return Address" type="email" autoComplete="email" register={form.register} error={form.formState.errors.email?.message} required />
                     </div>
 
-                    <CyberInput id="subject" label="Header / Subject" autoComplete="subject" register={form.register} error={form.formState.errors.subject?.message} required />
+                    <AnimatePresence mode="popLayout">
+                      {form.watch("subject") === "Project Request" ? (
+                        <m.div
+                          key="project-fields"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="grid md:grid-cols-2 gap-6 overflow-hidden"
+                        >
+                          <CyberInput id="projectType" label="Project Type" register={form.register} error={form.formState.errors.projectType?.message} />
+                          <CyberInput id="budget" label="Est. Budget" register={form.register} error={form.formState.errors.budget?.message} />
+                          <div className="md:col-span-2">
+                            <CyberInput id="timeline" label="Timeline" register={form.register} error={form.formState.errors.timeline?.message} />
+                          </div>
+                        </m.div>
+                      ) : (
+                        <m.div
+                          key="message-fields"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                        >
+                          <CyberInput id="subject" label="Header / Subject" autoComplete="subject" register={form.register} error={form.formState.errors.subject?.message} required />
+                        </m.div>
+                      )}
+                    </AnimatePresence>
 
                     <CyberInput id="message" label="Packet Payload" isTextarea register={form.register} error={form.formState.errors.message?.message} required />
 
