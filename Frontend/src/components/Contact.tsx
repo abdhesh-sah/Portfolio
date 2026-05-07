@@ -319,6 +319,7 @@ export default function Contact() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     {/* Mode Toggles */}
                     <div className="flex gap-4 mb-8">
                       <button
