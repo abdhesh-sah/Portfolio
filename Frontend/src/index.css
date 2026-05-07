@@ -1,6 +1,6 @@
 @import "tailwindcss";
-/* @plugin "tailwindcss-animate"; */
-/* @plugin "@tailwindcss/typography"; */
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --radius-lg: 0.5625rem;
@@ -377,11 +377,13 @@
     background: transparent;
   }
 
-  /* Glass Effect Card (Blur removed) */
+  /* Glass Effect Card (Holographic) */
   .glass-card {
     @apply border border-border/50 shadow-lg;
     @apply transition-all duration-300 hover:shadow-xl hover:border-border;
-    background-color: hsl(var(--card) / 0.95); /* Increased opacity for readability without blur */
+    background-color: hsl(var(--card) / 0.7); /* Reduced opacity for better holographic effect */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   /* Light mode: add a stronger shadow so white cards clearly lift off the grey page */
