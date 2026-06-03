@@ -99,7 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const handleExit = () => {
             if (document.visibilityState === 'hidden') {
-                localStorage.setItem("portfolio_v1_admin_last_exit", Date.now().toString());
+                localStorage.setItem("portfolio_admin_last_exit", Date.now().toString());
             } else {
                 if (!checkTimeout()) {
                     localStorage.removeItem("portfolio_admin_last_exit");

@@ -491,10 +491,10 @@ async function startServer() {
 
     // ── Step 7: Start keep-alive cron (production only) ──
     // Self-ping every 10 minutes to prevent Render free-tier from sleeping.
-    if (process.env.NODE_ENV === "production") {
+    if (env.NODE_ENV === "production") {
       const KEEP_ALIVE_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
-      const selfUrl = process.env.BACKEND_RENDER_URL
-        ? `https://${process.env.BACKEND_RENDER_URL}/api/v1/keep-alive`
+      const selfUrl = env.BACKEND_RENDER_URL
+        ? `${env.BACKEND_RENDER_URL.replace(/\/$/, "")}/api/v1/keep-alive`
         : `http://localhost:${port}/api/v1/keep-alive`;
 
       keepAliveInterval = setInterval(async () => {
