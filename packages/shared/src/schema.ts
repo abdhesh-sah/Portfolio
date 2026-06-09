@@ -858,7 +858,7 @@ export const seoSettingsSchema = z.object({
   twitterCard: z.string().default("summary_large_image"),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-}).strict();
+});
 
 export const insertSeoSettingsApiSchema = z.object({
   pageSlug: z.string().min(1).max(100),
@@ -890,7 +890,6 @@ export const insertSubscriberApiSchema = z.object({
 const siteSettingsBaseSchema = z.object({
   isOpenToWork: z.boolean(),
   availabilityStatus: z.string().max(255).nullish().transform(v => v === "" ? null : v),
-  singletonGuard: z.literal(1).optional().default(1),
 
   // Personal Branding
   personalName: z.string().max(255).nullish(),
@@ -1006,7 +1005,8 @@ const siteSettingsBaseSchema = z.object({
 export const siteSettingsSchema = siteSettingsBaseSchema.extend({
   id: z.number(),
   updatedAt: z.coerce.date(),
-}).strict();
+  singletonGuard: z.literal(1).optional(),
+});
 
 export const insertSiteSettingsApiSchema = siteSettingsBaseSchema.partial();
 

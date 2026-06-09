@@ -18,8 +18,9 @@ export class SettingsRepository {
 
         if (existing) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const { id: _id, singletonGuard: _sg, updatedAt: _ua, ...cleanData } = data as any;
             const updateData: any = {
-                ...data,
+                ...cleanData,
                 updatedAt: new Date(),
             };
 
