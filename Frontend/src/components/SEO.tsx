@@ -36,7 +36,12 @@ export function SEO({
         queryKey: QUERY_KEYS.seo(slug),
         queryFn: async () => {
             if (!slug) return null;
-            return apiFetch(`/api/v1/seo/${slug}`, {}, seoSettingsSchema);
+            try {
+                return await apiFetch(`/api/v1/seo/${slug}`, {}, seoSettingsSchema);
+            } catch (error: any) {
+                if (error?.status === 404) return null;
+                throw error;
+            }
         },
         enabled: !!slug,
         staleTime: 1000 * 60 * 5, // 5 minutes
