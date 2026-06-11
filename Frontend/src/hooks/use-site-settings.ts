@@ -10,7 +10,8 @@ export function useSiteSettings(): UseQueryResult<SiteSettings> {
     const query = useQuery<SiteSettings>({
         queryKey: QUERY_KEYS.settings(),
         queryFn: () => apiFetch("/api/v1/settings", {}, siteSettingsSchema),
-        staleTime: 1000 * 60 * 60, // 1 hour
+        staleTime: 1000 * 60 * 5, // 5 minutes (reduced from 1 hour to ensure admin updates show quickly)
+        gcTime: 1000 * 60 * 10, // 10 minutes garbage collection time
     });
 
     return {

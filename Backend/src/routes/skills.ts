@@ -25,7 +25,7 @@ export function registerSkillRoutes(app: Router) {
     // GET /skills - Get all skills
     app.get(
         "/skills",
-        cachePublic(600),
+        cachePublic(300), // 5 minutes (reduced from 600 for faster admin updates)
         asyncHandler(async (_req, res) => {
             const skills = await skillService.getAll();
             res.json(skills);

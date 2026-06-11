@@ -12,7 +12,7 @@ export function registerSettingsRoutes(app: Router) {
     // GET /settings - Publicly get site settings
     app.get(
         "/settings",
-        cachePublic(600),
+        cachePublic(300), // 5 minutes (reduced from 600 to ensure updates propagate quickly)
         asyncHandler(async (_req, res) => {
             const settings = await settingsService.getSettings();
             res.json(settings);

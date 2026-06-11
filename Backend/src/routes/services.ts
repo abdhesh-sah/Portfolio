@@ -12,7 +12,7 @@ export function registerServiceRoutes(app: Router) {
   // GET /services - public list
   app.get(
     "/services",
-    cachePublic(3600),
+    cachePublic(300), // 5 minutes (reduced from 3600 for faster admin updates)
     asyncHandler(async (_req, res) => {
       const services = await portfolioServiceService.getAll();
       res.json(services);
@@ -22,7 +22,7 @@ export function registerServiceRoutes(app: Router) {
   // GET /services/:id - public single
   app.get(
     "/services/:id",
-    cachePublic(3600),
+    cachePublic(300), // 5 minutes (reduced from 3600 for faster admin updates)
     asyncHandler(async (req, res) => {
       const id = parseIntParam(res, req.params.id, "service ID");
             if (id === null) return;

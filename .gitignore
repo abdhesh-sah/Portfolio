@@ -75,3 +75,4 @@ get_tokens.ts
 *.test_client.ts
 *.txt
 
+ADMIN_TROUBLESHOOTING.md

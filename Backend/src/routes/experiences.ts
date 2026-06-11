@@ -12,7 +12,7 @@ export function registerExperienceRoutes(app: Router) {
     // GET /experiences - Get all experiences
     app.get(
         "/experiences",
-        cachePublic(600),
+        cachePublic(300), // 5 minutes (reduced from 600 for faster admin updates)
         asyncHandler(async (_req, res) => {
             const experiences = await experienceService.getAll();
             res.json(experiences);
@@ -22,7 +22,7 @@ export function registerExperienceRoutes(app: Router) {
     // GET /experiences/:id - Get experience by ID
     app.get(
         "/experiences/:id",
-        cachePublic(600),
+        cachePublic(300), // 5 minutes (reduced from 600 for faster admin updates)
         asyncHandler(async (req, res) => {
             const id = parseIntParam(res, req.params.id, "experience ID");
             if (id === null) return;

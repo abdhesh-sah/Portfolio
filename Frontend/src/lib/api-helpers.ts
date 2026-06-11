@@ -108,6 +108,13 @@ export async function apiFetch<T = any>(
         delete headers["Content-Type"];
     }
 
+    // For GET requests, add cache-busting headers to prevent stale browser cache
+    // when React Query invalidates queries after mutations
+    if (opts.method === undefined || opts.method === 'GET') {
+        headers['Cache-Control'] = 'no-cache';
+        headers['Pragma'] = 'no-cache';
+    }
+
     const res = await fetch(`${API_BASE_URL}${path}`, {
         ...opts,
         credentials: 'include',

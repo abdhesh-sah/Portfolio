@@ -11,7 +11,7 @@ export function registerCaseStudyRoutes(app: Router) {
     // GET /case-studies — public list
     app.get(
         "/case-studies",
-        cachePublic(600),
+        cachePublic(300), // 5 minutes (reduced from 600 for faster admin updates)
         asyncHandler(async (_req: Request, res: Response) => {
             const studies = await caseStudyService.getPublished();
             res.json(studies);
@@ -21,7 +21,7 @@ export function registerCaseStudyRoutes(app: Router) {
     // GET /case-studies/:slug — public detail
     app.get(
         "/case-studies/:slug",
-        cachePublic(600),
+        cachePublic(300), // 5 minutes (reduced from 600 for faster admin updates)
         asyncHandler(async (req: Request, res: Response) => {
             const study = await caseStudyService.getBySlug(req.params.slug as string);
             if (!study) {

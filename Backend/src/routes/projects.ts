@@ -119,7 +119,7 @@ export function registerProjectRoutes(app: Router) {
   // GET /api/projects/:id - Get project by ID (Moved to bottom)
   app.get(
     "/projects/:id",
-    cachePublic(600),
+    cachePublic(300), // 5 minutes (reduced from 600 for faster admin updates)
     asyncHandler(async (req, res) => {
       const id = parseIntParam(res, req.params.id, "project ID");
       if (id === null) return;
