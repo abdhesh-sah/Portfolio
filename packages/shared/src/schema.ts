@@ -745,7 +745,7 @@ export const messageSchema = z.object({
 export const insertMessageApiSchema = z.object({
   name: z.string().min(1).max(255),
   email: z.string().email().max(255),
-  subject: z.string().max(500).default(""),
+  subject: z.string().max(500),
   message: z.string().min(1).max(5000),
   projectType: z.string().max(100).optional(),
   budget: z.string().max(100).optional(),
