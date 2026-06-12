@@ -38,8 +38,8 @@ export function SEO({
             if (!slug) return null;
             try {
                 return await apiFetch(`/api/v1/seo/${slug}`, {}, seoSettingsSchema);
-            } catch (error: any) {
-                if (error?.status === 404) return null;
+            } catch (error: unknown) {
+                if (typeof error === 'object' && error !== null && 'status' in error && (error as { status: number }).status === 404) return null;
                 throw error;
             }
         },
