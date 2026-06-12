@@ -8,7 +8,7 @@
         "@testing-library/react": "^16.3.2",
         "@typescript-eslint/eslint-plugin": "^8.25.0",
         "@typescript-eslint/parser": "^8.25.0",
-        "concurrently": "^9.2.1",
+        "concurrently": "^10.0.3",
         "eslint": "^9.21.0",
         "jsdom": "^29.0.1",
         "tinyexec": "^0.3.2",
@@ -51,7 +51,8 @@
         "serialize-javascript": "^7.0.4",
         "esbuild": "^0.25.0",
         "flatted": "^3.4.2",
-        "fast-xml-parser": "^5.4.1"
+        "fast-xml-parser": "^5.4.1",
+        "uuid": "^11.1.1"
     },
     "dependencies": {
         "axios": "^1.14.0"
