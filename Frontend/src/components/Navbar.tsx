@@ -17,7 +17,6 @@ const DEFAULT_NAV_ITEMS = [
   { name: "Projects", href: "/projects" },
   { name: "Experience", href: "#experience" },
   { name: "Blog", href: "/blog" },
-  { name: "Portal", href: "/portal" },
   { name: "Contact", href: "#contact" },
 ];
 

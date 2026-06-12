@@ -10,7 +10,6 @@ const defaultFooterNavItems = [
   { name: "Skills", href: "#skills" },
   { name: "Experience", href: "#experience" },
   { name: "Blog", href: "/blog" },
-  { name: "Portal", href: "/portal" },
   { name: "Contact", href: "#contact" },
 ];
 

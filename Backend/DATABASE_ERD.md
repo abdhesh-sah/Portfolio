@@ -256,36 +256,7 @@ AI-generated deep-dives into projects.
 - `createdAt`: timestamp
 - `updatedAt`: timestamp
 
-#### `clients` (MF-4)
-Client portal management.
-- `id`: serial (PK)
-- `name`: varchar(255)
-- `email`: varchar(255) (Unique)
-- `company`: varchar(255)
-- `tokenHash`: varchar(255) (Unique)
-- `status`: varchar(50) ('active', 'inactive')
-- `createdAt`: timestamp
 
-#### `client_projects`
-Tracking projects per client.
-- `id`: serial (PK)
-- `clientId`: integer (FK -> clients.id)
-- `title`: varchar(255)
-- `status`: varchar(50)
-- `deadline`: timestamp
-- `notes`: text
-- `createdAt`: timestamp
-- `updatedAt`: timestamp
-
-#### `client_feedback`
-Communication within the client portal.
-- `id`: serial (PK)
-- `clientProjectId`: integer (FK -> client_projects.id)
-- `clientId`: integer (FK -> clients.id)
-- `message`: text
-- `isAdmin`: boolean
-- `attachments`: jsonb (string[])
-- `createdAt`: timestamp
 
 #### `sketchpad_sessions` (MF-5)
 Creative whiteboard tool data.

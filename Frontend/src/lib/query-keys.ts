@@ -75,10 +75,6 @@ export const QUERY_KEYS = {
         projects: (id: number) => ["admin-client-projects", id] as const,
         feedback: (projectId: number) => ["admin-client-feedback", projectId] as const,
     },
-    portal: {
-        projects: ["portal-projects"] as const,
-        feedback: (projectId: number) => ["portal-feedback", projectId] as const,
-    }
 } as const;
 
 export const AUTH_QUERY_KEY = QUERY_KEYS.auth();

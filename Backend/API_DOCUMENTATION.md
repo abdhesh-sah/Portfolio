@@ -70,10 +70,6 @@ The API uses **Session-based authentication** with specialized middleware for Ad
 - `GET /feed/atom`: Atom Feed.
 - `GET /feed/json`: JSON Feed.
 
-### Client Portal (MF-4)
-- `GET /clients/portal`: Access client portal (requires token in Authorization header or secure cookie).
-- `POST /clients/feedback`: Submit feedback within a client project.
-
 ---
 
 ## Administrative Endpoints (Protected)
