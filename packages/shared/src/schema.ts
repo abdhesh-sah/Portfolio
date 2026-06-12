@@ -273,41 +273,7 @@ export const caseStudiesTable = pgTable("case_studies", {
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
 
-// ================= MF-4: CLIENT PORTAL =================
-export const clientsTable = pgTable("clients", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
-  company: varchar("company", { length: 255 }),
-  tokenHash: varchar("tokenHash", { length: 255 }).unique(), // SHA-256 for O(1) matching
-  status: varchar("status", { length: 50 }).$type<"active" | "inactive">().notNull().default("active"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-}, (table) => {
-  return {
-    tokenHashIdx: index("clients_token_hash_idx").on(table.tokenHash),
-  };
-});
 
-export const clientProjectsTable = pgTable("client_projects", {
-  id: serial("id").primaryKey(),
-  clientId: integer("clientId").notNull().references(() => clientsTable.id, { onDelete: "cascade" }),
-  title: varchar("title", { length: 255 }).notNull(),
-  status: varchar("status", { length: 50 }).$type<"not_started" | "in_progress" | "review" | "completed">().notNull().default("not_started"),
-  deadline: timestamp("deadline"),
-  notes: text("notes"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
-});
-
-export const clientFeedbackTable = pgTable("client_feedback", {
-  id: serial("id").primaryKey(),
-  clientProjectId: integer("clientProjectId").notNull().references(() => clientProjectsTable.id, { onDelete: "cascade" }),
-  clientId: integer("clientId").notNull().references(() => clientsTable.id, { onDelete: "cascade" }),
-  message: text("message").notNull(),
-  isAdmin: boolean("isAdmin").notNull().default(false),
-  attachments: jsonb("attachments").$type<string[]>().default([]),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
 
 // ================= MF-5: SKETCHPAD =================
 export const sketchpadSessionsTable = pgTable("sketchpad_sessions", {
@@ -1192,57 +1158,7 @@ export const insertCaseStudyApiSchema = z.object({
   status: z.enum(["draft", "published"]).default("draft"),
 });
 
-// ================= MF-4: Client Portal Schemas =================
-export const clientSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  email: z.string().email(),
-  company: z.string().nullable().optional(),
-  status: z.enum(["active", "inactive"]),
-  createdAt: z.coerce.date(),
-});
-export type Client = z.infer<typeof clientSchema>;
 
-export const insertClientApiSchema = z.object({
-  name: z.string().min(1).max(255),
-  email: z.string().email().max(255),
-  company: z.string().max(255).optional().or(z.literal("").transform(() => null)),
-});
-
-export const clientProjectSchema = z.object({
-  id: z.number(),
-  clientId: z.number(),
-  title: z.string(),
-  status: z.enum(["not_started", "in_progress", "review", "completed"]),
-  deadline: z.coerce.date().nullable().optional(),
-  notes: z.string().nullable().optional(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-});
-export type ClientProject = z.infer<typeof clientProjectSchema>;
-
-export const insertClientProjectApiSchema = z.object({
-  clientId: z.number(),
-  title: z.string().min(1).max(255),
-  status: z.enum(["not_started", "in_progress", "review", "completed"]).default("not_started"),
-  deadline: z.coerce.date().optional(),
-  notes: z.string().max(5000).optional(),
-});
-
-export const clientFeedbackSchema = z.object({
-  id: z.number(),
-  clientProjectId: z.number(),
-  clientId: z.number(),
-  message: z.string(),
-  attachments: z.array(z.string()).default([]),
-  createdAt: z.coerce.date(),
-});
-export type ClientFeedback = z.infer<typeof clientFeedbackSchema>;
-
-export const insertClientFeedbackApiSchema = z.object({
-  clientProjectId: z.number(),
-  message: z.string().min(1).max(5000),
-});
 
 // ================= MF-5: Sketchpad Schemas =================
 export const sketchpadSessionSchema = z.object({

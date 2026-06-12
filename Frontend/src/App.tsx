@@ -93,7 +93,7 @@ const ProjectDetail = lazy(() => import("#src/pages/ProjectDetail"));
 const ProjectsPage = lazy(() => import("#src/pages/Projects"));
 const BlogList = lazy(() => import("#src/pages/BlogList"));
 const BlogPost = lazy(() => import("#src/pages/BlogPost"));
-const ClientPortalPage = lazy(() => import("#src/components/ClientPortal"));
+
 const CaseStudyListPage = lazy(() => import("#src/components/CaseStudy").then(m => ({ default: m.CaseStudyList })));
 const CaseStudyViewerPage = lazy(() => import("#src/components/CaseStudy").then(m => ({ default: m.CaseStudyViewer })));
 const GuestbookPage = lazy(() => import("#src/pages/GuestbookPage"));
@@ -223,8 +223,7 @@ function Router() {
               <Route path="/guestbook" component={GuestbookPage} />
             )}
 
-            {/* Client Portal */}
-            <Route path="/portal" component={ClientPortalPage} />
+
 
             {/* Case Studies */}
             <Route path="/case-studies" component={CaseStudyListPage} />

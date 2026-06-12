@@ -99,9 +99,9 @@ export async function buildSystemPrompt(): Promise<string> {
 
 
 export const CHAT_MODELS = [
-    "arcee-ai/trinity-large-preview:free",
-    "meta-llama/llama-4-scout:free",
-    "google/gemma-3-1b-it:free",
+    "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "google/gemma-4-31b-it:free",
+    "google/gemma-4-26b-a4b-it:free",
 ];
 
 let openRouterClient: OpenRouter | null = null;

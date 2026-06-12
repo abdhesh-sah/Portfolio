@@ -22,14 +22,14 @@ const MindsetTab = lazy(() => import("#src/components/admin/tabs/MindsetTab").th
 const CustomizationTab = lazy(() => import("#src/components/admin/tabs/CustomizationTab").then(m => ({ default: m.CustomizationTab })));
 const SettingsTab = lazy(() => import("#src/components/admin/tabs/SettingsTab").then(m => ({ default: m.SettingsTab })));
 const CaseStudiesTab = lazy(() => import("#src/components/admin/tabs/CaseStudiesTab").then(m => ({ default: m.CaseStudiesTab })));
-const ClientsTab = lazy(() => import("#src/components/admin/tabs/ClientsTab").then(m => ({ default: m.ClientsTab })));
+
 const SketchpadTab = lazy(() => import("#src/components/admin/tabs/SketchpadTab").then(m => ({ default: m.SketchpadTab })));
 const SubscribersTab = lazy(() => import("#src/components/admin/tabs/SubscribersTab").then(m => ({ default: m.SubscribersTab })));
 const ChatLogTab = lazy(() => import("#src/components/admin/tabs/ChatLogTab").then(m => ({ default: m.ChatLogTab })));
 const NewsletterTab = lazy(() => import("#src/components/admin/tabs/NewsletterTab"));
 const ReadingListTab = lazy(() => import("#src/components/admin/tabs/ReadingListTab").then(m => ({ default: m.ReadingListTab })));
 
-type Tab = "overview" | "analytics" | "messages" | "templates" | "projects" | "skills" | "experiences" | "services" | "seo" | "articles" | "testimonials" | "guestbook" | "audit" | "mindset" | "customization" | "settings" | "case-studies" | "clients" | "sketchpad" | "subscribers" | "chat-logs" | "newsletter" | "reading-list";
+type Tab = "overview" | "analytics" | "messages" | "templates" | "projects" | "skills" | "experiences" | "services" | "seo" | "articles" | "testimonials" | "guestbook" | "audit" | "mindset" | "customization" | "settings" | "case-studies" | "sketchpad" | "subscribers" | "chat-logs" | "newsletter" | "reading-list";
 
 const TAB_LABELS: Record<Tab, string> = {
     overview: "OVERVIEW",
@@ -46,7 +46,7 @@ const TAB_LABELS: Record<Tab, string> = {
     guestbook: "GUESTBOOK",
     audit: "AUDIT LOG",
     "case-studies": "CASE STUDIES",
-    clients: "CLIENTS",
+
     sketchpad: "SKETCHPAD",
     mindset: "MINDSET",
     customization: "CUSTOMIZATION",
@@ -179,7 +179,7 @@ export default function AdminDashboard() {
                     {tab === "guestbook" && <GuestbookTab />}
                     {tab === "audit" && <AuditLogTab />}
                     {tab === "case-studies" && <CaseStudiesTab />}
-                    {tab === "clients" && <ClientsTab />}
+
                     {tab === "sketchpad" && <SketchpadTab />}
                     {tab === "subscribers" && <SubscribersTab />}
                     {tab === "newsletter" && <NewsletterTab />}

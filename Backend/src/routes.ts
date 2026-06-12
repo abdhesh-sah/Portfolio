@@ -25,7 +25,7 @@ import auditLogRoutes from "./routes/audit-log.js";
 import scopeRoutes from "./routes/scope.js";
 import { registerReviewRoutes } from "./routes/review.js";
 import { registerCaseStudyRoutes } from "./routes/case-studies.js";
-import { registerClientRoutes } from "./routes/clients.js";
+
 import { registerSketchpadRoutes } from "./routes/sketchpad.js";
 import { registerCoverLetterRoutes } from "./routes/cover-letter.js";
 
@@ -103,8 +103,7 @@ export function registerRoutes(app: Express) {
   registerReviewRoutes(v1Router);
   // MF-3: Auto Case Studies
   registerCaseStudyRoutes(v1Router);
-  // MF-4: Client Portal
-  registerClientRoutes(v1Router);
+
   // MF-5: Sketchpad
   registerSketchpadRoutes(v1Router);
   // MF-6: AI Cover Letter
