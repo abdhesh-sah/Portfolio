@@ -17,16 +17,12 @@ export class SettingsRepository {
         const existing = await this.getSettings();
 
         if (existing) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const { id: _id, singletonGuard: _sg, updatedAt: _ua, ...cleanData } = data as any;
-            const updateData: any = {
-                ...cleanData,
-                updatedAt: new Date(),
-            };
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { id, singletonGuard, updatedAt, ...cleanData } = data as Partial<SiteSettings>;
 
             const [updated] = await db
                 .update(siteSettingsTable)
-                .set(updateData)
+                .set({ ...cleanData, updatedAt: new Date() })
                 .where(eq(siteSettingsTable.id, existing.id))
                 .returning();
             return updated as SiteSettings;
