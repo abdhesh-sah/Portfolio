@@ -55,7 +55,7 @@
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
-    "nodemailer": "^8.0.7",
+    "nodemailer": "^9.0.0",
     "pg": "^8.18.0",
     "pino": "^10.3.1",
     "pino-pretty": "^13.1.3",
