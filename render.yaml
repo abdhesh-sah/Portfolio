@@ -14,6 +14,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: NODE_VERSION
+        value: "22"
       - key: DATABASE_URL
         sync: false
       - key: REDIS_URL
@@ -62,6 +64,8 @@ services:
       node -e "import('vite').catch(() => process.exit(1))" || npm install --no-save @rolldown/binding-linux-x64-gnu lightningcss-linux-x64-gnu @tailwindcss/oxide-linux-x64-gnu
       npm run build:frontend
     envVars:
+      - key: NODE_VERSION
+        value: "22"
       - key: VITE_API_URL
         fromService:
           name: portfolio-backend

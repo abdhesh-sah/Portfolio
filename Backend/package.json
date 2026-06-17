@@ -7,7 +7,7 @@
     "dev": "tsx --watch --import ./src/instrument.ts src/index.ts",
     "lint": "eslint src --ext .ts --max-warnings 0",
     "type-check": "tsc --noEmit",
-    "build": "(node -e \"import('vite').catch(() => process.exit(0))\" || npm install --no-save @rolldown/binding-linux-x64-gnu lightningcss-linux-x64-gnu @tailwindcss/oxide-linux-x64-gnu) && npm run build --prefix .. -w @portfolio/shared && tsc --project tsconfig.json",
+    "build": "(node -e \"import('vite').catch(() => process.exit(1))\" || npm install --no-save @rolldown/binding-linux-x64-gnu lightningcss-linux-x64-gnu @tailwindcss/oxide-linux-x64-gnu) && npm run build --prefix .. -w @portfolio/shared && tsc --project tsconfig.json",
     "start": "node --import ./dist/src/instrument.js ./dist/src/index.js",
     "migrate": "npx drizzle-kit migrate",
     "generate": "npx drizzle-kit generate",

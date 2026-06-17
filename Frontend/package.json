@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "(node -e \"import('rolldown').catch(() => process.exit(1))\" || npm install --no-save @rolldown/binding-linux-x64-gnu lightningcss-linux-x64-gnu @tailwindcss/oxide-linux-x64-gnu) && vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --max-warnings 0",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "type-check": "tsc --noEmit",
@@ -94,5 +94,8 @@
     "vitest": "^4.0.18",
     "workbox-build": "^7.4.0",
     "workbox-window": "^7.4.0"
+  },
+  "engines": {
+    "node": "22.x"
   }
 }
