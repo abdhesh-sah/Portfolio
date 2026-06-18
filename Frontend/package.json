@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "npm install --no-save @rolldown/binding-linux-x64-gnu lightningcss-linux-x64-gnu @tailwindcss/oxide-linux-x64-gnu && vite build",
+    "build": "node -e \"process.platform==='linux'&&require('child_process').execSync('npm install --no-save @rolldown/binding-linux-x64-gnu lightningcss-linux-x64-gnu @tailwindcss/oxide-linux-x64-gnu',{stdio:'inherit'})\" && vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --max-warnings 0",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "type-check": "tsc --noEmit",
@@ -85,7 +85,7 @@
     "express": "^5.2.1",
     "globals": "^17.4.0",
     "playwright": "^1.58.2",
-    "rollup-plugin-visualizer": "^7.0.1",
+
     "sharp": "^0.34.5",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.56.1",
