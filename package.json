@@ -61,7 +61,8 @@
         "@rolldown/binding-linux-x64-gnu": "1.0.3",
         "lightningcss-linux-x64-gnu": "1.32.0",
         "@tailwindcss/oxide-linux-x64-gnu": "4.2.2",
-        "@rollup/rollup-linux-x64-gnu": "4.60.3"
+        "@rollup/rollup-linux-x64-gnu": "4.60.3",
+        "@esbuild/linux-x64": "0.28.1"
     },
     "engines": {
         "node": "22.x"

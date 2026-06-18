@@ -75,6 +75,9 @@
     "typescript": "^6.0.2",
     "vitest": "^4.0.18"
   },
+  "optionalDependencies": {
+    "@esbuild/linux-x64": "0.25.12"
+  },
   "engines": {
     "node": "22.x"
   }
