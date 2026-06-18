@@ -57,6 +57,12 @@
     "dependencies": {
         "axios": "^1.14.0"
     },
+    "optionalDependencies": {
+        "@rolldown/binding-linux-x64-gnu": "1.0.3",
+        "lightningcss-linux-x64-gnu": "1.32.0",
+        "@tailwindcss/oxide-linux-x64-gnu": "4.2.2",
+        "@rollup/rollup-linux-x64-gnu": "4.60.3"
+    },
     "engines": {
         "node": "22.x"
     }
