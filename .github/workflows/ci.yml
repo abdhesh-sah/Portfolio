@@ -118,16 +118,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # TODO: Remove this workaround once npm's optional-dependency bug is resolved
-      #       upstream (https://github.com/npm/cli/issues/4828), or pin native
-      #       bindings in package.json optionalDependencies.
-      - name: Install missing native bindings (npm optional-deps bug)
-        run: |
-          npm install --no-save \
-            @rolldown/binding-linux-x64-gnu \
-            lightningcss-linux-x64-gnu \
-            @tailwindcss/oxide-linux-x64-gnu
-          node -e "import('vite').then(() => console.log('✓ Vite loaded OK'), (e) => { console.error('✗', e.message); process.exit(1); })"
 
       - name: Build shared package
         run: npm run build:shared
@@ -219,16 +209,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # TODO: Remove this workaround once npm's optional-dependency bug is resolved
-      #       upstream (https://github.com/npm/cli/issues/4828), or pin native
-      #       bindings in package.json optionalDependencies.
-      - name: Install missing native bindings (npm optional-deps bug)
-        run: |
-          npm install --no-save \
-            @rolldown/binding-linux-x64-gnu \
-            lightningcss-linux-x64-gnu \
-            @tailwindcss/oxide-linux-x64-gnu
-          node -e "import('vite').then(() => console.log('✓ Vite loaded OK'), (e) => { console.error('✗', e.message); process.exit(1); })"
 
       - name: Build shared package
         run: npm run build:shared
@@ -284,16 +264,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # TODO: Remove this workaround once npm's optional-dependency bug is resolved
-      #       upstream (https://github.com/npm/cli/issues/4828), or pin native
-      #       bindings in package.json optionalDependencies.
-      - name: Install missing native bindings (npm optional-deps bug)
-        run: |
-          npm install --no-save \
-            @rolldown/binding-linux-x64-gnu \
-            lightningcss-linux-x64-gnu \
-            @tailwindcss/oxide-linux-x64-gnu
-          node -e "import('vite').then(() => console.log('✓ Vite loaded OK'), (e) => { console.error('✗', e.message); process.exit(1); })"
 
       - name: Build shared package
         run: npm run build:shared
@@ -413,16 +383,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # TODO: Remove this workaround once npm's optional-dependency bug is resolved
-      #       upstream (https://github.com/npm/cli/issues/4828), or pin native
-      #       bindings in package.json optionalDependencies.
-      - name: Install missing native bindings (npm optional-deps bug)
-        run: |
-          npm install --no-save \
-            @rolldown/binding-linux-x64-gnu \
-            lightningcss-linux-x64-gnu \
-            @tailwindcss/oxide-linux-x64-gnu
-          node -e "import('vite').then(() => console.log('✓ Vite loaded OK'), (e) => { console.error('✗', e.message); process.exit(1); })"
 
       - name: Build shared package
         run: npm run build:shared
