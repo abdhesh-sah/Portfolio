@@ -107,7 +107,7 @@ app.use(
         origin: true,
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization", "X-CSRF-Token", "x-client-token", "Cache-Control"]
+        allowedHeaders: ["Content-Type", "Authorization", "X-CSRF-Token", "x-client-token", "Cache-Control", "Pragma"]
       });
     } else {
       logger.warn({ origin }, "CORS blocked origin");
