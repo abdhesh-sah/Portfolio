@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@openrouter/sdk": "^0.12.33",
+    "@openrouter/sdk": "^0.13.7",
     "@portfolio/shared": "*",
     "@react-pdf/renderer": "^4.3.2",
     "@resvg/resvg-js": "^2.6.2",
