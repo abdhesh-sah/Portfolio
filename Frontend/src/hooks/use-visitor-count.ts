@@ -75,7 +75,7 @@ export function useVisitorCount() {
                     setError(new Error("SSE failed after retries"));
                     if (!pollInterval) {
                         fetchPolling();
-                        pollInterval = setInterval(fetchPolling, 30000);
+                        pollInterval = setInterval(fetchPolling, 120000);
                     }
                 }
             };

@@ -356,6 +356,70 @@ function setupGracefulShutdown() {
   });
 }
 
+async function initDatabaseInBackground() {
+  logger.info({ context: "startup" }, "Ensuring database is ready (background loop)...");
+  const maxAttempts = 60; // 2 minutes max wait
+  let attempts = 0;
+  let dbReady = false;
+
+  while (attempts < maxAttempts && !dbReady) {
+    try {
+      const health = await checkDatabaseHealth();
+      if (health.healthy) {
+        dbReady = true;
+      } else {
+        attempts++;
+        if (attempts < maxAttempts) {
+          logger.info({ context: "startup" }, `Database not ready (${health.message}), retrying (${attempts}/${maxAttempts}) in background...`);
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      }
+    } catch (err: unknown) {
+      attempts++;
+      const message = err instanceof Error ? err.message : "Unknown error";
+      logger.info({ context: "startup" }, `Database error during connection check (${message}), retrying (${attempts}/${maxAttempts})...`);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  }
+
+  if (!dbReady) {
+    logger.error({ context: "startup" }, "Database failed to become ready in the background. Server will remain in degraded mode.");
+    if (process.env.NODE_ENV === "test") {
+      process.exit(1);
+    }
+    return;
+  }
+
+  logger.info({ context: "startup" }, "Database is ready. Running migrations in background...");
+  let migrationAttempts = 0;
+  let migrationsComplete = false;
+  while (migrationAttempts < 3 && !migrationsComplete) {
+    try {
+      await bootstrapDatabaseSchema();
+      migrationsComplete = true;
+      logger.info({ context: "startup" }, "Migrations complete");
+    } catch (migErr) {
+      migrationAttempts++;
+      const message = migErr instanceof Error ? migErr.message : "Unknown error";
+      logger.error({ context: "startup", attempt: migrationAttempts, error: message }, "Migration failed");
+      if (migrationAttempts < 3) {
+        logger.info({ context: "startup" }, "Retrying migrations in 5 seconds...");
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      } else {
+        logger.error({ context: "startup" }, "Migrations failed after maximum attempts. Server will remain in degraded mode.");
+        if (process.env.NODE_ENV === "test") {
+          process.exit(1);
+        }
+      }
+    }
+  }
+
+  if (migrationsComplete) {
+    isReady = true;
+    logger.info({ context: "startup" }, "Server fully ready");
+  }
+}
+
 // ==================== MAIN STARTUP ====================
 async function startServer() {
   try {
@@ -394,56 +458,11 @@ async function startServer() {
     // ── Step 3: Initialize background queues and workers ──
     initQueues();
 
-    // ── Step 4: Ensure database is ready before proceeding ──
-    logger.info({ context: "startup" }, "Ensuring database is ready (waiting for potential cold start)...");
-    const maxAttempts = 30; // Increased to 60s for Neon cold starts
-    let attempts = 0;
-    let dbReady = false;
-
-    while (attempts < maxAttempts && !dbReady) {
-      const health = await checkDatabaseHealth();
-      if (health.healthy) {
-        dbReady = true;
-      } else {
-        attempts++;
-        if (attempts < maxAttempts) {
-          logger.info({ context: "startup" }, `Database not ready (${health.message}), retrying (${attempts}/${maxAttempts})...`);
-          await new Promise(resolve => setTimeout(resolve, 2000));
-        }
-      }
-    }
-
-    if (!dbReady) {
-      logger.error({ context: "startup" }, "Database failed to become ready after multiple attempts. Shutting down...");
-      process.exit(1);
-    }
-    logger.info({ context: "startup" }, "Database is ready");
-
-    // ── Step 4b: Start circuit breaker health monitor ──
+    // ── Step 4: Start circuit breaker health monitor ──
+    // Start early so it begins monitoring database connectivity status
     startHealthMonitor();
 
-    // ── Step 5: Run database migrations ──
-    logger.info({ context: "startup" }, "Running database migrations...");
-    let migrationAttempts = 0;
-    let migrationsComplete = false;
-    while (migrationAttempts < 3 && !migrationsComplete) {
-      try {
-        await bootstrapDatabaseSchema();
-        migrationsComplete = true;
-        logger.info({ context: "startup" }, "Migrations complete");
-      } catch (migErr) {
-        migrationAttempts++;
-        logger.error({ context: "startup", attempt: migrationAttempts, error: migErr }, "Migration failed");
-        if (migrationAttempts < 3) {
-          logger.info({ context: "startup" }, "Retrying migrations in 5 seconds...");
-          await new Promise(resolve => setTimeout(resolve, 5000));
-        } else if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
-          process.exit(1);
-        }
-      }
-    }
-
-    // ── Step 6: Production Safety Checks ──
+    // ── Step 5: Production Safety Checks ──
     if (process.env.NODE_ENV === "production") {
       if (env.FRONTEND_URL && (env.FRONTEND_URL.includes("localhost") || env.FRONTEND_URL.includes("127.0.0.1"))) {
         logger.warn({ context: "startup", frontendUrl: env.FRONTEND_URL }, "CRITICAL: FRONTEND_URL is set to localhost in production environment!");
@@ -486,22 +505,26 @@ async function startServer() {
     // SETUP GRACEFUL SHUTDOWN
     setupGracefulShutdown();
 
-    isReady = true;
-    logger.info({ context: "startup" }, "Server fully ready");
+    // ── Step 6: Trigger background database connection and migration initialization ──
+    // This allows the server to bind to the port immediately and satisfy the hosting platform's
+    // startup check even if the database is experiencing cold starts or quota limits.
+    initDatabaseInBackground().catch((err: unknown) => {
+      logger.fatal({ context: "startup", error: err instanceof Error ? err.message : err }, "Unhandled error in background database initialization");
+    });
 
     // ── Step 7: Start keep-alive cron (production only) ──
     // Self-ping every 10 minutes to prevent Render free-tier from sleeping.
     if (env.NODE_ENV === "production") {
       const KEEP_ALIVE_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
       const selfUrl = env.BACKEND_RENDER_URL
-        ? `${env.BACKEND_RENDER_URL.replace(/\/$/, "")}/api/v1/keep-alive`
-        : `http://localhost:${port}/api/v1/keep-alive`;
+        ? `${env.BACKEND_RENDER_URL.replace(/\/$/, "")}/ping`
+        : `http://localhost:${port}/ping`;
 
       keepAliveInterval = setInterval(async () => {
         try {
           const res = await fetch(selfUrl);
-          const data = await res.json() as { status: string; db: string };
-          logger.info({ context: "cron", status: data.status, db: data.db }, "Keep-alive ping sent");
+          const data = await res.json() as { status: string };
+          logger.info({ context: "cron", status: data.status }, "Keep-alive ping sent");
         } catch (err) {
           logger.warn({ context: "cron", error: err }, "Keep-alive ping failed");
         }

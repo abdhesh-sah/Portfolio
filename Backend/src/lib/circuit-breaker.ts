@@ -74,6 +74,7 @@ export function startHealthMonitor(): void {
     if (healthCheckTimer) return; // Already running
 
     healthCheckTimer = setInterval(async () => {
+        if (state === "CLOSED") return;
         try {
             const health = await checkDatabaseHealth();
             if (health.healthy) {

@@ -30,7 +30,7 @@ export const LiveActivityTicker: React.FC = () => {
   const { data: activity, isLoading } = useQuery<LatestActivity>({
     queryKey: ["github-latest-detail"],
     queryFn: () => apiFetch("/api/v1/github/activity/latest"),
-    refetchInterval: 60000, // Refresh every minute
+    refetchInterval: 5 * 60 * 1000, // Refresh every 5 minutes
   });
 
   if (isLoading || !activity || activity.status !== "active") {

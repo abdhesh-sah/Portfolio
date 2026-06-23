@@ -31,4 +31,4 @@ Navigate to the `Frontend` directory, install dependencies, and launch Vite. Com
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ---
-Designed and Developed by [Abdhesh Sah](mailto:abdheshshah111@gmail.com)
+Designed and Developed by [Abdhesh Sah](mailto:contact@abdheshsah.com.np)

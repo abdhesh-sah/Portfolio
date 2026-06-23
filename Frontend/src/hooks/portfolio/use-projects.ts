@@ -50,7 +50,7 @@ export function useProjectVitals() {
       if (!response.ok) throw new Error("Failed to fetch project vitals");
       return response.json() as Promise<Record<string, "up" | "down" | "checking" | "none">>;
     },
-    refetchInterval: 1000 * 60 * 2, // Refetch every 2 minutes
-    staleTime: 1000 * 60 * 1,
+    refetchInterval: 1000 * 60 * 10, // Refetch every 10 minutes
+    staleTime: 1000 * 60 * 5,
   });
 }
