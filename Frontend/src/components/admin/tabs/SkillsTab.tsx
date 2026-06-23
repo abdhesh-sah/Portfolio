@@ -120,6 +120,29 @@ export function SkillsTab(_props: AdminTabProps) {
                         placeholder="Lucide icon name (e.g. Code, Zap, Cpu)"
                     />
 
+                    <div className="grid md:grid-cols-2 gap-10">
+                        <FormField
+                            label="Position X (0-100)"
+                            value={editing.x?.toString() || "50"}
+                            onChange={(v) => setEditing(prev => prev ? ({ ...prev, x: parseFloat(v) || 0 }) : null)}
+                            type="number"
+                            min="0"
+                            max="100"
+                            step="any"
+                            required
+                        />
+                        <FormField
+                            label="Position Y (0-100)"
+                            value={editing.y?.toString() || "50"}
+                            onChange={(v) => setEditing(prev => prev ? ({ ...prev, y: parseFloat(v) || 0 }) : null)}
+                            type="number"
+                            min="0"
+                            max="100"
+                            step="any"
+                            required
+                        />
+                    </div>
+
                     <FormTextarea
                         label="Capability_Description"
                         value={editing.description}
@@ -270,6 +293,10 @@ export function SkillsTab(_props: AdminTabProps) {
                                                     className="progress-fill"
                                                     style={{ width: `${s.mastery}%` }}
                                                 />
+                                            </div>
+                                            <div className="flex justify-between text-[9px] font-bold text-[var(--admin-text-muted)] uppercase tracking-wider">
+                                                <span>X: {s.x}</span>
+                                                <span>Y: {s.y}</span>
                                             </div>
                                         </div>
 
