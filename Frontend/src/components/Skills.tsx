@@ -26,7 +26,7 @@ export default function SkillsTree() {
   const [viewMode, setViewMode] = useState<'tree' | 'list'>('tree');
 
   const skillNodes = useMemo(() => {
-    if (!apiSkills || apiSkills.length === 0) return DEFAULT_SKILL_NODES;
+    if (!apiSkills) return [];
     return apiSkills.map(s => ({
       ...s,
       id: String(s.id),
@@ -37,7 +37,7 @@ export default function SkillsTree() {
   }, [apiSkills]);
 
   const connections = useMemo(() => {
-    if (!apiConnections || apiConnections.length === 0) return DEFAULT_CONNECTIONS;
+    if (!apiConnections) return [];
     return apiConnections.map(c => ({
       from: String(c.fromSkillId),
       to: String(c.toSkillId)
@@ -205,83 +205,106 @@ export default function SkillsTree() {
           aria-label="Skill tree nodes — use arrow keys to navigate"
           onKeyDown={handleTreeKeyDown}
         >
-          {/* Tree SVG */}
-          <SkillsTreeSVG
-            highlightedConnections={highlightedConnections}
-            skillNodes={skillNodes}
-            connections={connections}
-          />
-
-          {/* Skill Nodes */}
-          <m.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-          >
-            {skillNodes.map((node, idx) => (
-              <HexagonNode
-                key={node.id}
-                node={node}
-                isActive={activeNode === node.id}
-                onClick={() => handleNodeClick(node.id)}
-                onHover={() => setActiveNode(node.id)}
-                onLeave={() => !showTooltip && setActiveNode(null)}
-                data-skill-idx={idx}
+          {skillNodes.length === 0 ? (
+            <div className="absolute inset-0 flex items-center justify-center p-4">
+              <m.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="max-w-md w-full p-8 rounded-2xl border border-border bg-[#0d1117]/80 backdrop-blur-md shadow-2xl text-center space-y-4"
+              >
+                <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary/70">
+                  <Cpu className="w-6 h-6 animate-pulse" />
+                </div>
+                <h3 className="text-base font-bold tracking-wide uppercase text-foreground">
+                  Neural Pathways Offline
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  No technical capabilities have been indexed yet. Populate your capabilities in the administrative panel.
+                </p>
+              </m.div>
+            </div>
+          ) : (
+            <>
+              {/* Tree SVG */}
+              <SkillsTreeSVG
+                highlightedConnections={highlightedConnections}
+                skillNodes={skillNodes}
+                connections={connections}
               />
-            ))}
-          </m.div>
 
+              {/* Skill Nodes */}
+              <m.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+              >
+                {skillNodes.map((node, idx) => (
+                  <HexagonNode
+                    key={node.id}
+                    node={node}
+                    isActive={activeNode === node.id}
+                    onClick={() => handleNodeClick(node.id)}
+                    onHover={() => setActiveNode(node.id)}
+                    onLeave={() => !showTooltip && setActiveNode(null)}
+                    data-skill-idx={idx}
+                  />
+                ))}
+              </m.div>
 
-          {/* Stat Panels */}
-          <div className="hidden lg:block">
-            <StatPanel
-              title="Proficiency"
-              position="left"
-              icon={<Zap className="w-3 h-3 text-cyan-400" />}
-            >
-              <ProficiencyChart skillNodes={skillNodes} />
-            </StatPanel>
+              {/* Stat Panels */}
+              <div className="hidden lg:block">
+                <StatPanel
+                  title="Proficiency"
+                  position="left"
+                  icon={<Zap className="w-3 h-3 text-cyan-400" />}
+                >
+                  <ProficiencyChart skillNodes={skillNodes} />
+                </StatPanel>
 
-            <StatPanel
-              title="Categories"
-              position="right"
-              icon={<Layers className="w-3 h-3 text-purple-400" />}
-            >
-              <CategorySummary skillNodes={skillNodes} />
-            </StatPanel>
-          </div>
+                <StatPanel
+                  title="Categories"
+                  position="right"
+                  icon={<Layers className="w-3 h-3 text-purple-400" />}
+                >
+                  <CategorySummary skillNodes={skillNodes} />
+                </StatPanel>
+              </div>
+            </>
+          )}
         </m.div>
 
         {/* Legend */}
-        <m.div
-          className="flex justify-center gap-4 md:gap-8 mt-6 md:mt-8"
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {[
-            { label: 'Core', color: 'var(--color-cyan)' },
-            { label: 'Comfortable', color: 'var(--color-purple)' },
-            { label: 'Learning', color: '#ec4899' }
-          ].map((item) => (
-            <m.div 
-              key={item.label} 
-              variants={staggerChild}
-              className="flex items-center gap-2"
-            >
-              <div
-                className="w-2.5 h-2.5 rounded-full"
-                style={{
-                  background: item.color,
-                  boxShadow: `0 0 8px ${item.color}80`
-                }}
-              />
-              <span className="text-xs text-muted-foreground font-medium">{item.label}</span>
-            </m.div>
-          ))}
-        </m.div>
+        {skillNodes.length > 0 && (
+          <m.div
+            className="flex justify-center gap-4 md:gap-8 mt-6 md:mt-8"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {[
+              { label: 'Core', color: 'var(--color-cyan)' },
+              { label: 'Comfortable', color: 'var(--color-purple)' },
+              { label: 'Learning', color: '#ec4899' }
+            ].map((item) => (
+              <m.div 
+                key={item.label} 
+                variants={staggerChild}
+                className="flex items-center gap-2"
+              >
+                <div
+                  className="w-2.5 h-2.5 rounded-full"
+                  style={{
+                    background: item.color,
+                    boxShadow: `0 0 8px ${item.color}80`
+                  }}
+                />
+                <span className="text-xs text-muted-foreground font-medium">{item.label}</span>
+              </m.div>
+            ))}
+          </m.div>
+        )}
       </div>
 
       {/* Tooltip Modal */}
