@@ -7,7 +7,7 @@ import { Zap, Layers, Code2, Cpu } from 'lucide-react';
 import { useTheme } from './theme-provider';
 
 import { SkillStatus, SkillCategory } from './skills/SkillTypes';
-import { DEFAULT_SKILL_NODES, DEFAULT_CONNECTIONS, ICON_MAP } from './skills/SkillData';
+import { ICON_MAP } from './skills/SkillData';
 import { HexagonNode } from './skills/HexagonNode';
 import { SkillTooltip } from './skills/SkillTooltip';
 import { SkillsTreeSVG } from './skills/SkillsTreeSVG';
