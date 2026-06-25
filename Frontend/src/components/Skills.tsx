@@ -18,13 +18,13 @@ export default function SkillsTree() {
   const { treePerformanceMode, setTreePerformanceMode } = useTheme();
   const [activeNode, setActiveNode] = useState<string | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
-  // const isLowPower = performanceMode === 'low';
+  const [viewMode, setViewMode] = useState<'tree' | 'list'>('tree');
 
   const { data: apiSkills } = useSkills();
   const { data: apiConnections } = useSkillConnections();
   const { data: settings } = useSiteSettings();
-  const [viewMode, setViewMode] = useState<'tree' | 'list'>('tree');
 
+  // 1. Process Skills List cleanly with a clear fallback
   const skillNodes = useMemo(() => {
     if (!apiSkills) return [];
     return apiSkills.map(s => ({
@@ -36,6 +36,15 @@ export default function SkillsTree() {
     }));
   }, [apiSkills]);
 
+  // 2. Map Nodes by unique key to change O(N) scans to lightning fast O(1) lookups
+  const skillNodesMap = useMemo(() => {
+    const map = new Map<string, typeof skillNodes[number]>();
+    for (let i = 0; i < skillNodes.length; i++) {
+      map.set(skillNodes[i].id, skillNodes[i]);
+    }
+    return map;
+  }, [skillNodes]);
+
   const connections = useMemo(() => {
     if (!apiConnections) return [];
     return apiConnections.map(c => ({
@@ -44,6 +53,7 @@ export default function SkillsTree() {
     }));
   }, [apiConnections]);
 
+  // 3. Keep BFS calculation tracking fast and predictable
   const { highlightedConnections, highlightedNodes } = useMemo(() => {
     if (!activeNode) {
       return {
@@ -57,29 +67,45 @@ export default function SkillsTree() {
 
     while (queue.length > 0) {
       const current = queue.shift()!;
-      connections.forEach((conn) => {
+      for (let i = 0; i < connections.length; i++) {
+        const conn = connections[i];
         if (conn.to === current && !nodesSet.has(conn.from)) {
           nodesSet.add(conn.from);
           connectionsSet.add(`${conn.from}-${conn.to}`);
           queue.push(conn.from);
         }
-      });
+      }
     }
     return { highlightedConnections: connectionsSet, highlightedNodes: nodesSet };
   }, [activeNode, connections]);
 
-  const handleNodeClick = (id: string) => {
+  // 4. Wrap triggers in useCallback to prevent child nodes from dropping memo frames
+  const handleNodeClick = useCallback((id: string) => {
     setActiveNode(id);
     setShowTooltip(true);
-  };
+  }, []);
 
-  const handleCloseTooltip = () => {
+  const handleCloseTooltip = useCallback(() => {
     setShowTooltip(false);
     setActiveNode(null);
-  };
+  }, []);
 
-  const activeNodeData = skillNodes.find((n) => n.id === activeNode);
+  const handleNodeHover = useCallback((id: string) => {
+    setActiveNode(id);
+  }, []);
 
+  const handleNodeLeave = useCallback(() => {
+    if (!showTooltip) {
+      setActiveNode(null);
+    }
+  }, [showTooltip]);
+
+  const togglePerformanceMode = useCallback(() => {
+    setTreePerformanceMode(treePerformanceMode === 'power' ? 'normal' : 'power');
+  }, [treePerformanceMode, setTreePerformanceMode]);
+
+  // Instant O(1) pointer fetch
+  const activeNodeData = activeNode ? skillNodesMap.get(activeNode) : null;
   const treeContainerRef = useRef<HTMLDivElement>(null);
 
   /** Arrow-key navigation between skill nodes based on spatial proximity */
@@ -115,7 +141,7 @@ export default function SkillsTree() {
           (e.key === 'ArrowUp' && dy < 0);
 
         if (!isCandidate) continue;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const dist = dx * dx + dy * dy; // Optimized: Avoid costly Math.sqrt operations
         if (dist < bestDist) {
           bestDist = dist;
           bestIdx = i;
@@ -127,7 +153,7 @@ export default function SkillsTree() {
         handleNodeClick(skillNodes[bestIdx].id);
       }
     },
-    [skillNodes]
+    [skillNodes, handleNodeClick]
   );
 
   return (
@@ -144,9 +170,7 @@ export default function SkillsTree() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <m.h2
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-foreground"
-          >
+          <m.h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-foreground">
             {settings?.skillsHeading || "Skill Tree"}
           </m.h2>
           <div className="flex flex-col items-center gap-2">
@@ -154,11 +178,12 @@ export default function SkillsTree() {
               A verified map of my technical abilities
             </p>
             <button
-              onClick={() => setTreePerformanceMode(treePerformanceMode === 'power' ? 'normal' : 'power')}
-              className={`group flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-500 ${treePerformanceMode === 'power'
-                ? 'bg-cyan-500 text-white border-none shadow-[0_0_20px_rgba(6,182,212,0.5)] scale-105'
-                : 'bg-primary/10 text-primary-foreground/60 border border-primary/20 hover:bg-primary/20'
-                }`}
+              onClick={togglePerformanceMode}
+              className={`group flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-500 ${
+                treePerformanceMode === 'power'
+                  ? 'bg-cyan-500 text-white border-none shadow-[0_0_20px_rgba(6,182,212,0.5)] scale-105'
+                  : 'bg-primary/10 text-primary-foreground/60 border border-primary/20 hover:bg-primary/20'
+              }`}
             >
               <Cpu className={`w-3.5 h-3.5 ${treePerformanceMode === 'power' ? 'animate-spin-slow' : 'group-hover:rotate-12 transition-transform'}`} />
               <span className={treePerformanceMode === 'power' ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]' : ''}>
@@ -198,9 +223,7 @@ export default function SkillsTree() {
         {/* Tree Container (Desktop / Tree mode) */}
         <m.div
           className={`relative w-full max-w-5xl mx-auto ${viewMode === 'tree' ? 'block' : 'hidden'}`}
-          style={{
-            aspectRatio: '16 / 12'
-          }}
+          style={{ aspectRatio: '16 / 12' }}
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -230,7 +253,6 @@ export default function SkillsTree() {
             </div>
           ) : (
             <>
-              {/* Tree SVG */}
               <SkillsTreeSVG
                 highlightedConnections={highlightedConnections}
                 highlightedNodes={highlightedNodes}
@@ -251,8 +273,8 @@ export default function SkillsTree() {
                     node={node}
                     isActive={activeNode === node.id}
                     onClick={() => handleNodeClick(node.id)}
-                    onHover={() => setActiveNode(node.id)}
-                    onLeave={() => !showTooltip && setActiveNode(null)}
+                    onHover={() => handleNodeHover(node.id)}
+                    onLeave={handleNodeLeave}
                     data-skill-idx={idx}
                   />
                 ))}
@@ -290,9 +312,9 @@ export default function SkillsTree() {
             viewport={{ once: true }}
           >
             {[
-              { label: 'Core', color: 'var(--color-cyan)' },
-              { label: 'Comfortable', color: 'var(--color-purple)' },
-              { label: 'Learning', color: '#ec4899ff' }
+              { label: 'Core', color: 'var(--color-cyan, #06b6d4)' },
+              { label: 'Comfortable', color: 'var(--color-purple, #a855f7)' },
+              { label: 'Learning', color: '#ec4899' }
             ].map((item) => (
               <m.div 
                 key={item.label} 

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { m } from 'framer-motion';
 import { SkillNode, Connection } from './SkillTypes';
 import { useTheme } from '../theme-provider';
@@ -19,49 +20,35 @@ export const SkillsTreeSVG = ({
     const isLowPower = performanceMode === 'low';
     const isTreePower = treePerformanceMode === 'power' && !isLowPower;
 
-    const getNodePos = (id: string) => {
-        const node = skillNodes.find((n) => n.id === id);
-        return node ? { x: node.x, y: node.y } : { x: 0, y: 0 };
-    };
+    // 1. Optimize lookup time from O(N^2) to O(1)
+    const nodePosMap = useMemo(() => {
+        const map: Record<string, { x: number; y: number }> = {};
+        for (let i = 0; i < skillNodes.length; i++) {
+            const node = skillNodes[i];
+            map[node.id] = { x: node.x, y: node.y };
+        }
+        return map;
+    }, [skillNodes]);
 
     const getTrunkPoint = (nodeX: number, nodeY: number) => {
         // Clamp node y-coord to main trunk vertical span [28, 98]
-        if (nodeY <= 28) return { x: 50, y: 28 };
-        if (nodeY >= 98) return { x: 50, y: 98 };
+        const trunkY = Math.max(28, Math.min(98, nodeY + Math.abs(nodeX - 50) * 0.35));
 
-        // Real tree branches grow outwards and upwards.
-        // Start point on trunk is lower than node y, scaled by horizontal distance.
-        const distH = Math.abs(nodeX - 50);
-        const dropOffset = distH * 0.35;
-        const trunkY = Math.max(28, Math.min(98, nodeY + dropOffset));
-
-        // Trunk bezier control segments matching the main trunk path:
-        // M 50 98 C 50 92, 48 88, 49 82 C 50 76, 52 70, 51 64 C 50 58, 48 52, 50 46 C 52 40, 50 34, 50 28
+        // Trunk bezier control segments matching the main trunk path
         let p0, p1, p2, p3;
         if (trunkY >= 82) {
-            p0 = { x: 50, y: 98 };
-            p1 = { x: 50, y: 92 };
-            p2 = { x: 48, y: 88 };
-            p3 = { x: 49, y: 82 };
+            p0 = { x: 50, y: 98 }; p1 = { x: 50, y: 92 }; p2 = { x: 48, y: 88 }; p3 = { x: 49, y: 82 };
         } else if (trunkY >= 64) {
-            p0 = { x: 49, y: 82 };
-            p1 = { x: 50, y: 76 };
-            p2 = { x: 52, y: 70 };
-            p3 = { x: 51, y: 64 };
+            p0 = { x: 49, y: 82 }; p1 = { x: 50, y: 76 }; p2 = { x: 52, y: 70 }; p3 = { x: 51, y: 64 };
         } else if (trunkY >= 46) {
-            p0 = { x: 51, y: 64 };
-            p1 = { x: 50, y: 58 };
-            p2 = { x: 48, y: 52 };
-            p3 = { x: 50, y: 46 };
+            p0 = { x: 51, y: 64 }; p1 = { x: 50, y: 58 }; p2 = { x: 48, y: 52 }; p3 = { x: 50, y: 46 };
         } else {
-            p0 = { x: 50, y: 46 };
-            p1 = { x: 52, y: 40 };
-            p2 = { x: 50, y: 34 };
-            p3 = { x: 50, y: 28 };
+            p0 = { x: 50, y: 46 }; p1 = { x: 52, y: 40 }; p2 = { x: 50, y: 34 }; p3 = { x: 50, y: 28 };
         }
 
-        // Interpolate y monontonically to find parameters t
-        const t = (p0.y - trunkY) / (p0.y - p3.y);
+        // Interpolate y monotonically to find parameter t safely
+        const denominator = p0.y - p3.y;
+        const t = denominator === 0 ? 0 : Math.max(0, Math.min(1, (p0.y - trunkY) / denominator));
         const oneMinusT = 1 - t;
 
         // Evaluate Cubic Bezier for x
@@ -74,6 +61,9 @@ export const SkillsTreeSVG = ({
         return { x: trunkX, y: trunkY };
     };
 
+    // Shared path string for main trunk
+    const trunkPathD = "M 50 98 C 50 92, 48 88, 49 82 C 50 76, 52 70, 51 64 C 50 58, 48 52, 50 46 C 52 40, 50 34, 50 28";
+
     return (
         <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }} viewBox="0 0 100 100" preserveAspectRatio="none">
             <defs>
@@ -81,20 +71,18 @@ export const SkillsTreeSVG = ({
                     <stop offset="0%" stopColor="#2d1b4e" stopOpacity="1" />
                     <stop offset="30%" stopColor="#4c1d95" stopOpacity="1" />
                     <stop offset="60%" stopColor="#7c3aed" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="var(--color-purple-light)" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="var(--color-purple-light, #c084fc)" stopOpacity="0.6" />
                 </linearGradient>
 
-                {/* Horizontal branch gradients for Left/Right flow direction */}
                 <linearGradient id="branchGradientRight" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.8" />
-                    <stop offset="100%" stopColor="var(--color-purple-light)" stopOpacity="0.15" />
+                    <stop offset="100%" stopColor="var(--color-purple-light, #c084fc)" stopOpacity="0.15" />
                 </linearGradient>
                 <linearGradient id="branchGradientLeft" x1="100%" y1="0%" x2="0%" y2="0%">
                     <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.8" />
-                    <stop offset="100%" stopColor="var(--color-purple-light)" stopOpacity="0.15" />
+                    <stop offset="100%" stopColor="var(--color-purple-light, #c084fc)" stopOpacity="0.15" />
                 </linearGradient>
 
-                {/* Vibrant cyan glow transitions for Highlighted branches */}
                 <linearGradient id="branchGradientRightHighlighted" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.9" />
                     <stop offset="50%" stopColor="#00d4ff" stopOpacity="0.9" />
@@ -105,15 +93,6 @@ export const SkillsTreeSVG = ({
                     <stop offset="50%" stopColor="#00d4ff" stopOpacity="0.9" />
                     <stop offset="100%" stopColor="#00d4ff" stopOpacity="0.4" />
                 </linearGradient>
-
-                <filter id="treeGlow" x="-100%" y="-100%" width="300%" height="300%">
-                    <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
-                    <feMerge>
-                        <feMergeNode in="coloredBlur" />
-                        <feMergeNode in="coloredBlur" />
-                        <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                </filter>
 
                 <filter id="connectionGlow" x="-50%" y="-50%" width="200%" height="200%">
                     <feGaussianBlur stdDeviation="0.8" result="blur" />
@@ -126,7 +105,7 @@ export const SkillsTreeSVG = ({
                 <filter id="treeHighGlow" x="-200%" y="-200%" width="500%" height="500%">
                     <feGaussianBlur stdDeviation="3" result="blur1" />
                     <feGaussianBlur stdDeviation="5" result="blur2" />
-                    <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 2 0" />
+                    <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 2 0" />
                     <feMerge>
                         <feMergeNode in="blur1" />
                         <feMergeNode in="blur2" />
@@ -134,12 +113,11 @@ export const SkillsTreeSVG = ({
                     </feMerge>
                 </filter>
 
-                {/* New Super Vibrant Glow for Power Mode */}
                 <filter id="superGlow" x="-300%" y="-300%" width="700%" height="700%">
                     <feGaussianBlur stdDeviation="4" result="blur1" />
                     <feGaussianBlur stdDeviation="8" result="blur2" />
                     <feGaussianBlur stdDeviation="15" result="blur3" />
-                    <feColorMatrix type="matrix" values="1.2 0 0 0 0.1, 0 1.2 0 0 0.1, 0 0 1.5 0 0.2, 0 0 0 2.5 0" />
+                    <feColorMatrix type="matrix" values="1.2 0 0 0 0.1  0 1.2 0 0 0.1  0 0 1.5 0 0.2  0 0 0 2.5 0" />
                     <feMerge>
                         <feMergeNode in="blur1" />
                         <feMergeNode in="blur2" />
@@ -158,7 +136,7 @@ export const SkillsTreeSVG = ({
 
             {/* Main tree trunk */}
             <m.path
-                d="M 50 98 C 50 92, 48 88, 49 82 C 50 76, 52 70, 51 64 C 50 58, 48 52, 50 46 C 52 40, 50 34, 50 28"
+                d={trunkPathD}
                 stroke="url(#trunkGradient)"
                 strokeWidth={isTreePower ? 3 : 2.5}
                 fill="none"
@@ -175,21 +153,19 @@ export const SkillsTreeSVG = ({
                     pathLength: { duration: 2, ease: 'easeOut' },
                     opacity: { duration: 2, repeat: Infinity, ease: "easeInOut" },
                     strokeWidth: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                } : { duration: isLowPower ? 0.5 : 2, ease: 'easeOut' }} />
+                } : { duration: isLowPower ? 0.5 : 2, ease: 'easeOut' }}
+            />
 
             {/* Dynamic trunk-to-skill branches */}
             {skillNodes.map((node) => {
                 const trunkPt = getTrunkPoint(node.x, node.y);
                 const isHighlighted = highlightedNodes.has(node.id);
-                
-                // Determine direction to select appropriate gradient
                 const isRightSide = node.x >= 50;
+                
                 const gradientId = isHighlighted
                     ? (isRightSide ? 'branchGradientRightHighlighted' : 'branchGradientLeftHighlighted')
                     : (isRightSide ? 'branchGradientRight' : 'branchGradientLeft');
 
-                // Determine control points for a beautiful organic curve
-                // Start at trunkPt, curve outwards and up to node
                 const dx = node.x - trunkPt.x;
                 const control1X = trunkPt.x + dx * 0.45;
                 const control1Y = trunkPt.y;
@@ -230,17 +206,21 @@ export const SkillsTreeSVG = ({
             })}
 
             {/* Connection lines */}
-            {connections.map((conn, i) => {
-                const start = getNodePos(conn.from);
-                const end = getNodePos(conn.to);
-                const isHighlighted = highlightedConnections.has(`${conn.from}-${conn.to}`);
+            {connections.map((conn) => {
+                // Optimized fast Map Lookups
+                const start = nodePosMap[conn.from] || { x: 0, y: 0 };
+                const end = nodePosMap[conn.to] || { x: 0, y: 0 };
+                
+                const connectionKey = `${conn.from}-${conn.to}`;
+                const isHighlighted = highlightedConnections.has(connectionKey);
                 const midX = (start.x + end.x) / 2;
                 const midY = (start.y + end.y) / 2 - 3;
+                const pathD = `M ${start.x} ${start.y} Q ${midX} ${midY}, ${end.x} ${end.y}`;
 
                 return (
-                    <g key={i}>
+                    <g key={`connection-${connectionKey}`}>
                         <m.path
-                            d={`M ${start.x} ${start.y} Q ${midX} ${midY}, ${end.x} ${end.y}`}
+                            d={pathD}
                             stroke={isHighlighted ? '#00d4ff' : (isTreePower ? 'rgba(168, 85, 247, 0.4)' : 'rgba(100, 100, 160, 0.25)')}
                             strokeWidth={isHighlighted ? 0.8 : (isTreePower ? 0.6 : 0.4)}
                             fill="none"
@@ -249,7 +229,7 @@ export const SkillsTreeSVG = ({
                             initial={{ pathLength: isLowPower ? 1 : 0, opacity: 0 }}
                             whileInView={{ pathLength: 1, opacity: 1 }}
                             viewport={{ once: true }}
-                            transition={{ duration: isLowPower ? 0.3 : 0.8, delay: isLowPower ? 0 : 1.5 + i * 0.05 }}
+                            transition={{ duration: isLowPower ? 0.3 : 0.8, delay: isLowPower ? 0 : 1.0 }}
                         />
                         {isTreePower && (
                             <m.circle
@@ -260,7 +240,7 @@ export const SkillsTreeSVG = ({
                                 <animateMotion
                                     dur={`${2 + Math.random() * 2}s`}
                                     repeatCount="indefinite"
-                                    path={`M ${start.x} ${start.y} Q ${midX} ${midY}, ${end.x} ${end.y}`}
+                                    path={pathD}
                                 />
                             </m.circle>
                         )}
@@ -268,7 +248,7 @@ export const SkillsTreeSVG = ({
                 );
             })}
 
-            {/* Crystalline roots with animation */}
+            {/* Crystalline roots */}
             <g filter={isTreePower ? 'url(#superGlow)' : 'none'}>
                 <m.polygon
                     points="50,88 46,98 50,100 54,98"
@@ -299,7 +279,7 @@ export const SkillsTreeSVG = ({
                     <animateMotion
                         dur={`${3 + id}s`}
                         repeatCount="indefinite"
-                        path="M 50 98 C 50 92, 48 88, 49 82 C 50 76, 52 70, 51 64 C 50 58, 48 52, 50 46 C 52 40, 50 34, 50 28"
+                        path={trunkPathD}
                     />
                 </m.circle>
             ))}
