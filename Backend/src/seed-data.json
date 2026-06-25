@@ -20,7 +20,7 @@
     "isOpenToWork": true,
     "availabilityStatus": "Active",
     "personalAvatar": "/images/Myphoto.webp",
-    "resumeUrl": "/resume.pdf",
+    "resumeUrl": "/resume",
     "whyHireMeData": {
       "stats": [
         { "label": "Tech Stack", "value": "15+" },

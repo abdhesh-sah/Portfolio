@@ -29,11 +29,13 @@ export default function Resume() {
 
     const githubDisplay = settings?.socialGithub
         ? settings.socialGithub.replace(/^https?:\/\//, "").replace(/\/$/, "")
-        : "github.com";
+        : null;
 
     const linkedinDisplay = settings?.socialLinkedin
         ? settings.socialLinkedin.replace(/^https?:\/\//, "").replace(/\/$/, "")
-        : "linkedin.com";
+        : null;
+
+    const siteDisplay = typeof window !== "undefined" ? window.location.hostname : "myportfolio.dev";
 
     const handlePrint = () => {
         window.print();
@@ -141,7 +143,7 @@ export default function Resume() {
                                 <MapPin className="w-3.5 h-3.5" />
                             </div>
                             <div className="flex items-center gap-2">
-                                <span>portfolio.dev</span>
+                                <span>{siteDisplay}</span>
                                 <Globe className="w-3.5 h-3.5" />
                             </div>
                         </div>
@@ -248,14 +250,18 @@ export default function Resume() {
                         {/* Links/QR */}
                         <section className="pt-8">
                              <div className="space-y-4 border-t border-neutral-100 pt-6">
-                                <a href={settings.socialGithub || "#"} className="flex items-center gap-3 text-neutral-500 hover:text-black transition-colors">
-                                    <Github className="w-4 h-4" />
-                                    <span className="text-xs font-bold">{githubDisplay}</span>
-                                </a>
-                                <a href={settings.socialLinkedin || "#"} className="flex items-center gap-3 text-neutral-500 hover:text-black transition-colors">
-                                    <Linkedin className="w-4 h-4" />
-                                    <span className="text-xs font-bold">{linkedinDisplay}</span>
-                                </a>
+                                {githubDisplay && (
+                                    <a href={settings.socialGithub || "#"} className="flex items-center gap-3 text-neutral-500 hover:text-black transition-colors">
+                                        <Github className="w-4 h-4" />
+                                        <span className="text-xs font-bold">{githubDisplay}</span>
+                                    </a>
+                                )}
+                                {linkedinDisplay && (
+                                    <a href={settings.socialLinkedin || "#"} className="flex items-center gap-3 text-neutral-500 hover:text-black transition-colors">
+                                        <Linkedin className="w-4 h-4" />
+                                        <span className="text-xs font-bold">{linkedinDisplay}</span>
+                                    </a>
+                                )}
                              </div>
                         </section>
                     </div>

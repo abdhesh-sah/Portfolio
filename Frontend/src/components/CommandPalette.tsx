@@ -86,8 +86,13 @@ export function CommandPalette() {
         toast({ title: "Email Copied", description: email });
       }},
       { id: "download-resume", title: "Download Resume", type: "action" as const, icon: Download, action: () => {
-        if (settings?.resumeUrl) window.open(settings.resumeUrl, '_blank');
-        else toast({ title: "Resume Not Available", description: "No resume link configured in settings.", variant: "destructive" });
+        if (!settings?.resumeUrl) {
+          toast({ title: "Resume Not Available", description: "No resume link configured in settings.", variant: "destructive" });
+        } else if (settings.resumeUrl.startsWith("http") || settings.resumeUrl.endsWith(".pdf")) {
+          window.open(settings.resumeUrl, '_blank');
+        } else {
+          setLocation(settings.resumeUrl);
+        }
       }},
       { id: "testimonials-nav", title: "View Testimonials", type: "navigation" as const, icon: Star, href: "/#testimonials" },
       { id: "stack-nav", title: "Modern Tech Stack", type: "navigation" as const, icon: Layers, href: "/#stack" },
