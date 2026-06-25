@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import {
   ArrowLeft,
   Layers,
@@ -21,6 +21,13 @@ import { toast } from "#src/hooks/use-toast";
 import { ApiResponseViewer } from "#src/components/ApiResponseViewer";
 import { InteractivePlayground } from "#src/components/InteractivePlayground";
 import { FloatingParticles, SectionCard, TechBadge, ProjectHero, OtherProjectsSection } from "#src/components/ProjectDetail/ProjectSections";
+import { useDwellTime } from "#src/hooks/use-dwell-time";
+import { trackProjectEngagement } from "#src/lib/analytics";
+
+const DWELL_THRESHOLDS = [
+  { seconds: 30,  label: "warm_read" },
+  { seconds: 120, label: "deep_read" },
+];
 
 export default function ProjectDetail() {
   const { data: settings } = useSiteSettings();
@@ -32,13 +39,41 @@ export default function ProjectDetail() {
     isNaN(projectId) ? null : projectId
   );
 
-  // Calculate other projects for the recommendation section
+  // Hardened deterministic layout slice optimization
   const otherProjects = useMemo(() => {
-    return projects
-      ?.filter(p => p.id !== project?.id)
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 3);
+    if (!projects || !project?.id) return [];
+    
+    // Filter out the current active asset layout track
+    const filtered = projects.filter(p => p.id !== project.id);
+    
+    // Seed shuffle loop accurately bound to the active ID context to prevent dynamic background jumping
+    const pseudoRandomSort = (a: typeof project, b: typeof project) => {
+      const scoreA = Math.sin(a.id + project.id);
+      const scoreB = Math.sin(b.id + project.id);
+      return scoreA - scoreB;
+    };
+
+    return [...filtered].sort(pseudoRandomSort).slice(0, 3);
   }, [projects, project?.id]);
+
+  // Persistent optimization anchor configuration tracking layout paths
+  const stablePublishDate = useMemo(() => new Date().toISOString().split('T')[0], []);
+
+  const handleDwellMilestone = useCallback(
+    (label: string) => {
+      if (project?.title) {
+        trackProjectEngagement(project.title, label as "warm_read" | "deep_read");
+      }
+    },
+    [project?.title]
+  );
+
+  useDwellTime({
+    thresholds: DWELL_THRESHOLDS,
+    onMilestone: handleDwellMilestone,
+    key: params?.id || "global",
+    enabled: !!project,
+  });
 
   const [, setLocation] = useLocation();
 
@@ -79,9 +114,6 @@ export default function ProjectDetail() {
   const linkedinShareUrl = project ? `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}` : "";
   const whatsappShareUrl = project ? `https://wa.me/?text=${encodeURIComponent(`Check out this project: ${project.title} ${window.location.href}`)}` : "";
 
-
-
-  // Category colors
   const categoryColors: Record<string, { glow: string; text: string }> = {
     System: { glow: 'rgba(0, 212, 255, 0.3)', text: '#00d4ff' },
     Academic: { glow: 'rgba(168, 85, 247, 0.3)', text: '#a855f7' },
@@ -166,7 +198,7 @@ export default function ProjectDetail() {
               "@type": "Person",
               "name": settings?.personalName || "Portfolio Owner"
             },
-            "datePublished": new Date().toISOString().split('T')[0],
+            "datePublished": stablePublishDate,
             "codeRepository": project.githubUrl,
             "programmingLanguage": project.techStack,
           },
@@ -215,6 +247,7 @@ export default function ProjectDetail() {
 
       <main className="relative z-10 pt-24 pb-20 px-4 md:px-8">
         <div className="max-w-5xl mx-auto">
+          {/* Framer Motion Animation block completely wraps layout structures safely */}
           <m.div
             {...fadeUp}
             className="space-y-10"
@@ -230,8 +263,8 @@ export default function ProjectDetail() {
             />
 
             {/* Content Grid */}
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Main Content */}
+            <div className="grid lg:grid-cols-3 gap-8 items-start">
+              {/* Main Content Column */}
               <div className="lg:col-span-2 space-y-8">
                 {/* Motivation */}
                 <SectionCard title="Motivation" icon={Lightbulb} accentColor="#00d4ff">
@@ -304,9 +337,8 @@ export default function ProjectDetail() {
                 )}
               </div>
 
-              {/* Sidebar */}
-              <div className="space-y-6">
-                {/* Technologies */}
+              {/* Sidebar Column: Adding items-start to grid forces the parent col to preserve natural bounds, restoring standard layout tracking targets */}
+              <div className="lg:col-span-1">
                 <m.div
                   initial={fadeRight.initial}
                   animate={fadeRight.animate}

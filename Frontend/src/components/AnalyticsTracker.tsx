@@ -1,14 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { API_BASE_URL } from "#src/lib/api-helpers";
 import * as Sentry from "@sentry/react";
+import { trackEngagementMilestone } from "#src/lib/analytics";
 
 // Local cache to prevent double-tracking across remounts within the same session
 let lastTrackedPath: string | null = null;
 
 export function AnalyticsTracker() {
     const [location] = useLocation();
+    // Tracks whether deep-scroll has already fired for the current route
+    const deepScrollFiredRef = useRef<string | null>(null);
 
+    // ─── Effect 1: Virtual pageview on every SPA route change ────────────────
     useEffect(() => {
         // Prevent duplicate tracking for the same path in strict mode or rapid navigation
         if (lastTrackedPath === location) return;
@@ -25,7 +29,7 @@ export function AnalyticsTracker() {
                 const userAgent = navigator.userAgent;
                 const urlParams = new URLSearchParams(window.location.search);
                 const referral = urlParams.get("ref");
-                
+
                 const info = {
                     type: "page_view",
                     path: location,
@@ -58,6 +62,50 @@ export function AnalyticsTracker() {
                 page_path: location,
             });
         }
+
+        // 3. ── FIX: Tell Microsoft Clarity about the SPA virtual page change ──
+        //    Without this, Clarity groups the entire session under the landing
+        //    page URL, making per-page dwell-time data unreliable in an SPA.
+        if (window.clarity) {
+            window.clarity("set", "pageview", location);
+            // Also tag the page name so Clarity filter panel shows readable names
+            window.clarity("set", "page", location);
+        }
+    }, [location]);
+
+    // ─── Effect 2: Deep-scroll (80% depth) per route ───────────────────────────
+    //    Fires once per unique route when the visitor has scrolled past 80%
+    //    of the page height. Uses a scroll event listener (passive) instead
+    //    of an IntersectionObserver sentinel so it works correctly regardless
+    //    of layout stacking context or dynamic page heights.
+    useEffect(() => {
+        // Reset per-route guard when the route changes
+        deepScrollFiredRef.current = null;
+
+        const handleScroll = () => {
+            // Already fired for this route — bail immediately
+            if (deepScrollFiredRef.current === location) return;
+
+            const scrolled = window.scrollY + window.innerHeight;
+            const total = document.documentElement.scrollHeight;
+
+            // Guard against tiny/non-scrollable pages (avoid false fires)
+            if (total <= window.innerHeight) return;
+
+            const pct = scrolled / total;
+            if (pct >= 0.8) {
+                deepScrollFiredRef.current = location;
+                trackEngagementMilestone("deep_scroll");
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        // Run once on mount in case the page is already scrolled (back-nav)
+        handleScroll();
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
     }, [location]);
 
     return null;

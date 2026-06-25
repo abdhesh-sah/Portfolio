@@ -10,41 +10,100 @@ export type AnalyticsEvent = {
 declare global {
     interface Window {
         gtag?: (command: string, action: string, params?: unknown) => void;
+        clarity?: {
+            (command: string, ...args: unknown[]): void;
+            q?: unknown[][]; // Ensure support for the script initialization queue
+        };
+        reb2b?: {
+            loaded: boolean;
+            track?: (event: string, properties?: Record<string, unknown>) => void;
+        };
+        dataLayer?: unknown[];
     }
 }
 
-export async function trackEvent(event: AnalyticsEvent) {
-    // Bot Filtering
+export const trackSPAView = (path: string) => {
+    if (typeof window !== 'undefined' && typeof window.clarity === 'function') {
+        window.clarity("set", "pageview", path);
+    }
+};
+
+export function trackEvent(event: AnalyticsEvent) {
+    if (typeof window === "undefined") return;
+
+    // Fast bot filtering loop
     if (/bot|crawler|spider|preview|lighthouse|googlebot|bingbot|yandex|slurp|duckduckgo/i.test(navigator.userAgent)) {
         return;
     }
 
-    try {
-        const userAgent = navigator.userAgent;
-        const urlParams = new URLSearchParams(window.location.search);
-        const referral = urlParams.get("ref");
+    const userAgent = navigator.userAgent;
+    const urlParams = new URLSearchParams(window.location.search);
+    const referral = urlParams.get("ref");
 
-        const info = {
-            path: window.location.pathname,
-            browser: getBrowser(userAgent),
-            os: getOS(userAgent),
-            device: /Mobi|Android/i.test(userAgent) ? "mobile" : "desktop",
-            referral: referral,
-            ...event,
-        };
+    const info = {
+        path: window.location.pathname,
+        browser: getBrowser(userAgent),
+        os: getOS(userAgent),
+        device: /Mobi|Android/i.test(userAgent) ? "mobile" : "desktop",
+        referral: referral,
+        ...event,
+    };
 
-        await fetch(`${API_BASE_URL}/api/v1/analytics/track`, {
+    const targetUrl = `${API_BASE_URL}/api/v1/analytics/track`;
+
+    // Hardened Pipeline: Use sendBeacon when page transitions to prevent telemetry dropping
+    if (navigator.sendBeacon) {
+        const blob = new Blob([JSON.stringify(info)], { type: "application/json" });
+        navigator.sendBeacon(targetUrl, blob);
+    } else {
+        // Safe, non-blocking detached fetch stream fallback
+        fetch(targetUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(info),
+        }).catch((err) => {
+            Sentry.captureException(err, { tags: { context: "analytics-network" } });
         });
+    }
 
-        // Also log to Google Analytics if available
-        if (window.gtag) {
+    // Mirror to Google Analytics 4 (Runs independently of your backend's up/down status)
+    if (typeof window.gtag === "function") {
+        try {
             window.gtag("event", event.type, event);
+        } catch (err) {
+            console.error("GA4 Event Failed:", err);
         }
-    } catch (err) {
-        Sentry.captureException(err, { tags: { context: "analytics" } });
+    }
+}
+
+export function trackEngagementMilestone(
+    milestoneType: "viewed_resume" | "clicked_contact" | "deep_scroll" | "warm_read" | "deep_read"
+) {
+    if (typeof window === "undefined") return;
+
+    if (typeof window.clarity === "function") {
+        window.clarity("set", "LeadIntent", milestoneType);
+    }
+
+    if (typeof window.gtag === "function") {
+        window.gtag("event", "engagement_milestone", { milestone: milestoneType });
+    }
+}
+
+export function trackProjectEngagement(
+    projectTitle: string,
+    level: "warm_read" | "deep_read"
+) {
+    if (typeof window === "undefined") return;
+
+    if (typeof window.clarity === "function") {
+        window.clarity("set", "LeadIntent", level);
+        const safeTitle = projectTitle.replace(/[^\w\s-]/g, "").trim().slice(0, 64);
+        window.clarity("set", "ProjectTitle", safeTitle);
+    }
+
+    if (typeof window.gtag === "function") {
+        window.gtag("event", "project_dwell", { level, project: projectTitle });
     }
 }
 

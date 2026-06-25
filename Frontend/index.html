@@ -39,6 +39,12 @@
   <link rel="preconnect" href="https://api.github.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Preconnect: B2B Identity Resolution (RB2B) -->
+  <link rel="preconnect" href="https://ddwl4m2hdecbv.cloudfront.net" crossorigin>
+  <link rel="dns-prefetch" href="https://ddwl4m2hdecbv.cloudfront.net">
+  <!-- Preconnect: Behavioral Analytics (Microsoft Clarity) -->
+  <link rel="preconnect" href="https://www.clarity.ms" crossorigin>
+  <link rel="dns-prefetch" href="https://www.clarity.ms">
 
   <!-- Preload critical hero image -->
   <link rel="preload" as="image" type="image/webp" href="/images/Myphoto-500.webp" fetchpriority="high">
@@ -110,6 +116,31 @@
 
   <!-- CSP (Should be set via HTTP header in production, removed for development stability) -->
   <!-- <meta http-equiv="Content-Security-Policy" content="..."> -->
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       B2B VISITOR IDENTITY RESOLUTION — RB2B (Free, async)
+       Dashboard: https://app.rb2b.com
+       Resolves anonymous IP → company name/logo for warm B2B leads.
+       Replace %VITE_RB2B_KEY% with your actual key from .env files.
+       ═══════════════════════════════════════════════════════════════ -->
+  <script type="text/javascript">
+    !function(){var r=window.reb2b=window.reb2b||[];if(!r.invoked){r.invoked=!0;r.methods=["track","identify","alias","group","page"];r.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);r.push(e);return r}};for(var t=0;t<r.methods.length;t++){var e=r.methods[t];r[e]=r.factory(e)}r.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src="https://ddwl4m2hdecbv.cloudfront.net/b/"+t+"/reb2b.js.gz";var head=document.head||document.getElementsByTagName("head")[0];if(head){head.appendChild(e);}};r.SNIPPET_VERSION="1.0.0";r.load("%VITE_RB2B_KEY%");r.page()}}();
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       BEHAVIORAL SESSION RECORDING — Microsoft Clarity (Free, async)
+       Dashboard: https://clarity.microsoft.com
+       Records mouse movement, scroll depth, rage clicks & replays.
+       All form inputs are auto-masked by default (PII-safe).
+       Replace %VITE_CLARITY_PROJECT_ID% with your project ID from .env.
+       ═══════════════════════════════════════════════════════════════ -->
+  <script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "%VITE_CLARITY_PROJECT_ID%");
+  </script>
 
   <title>Abdhesh Sah | Full-Stack Engineer & System Designer | Portfolio</title>
   <script>
@@ -203,8 +234,6 @@
       </div>
     </div>
   </div>
-  <script type="module" src="/src/main.tsx"></script>
-
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3Q2BQ64DRC"></script>
   <script>
@@ -214,6 +243,8 @@
 
     gtag('config', 'G-3Q2BQ64DRC');
   </script>
+
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 
 </html>

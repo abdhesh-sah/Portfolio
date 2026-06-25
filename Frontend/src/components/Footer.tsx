@@ -200,6 +200,9 @@ export default function Footer() {
           {/* Copyright (Centralized) */}
           <div className="text-center text-muted-foreground font-medium">
             <p>{settings?.footerCopyright ? settings.footerCopyright.replace('{year}', currentYear.toString()) : `© ${currentYear} ${settings?.personalName || 'Portfolio Owner'}. All rights reserved.`}</p>
+            <p className="text-[10px] text-muted-foreground/50 mt-1">
+              This site uses anonymous traffic analytics (company-level only). No personal data is collected or stored.
+            </p>
           </div>
 
           {/* Tech Credit (Right) */}

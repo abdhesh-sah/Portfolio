@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { Mail, MapPin, Phone, Send, CheckCircle, Github, Linkedin, Terminal, Copy, Check } from "lucide-react";
 import { Button } from "#src/components/ui/button";
 import { AvailabilityCalendar } from "./AvailabilityCalendar";
+import { trackEngagementMilestone } from "#src/lib/analytics";
 
 // Cyber Input Component
 const CyberInput = ({
@@ -162,6 +163,9 @@ export default function Contact() {
         form.reset();
         setShowSuccess(true);
         setCooldown(60); // 60 seconds cooldown
+        // ── Engagement Milestone: visitor successfully sent a message ──
+        //    Clarity filter: LeadIntent = "clicked_contact"
+        trackEngagementMilestone("clicked_contact");
       },
     });
   };

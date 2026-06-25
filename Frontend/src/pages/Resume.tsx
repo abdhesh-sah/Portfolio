@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { m } from "framer-motion";
 import { Mail, Globe, Github, Linkedin, MapPin, Printer } from "lucide-react";
 import { useProjects, useSkills, useExperiences } from "#src/hooks/use-portfolio";
@@ -11,6 +11,7 @@ import { Sparkles, FileText } from "lucide-react";
 import { cn } from "#src/lib/utils";
 import { SkillAnalysisPanel } from "#src/components/SkillAnalysisPanel";
 import { AdminButton } from "#src/components/admin/AdminShared";
+import { trackEngagementMilestone } from "#src/lib/analytics";
 
 export default function Resume() {
     const { data: settings } = useSiteSettings();
@@ -37,7 +38,14 @@ export default function Resume() {
 
     const siteDisplay = typeof window !== "undefined" ? window.location.hostname : "myportfolio.dev";
 
+    // ── Engagement Milestone: fire once when recruiter lands on /resume ──
+    useEffect(() => {
+        trackEngagementMilestone("viewed_resume");
+    }, []);
+
     const handlePrint = () => {
+        // Signal high-intent action (Print / Save as PDF) before dialog opens
+        trackEngagementMilestone("clicked_contact");
         window.print();
     };
 
