@@ -44,23 +44,28 @@ export default function SkillsTree() {
     }));
   }, [apiConnections]);
 
-  const highlightedConnections = useMemo(() => {
-    if (!activeNode) return new Set<string>();
+  const { highlightedConnections, highlightedNodes } = useMemo(() => {
+    if (!activeNode) {
+      return {
+        highlightedConnections: new Set<string>(),
+        highlightedNodes: new Set<string>()
+      };
+    }
     const connectionsSet = new Set<string>();
-    const visited = new Set<string>([activeNode]);
+    const nodesSet = new Set<string>([activeNode]);
     const queue = [activeNode];
 
     while (queue.length > 0) {
       const current = queue.shift()!;
       connections.forEach((conn) => {
-        if (conn.to === current && !visited.has(conn.from)) {
-          visited.add(conn.from);
+        if (conn.to === current && !nodesSet.has(conn.from)) {
+          nodesSet.add(conn.from);
           connectionsSet.add(`${conn.from}-${conn.to}`);
           queue.push(conn.from);
         }
       });
     }
-    return connectionsSet;
+    return { highlightedConnections: connectionsSet, highlightedNodes: nodesSet };
   }, [activeNode, connections]);
 
   const handleNodeClick = (id: string) => {
@@ -228,6 +233,7 @@ export default function SkillsTree() {
               {/* Tree SVG */}
               <SkillsTreeSVG
                 highlightedConnections={highlightedConnections}
+                highlightedNodes={highlightedNodes}
                 skillNodes={skillNodes}
                 connections={connections}
               />
@@ -286,7 +292,7 @@ export default function SkillsTree() {
             {[
               { label: 'Core', color: 'var(--color-cyan)' },
               { label: 'Comfortable', color: 'var(--color-purple)' },
-              { label: 'Learning', color: '#ec4899' }
+              { label: 'Learning', color: '#ec4899ff' }
             ].map((item) => (
               <m.div 
                 key={item.label} 
