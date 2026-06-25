@@ -117,7 +117,7 @@ export function SkillsTab(_props: AdminTabProps) {
                             <FormField
                                 label="Mastery_Level (0-100)"
                                 value={editing.mastery?.toString() ?? ""}
-                                onChange={(v) => setEditing(prev => prev ? ({ ...prev, mastery: v as any }) : null)}
+                                onChange={(v) => setEditing(prev => prev ? ({ ...prev, mastery: Number(v) || 0 }) : null)}
                                 type="number"
                                 min="0"
                                 max="100"
@@ -136,7 +136,7 @@ export function SkillsTab(_props: AdminTabProps) {
                         <FormField
                             label="Position X (0-100)"
                             value={editing.x?.toString() ?? ""}
-                            onChange={(v) => setEditing(prev => prev ? ({ ...prev, x: v as any }) : null)}
+                            onChange={(v) => setEditing(prev => prev ? ({ ...prev, x: Number(v) || 0 }) : null)}
                             type="number"
                             min="0"
                             max="100"
@@ -146,7 +146,7 @@ export function SkillsTab(_props: AdminTabProps) {
                         <FormField
                             label="Position Y (0-100)"
                             value={editing.y?.toString() ?? ""}
-                            onChange={(v) => setEditing(prev => prev ? ({ ...prev, y: v as any }) : null)}
+                            onChange={(v) => setEditing(prev => prev ? ({ ...prev, y: Number(v) || 0 }) : null)}
                             type="number"
                             min="0"
                             max="100"
