@@ -167,27 +167,60 @@ export const SkillsTreeSVG = ({
                     : (isRightSide ? 'branchGradientRight' : 'branchGradientLeft');
 
                 const dx = node.x - trunkPt.x;
-                const control1X = trunkPt.x + dx * 0.45;
-                const control1Y = trunkPt.y;
-                const control2X = node.x - dx * 0.15;
+                const dy = node.y - trunkPt.y;
+                
+                // Optimized organic control points to exit trunk at a natural slight angle
+                const control1X = trunkPt.x + dx * 0.5;
+                const control1Y = trunkPt.y + dy * 0.1;
+                const control2X = node.x - dx * 0.2;
                 const control2Y = node.y;
 
                 const pathD = `M ${trunkPt.x} ${trunkPt.y} C ${control1X} ${control1Y}, ${control2X} ${control2Y}, ${node.x} ${node.y}`;
 
                 return (
                     <g key={`branch-${node.id}`}>
+                        {/* Glowing branch joint / node at trunk intersection */}
+                        <m.circle
+                            cx={trunkPt.x}
+                            cy={trunkPt.y}
+                            r={isHighlighted ? 0.5 : 0.35}
+                            fill={isHighlighted ? "#00d4ff" : "#7c3aed"}
+                            filter="url(#connectionGlow)"
+                            initial={{ scale: 0, opacity: 0 }}
+                            whileInView={{ scale: 1, opacity: isHighlighted ? 1 : 0.7 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: isLowPower ? 0 : 0.2 }}
+                        />
+
+                        {/* Outer Glow / Sheath Path for Premium Depth */}
                         <m.path
                             d={pathD}
-                            stroke={`url(#${gradientId})`}
-                            strokeWidth={isHighlighted ? 1.4 : (isTreePower ? 1.0 : 0.8)}
+                            stroke={isHighlighted ? 'rgba(0, 212, 255, 0.25)' : 'rgba(124, 58, 237, 0.12)'}
+                            strokeWidth={isHighlighted ? 2.4 : (isTreePower ? 1.6 : 1.2)}
                             fill="none"
                             strokeLinecap="round"
-                            filter={isTreePower ? (isHighlighted ? 'url(#connectionGlow)' : 'url(#treeHighGlow)') : 'none'}
+                            filter={isTreePower ? 'url(#treeHighGlow)' : 'none'}
                             initial={{ pathLength: isLowPower ? 1 : 0, opacity: 0 }}
                             whileInView={{ pathLength: 1, opacity: 1 }}
                             viewport={{ once: true }}
-                            transition={{ duration: isLowPower ? 0.3 : 1.0, delay: isLowPower ? 0 : 0.5 + Math.random() * 0.5 }}
+                            transition={{ duration: isLowPower ? 0.3 : 1.0, delay: isLowPower ? 0 : 0.4 }}
                         />
+
+                        {/* Inner Bright Core Path */}
+                        <m.path
+                            d={pathD}
+                            stroke={`url(#${gradientId})`}
+                            strokeWidth={isHighlighted ? 1.2 : (isTreePower ? 0.8 : 0.6)}
+                            fill="none"
+                            strokeLinecap="round"
+                            filter={isTreePower && isHighlighted ? 'url(#connectionGlow)' : 'none'}
+                            initial={{ pathLength: isLowPower ? 1 : 0, opacity: 0 }}
+                            whileInView={{ pathLength: 1, opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: isLowPower ? 0.3 : 1.0, delay: isLowPower ? 0 : 0.5 + Math.random() * 0.4 }}
+                        />
+
+                        {/* Branch Energy Pulses in Power Mode */}
                         {isTreePower && (
                             <m.circle
                                 r={isHighlighted ? 0.22 : 0.16}
