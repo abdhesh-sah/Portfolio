@@ -1,7 +1,7 @@
 import React, { useState, type FormEvent } from "react";
 import { useSkills, useAdminSkills } from "#src/hooks/use-portfolio";
 import { FormField, FormTextarea, EmptyState, FormSelect, AdminButton } from "#src/components/admin/AdminShared";
-import { Plus, Trash2, Edit3, X, Check, Zap, Cpu, Code, Layers } from "lucide-react";
+import { Plus, Trash2, Edit3, X, Check, Zap, Cpu, Code, Layers, AlertTriangle } from "lucide-react";
 import { cn } from "#src/lib/utils";
 import type { Skill } from "#shared/schema";
 
@@ -31,10 +31,22 @@ export function SkillsTab(_props: AdminTabProps) {
         e.preventDefault();
         if (!editing) return;
 
+        // Strip read-only DB fields before sending — the backend schema
+        // uses .strict() and rejects any keys not in insertSkillApiSchema
+        const { id: _id, ...payload } = editing;
+
+        // Final sanitation fallback for any trailing NaN states from form entries
+        const cleanPayload = {
+            ...payload,
+            mastery: Number(payload.mastery) || 0,
+            x: Number(payload.x) || 0,
+            y: Number(payload.y) || 0
+        };
+
         if (editing.id) {
-            await update({ id: editing.id, data: editing });
+            await update({ id: editing.id, data: cleanPayload });
         } else {
-            await create(editing);
+            await create(cleanPayload);
         }
         setEditing(null);
     };
@@ -104,8 +116,8 @@ export function SkillsTab(_props: AdminTabProps) {
                         <div className="md:col-span-2">
                             <FormField
                                 label="Mastery_Level (0-100)"
-                                value={editing.mastery?.toString() || "0"}
-                                onChange={(v) => setEditing(prev => prev ? ({ ...prev, mastery: parseInt(v) || 0 }) : null)}
+                                value={editing.mastery?.toString() ?? ""}
+                                onChange={(v) => setEditing(prev => prev ? ({ ...prev, mastery: v as any }) : null)}
                                 type="number"
                                 min="0"
                                 max="100"
@@ -123,8 +135,8 @@ export function SkillsTab(_props: AdminTabProps) {
                     <div className="grid md:grid-cols-2 gap-10">
                         <FormField
                             label="Position X (0-100)"
-                            value={editing.x?.toString() || "50"}
-                            onChange={(v) => setEditing(prev => prev ? ({ ...prev, x: parseFloat(v) || 0 }) : null)}
+                            value={editing.x?.toString() ?? ""}
+                            onChange={(v) => setEditing(prev => prev ? ({ ...prev, x: v as any }) : null)}
                             type="number"
                             min="0"
                             max="100"
@@ -133,8 +145,8 @@ export function SkillsTab(_props: AdminTabProps) {
                         />
                         <FormField
                             label="Position Y (0-100)"
-                            value={editing.y?.toString() || "50"}
-                            onChange={(v) => setEditing(prev => prev ? ({ ...prev, y: parseFloat(v) || 0 }) : null)}
+                            value={editing.y?.toString() ?? ""}
+                            onChange={(v) => setEditing(prev => prev ? ({ ...prev, y: v as any }) : null)}
                             type="number"
                             min="0"
                             max="100"
@@ -177,7 +189,10 @@ export function SkillsTab(_props: AdminTabProps) {
         s.category.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    // Group skills by category
+    // Track if selected items are hidden by the active search query string
+    const visibleIds = new Set(filteredSkills.map(s => s.id));
+    const hiddenSelectionCount = selectedIds.filter(id => !visibleIds.has(id)).length;
+
     const grouped: Record<string, Skill[]> = {};
     filteredSkills.forEach((s) => {
         (grouped[s.category] ??= []).push(s);
@@ -269,8 +284,7 @@ export function SkillsTab(_props: AdminTabProps) {
                                                     size="sm"
                                                     className="w-8 h-8 nm-button rounded-lg text-indigo-500 hover:scale-110 flex items-center justify-center"
                                                     title="Edit"
-                                                >
-                                                </AdminButton>
+                                                />
                                                 <AdminButton
                                                     onClick={() => deleteSkill(s.id)}
                                                     variant="secondary"
@@ -278,8 +292,7 @@ export function SkillsTab(_props: AdminTabProps) {
                                                     size="sm"
                                                     className="w-8 h-8 nm-button rounded-lg text-rose-500 hover:scale-110 flex items-center justify-center"
                                                     title="Delete"
-                                                >
-                                                </AdminButton>
+                                                />
                                             </div>
                                         </div>
 
@@ -292,6 +305,8 @@ export function SkillsTab(_props: AdminTabProps) {
                                                 <div
                                                     className="progress-fill"
                                                     style={{ width: `${s.mastery}%` }}
+                                                    // Add dynamic safety key to enforce visual tracking redraws
+                                                    key={`fill-${s.id}-${s.mastery}`}
                                                 />
                                             </div>
                                             <div className="flex justify-between text-[9px] font-bold text-[var(--admin-text-muted)] uppercase tracking-wider">
@@ -300,7 +315,6 @@ export function SkillsTab(_props: AdminTabProps) {
                                             </div>
                                         </div>
 
-                                        {/* Ambient Background Number */}
                                         <div className="absolute -bottom-4 -right-4 text-8xl font-black text-black/[0.02] italic pointer-events-none select-none">
                                             {s.mastery}
                                         </div>
@@ -315,18 +329,29 @@ export function SkillsTab(_props: AdminTabProps) {
             {/* Bulk Actions Fixed Bar */}
             {selectedIds.length > 0 && (
                 <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-10 fade-in duration-500">
-                    <div className="nm-float bg-[var(--nm-bg)]/90 backdrop-blur-xl px-10 py-5 flex items-center gap-8 border border-white/10">
+                    <div className="nm-flat bg-[var(--nm-bg)]/90 backdrop-blur-xl px-10 py-5 flex flex-col md:flex-row items-center gap-6 border border-white/10">
                         <div className="flex items-center gap-4">
                             <div className="w-10 h-10 nm-inset rounded-xl flex items-center justify-center text-indigo-500">
                                 <Layers size={20} />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-[12px] font-black text-[var(--admin-text-primary)] uppercase tracking-tight">{selectedIds.length} BATCH_LOAD</span>
-                                <span className="text-[9px] text-[var(--admin-text-muted)] uppercase tracking-[0.2em] font-bold">Protocol_Selection</span>
+                                <span className="text-[12px] font-black text-[var(--admin-text-primary)] uppercase tracking-tight">
+                                    {selectedIds.length} BATCH_LOAD
+                                </span>
+                                <span className="text-[9px] text-[var(--admin-text-muted)] uppercase tracking-[0.2em] font-bold">
+                                    Protocol_Selection
+                                </span>
                             </div>
                         </div>
 
-                        <div className="w-px h-8 nm-inset opacity-20" />
+                        {hiddenSelectionCount > 0 && (
+                            <div className="flex items-center gap-2 bg-rose-500/10 px-3 py-1.5 rounded-xl border border-rose-500/20 text-rose-500 text-[9px] font-black tracking-wider uppercase animate-pulse">
+                                <AlertTriangle size={12} />
+                                {hiddenSelectionCount} Hidden by search filter!
+                            </div>
+                        )}
+
+                        <div className="hidden md:block w-px h-8 nm-inset opacity-20" />
 
                         <div className="flex items-center gap-4">
                             <AdminButton
@@ -342,8 +367,7 @@ export function SkillsTab(_props: AdminTabProps) {
                                 variant="secondary"
                                 icon={X}
                                 className="nm-button h-12 w-12 text-[var(--admin-text-secondary)] flex items-center justify-center"
-                            >
-                            </AdminButton>
+                            />
                         </div>
                     </div>
                 </div>
