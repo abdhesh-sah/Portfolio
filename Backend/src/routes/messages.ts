@@ -15,6 +15,27 @@ import { validateBody } from "../middleware/validate.js";
 import { messageSSE } from "../lib/sse.js";
 import { notificationService } from "../services/notification.service.js";
 import crypto from "crypto";
+import multer from "multer";
+import { UploadService } from "../services/upload.service.js";
+
+const contactUpload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB limit
+        files: 1
+    },
+    fileFilter: (_req, file, cb) => {
+        const allowedTypes = [
+            "image/jpeg", "image/png", "image/webp", "image/gif", "image/avif",
+            "application/pdf"
+        ];
+        if (allowedTypes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error("Invalid file type. Only JPG, PNG, WEBP, GIF, AVIF, and PDF are allowed."));
+        }
+    }
+}).single("attachment");
 
 export function registerMessageRoutes(app: Router) {
     // GET /messages/stream - SSE endpoint for real-time message notifications (admin only)
@@ -90,10 +111,39 @@ export function registerMessageRoutes(app: Router) {
     app.post(
         "/messages",
         contactLimiter,
+        (req, res, next) => {
+            contactUpload(req as any, res as any, (err: any) => {
+                if (err) {
+                    const multerErr = err as { code?: string };
+                    if (multerErr.code === "LIMIT_FILE_SIZE") {
+                        return res.status(413).json({ message: "File too large. Maximum size is 5MB." });
+                    }
+                    return res.status(400).json({ message: err.message });
+                }
+                next();
+            });
+        },
         validateBody(insertMessageApiSchema),
         asyncHandler(async (req, res) => {
             try {
-                const message = await messageService.create(req.body);
+                let attachmentUrl: string | undefined;
+                let attachmentName: string | undefined;
+
+                if (req.file) {
+                    // Upload file to Cloudinary
+                    const uploadResult = await UploadService.uploadAttachment(
+                        req.file.buffer,
+                        req.file.originalname
+                    );
+                    attachmentUrl = uploadResult.url;
+                    attachmentName = uploadResult.originalName;
+                }
+
+                const message = await messageService.create({
+                    ...req.body,
+                    attachmentUrl,
+                    attachmentName
+                });
                 logger.info({ context: "messages", name: message.name, email: message.email }, "New message received");
 
                 // Emit SSE event for real-time admin notification

@@ -7,7 +7,7 @@ import { apiFetch } from "#src/lib/api-helpers";
 import { queryClient } from "#src/lib/queryClient";
 import { EmptyState, LoadingSkeleton, AdminButton, FloatingLabelInput } from "#src/components/admin/AdminShared";
 import type { Message, EmailTemplate } from "#shared/schema";
-import { Mail, Search, RefreshCw, Trash2, Reply, Send, X, Check, MessageSquare, User, Clock, ChevronRight, Plus } from "lucide-react";
+import { Mail, Search, RefreshCw, Trash2, Reply, Send, X, Check, MessageSquare, User, Clock, ChevronRight, Plus, Paperclip } from "lucide-react";
 import { cn } from "#src/lib/utils";
 import { formatDate } from "#src/lib/utils/date";
 import { QUERY_KEYS } from "#src/lib/query-keys";
@@ -166,6 +166,19 @@ export function MessagesTab() {
                                     <p className="text-sm text-admin-text-secondary leading-relaxed break-words whitespace-pre-wrap">
                                         {msg.message}
                                     </p>
+                                    {msg.attachmentUrl && (
+                                        <div className="mt-3 pt-3 border-t border-[var(--nm-light)]">
+                                            <a
+                                                href={msg.attachmentUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl nm-flat hover:nm-inset transition-all text-nm-accent text-xs font-bold uppercase tracking-widest"
+                                            >
+                                                <Paperclip size={14} />
+                                                {msg.attachmentName || "View Attachment"}
+                                            </a>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

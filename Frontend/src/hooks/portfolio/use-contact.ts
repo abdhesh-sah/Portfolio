@@ -25,21 +25,38 @@ export function useSendMessage() {
   return useMutation({
     mutationKey: ["send-message"],
 
-    mutationFn: async (data: InsertMessage) => {
+    mutationFn: async ({ data, attachment }: { data: InsertMessage; attachment?: File | null }) => {
       const url = `${API_BASE_URL}${api.messages.create.path}`;
+
+      const formData = new FormData();
+      // Append all text fields
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("subject", data.subject || "");
+      formData.append("message", data.message);
+      if (data.projectType) formData.append("projectType", data.projectType);
+      if (data.budget) formData.append("budget", data.budget);
+      if (data.timeline) formData.append("timeline", data.timeline);
+      if (data._bnt_id) formData.append("_bnt_id", data._bnt_id);
+      // Append file if present
+      if (attachment) {
+        formData.append("attachment", attachment);
+      }
+
       const res = await fetch(url, {
         method: api.messages.create.method,
-        headers: {
-          "Content-Type": "application/json",
-        },
         credentials: 'include',
-        body: JSON.stringify(data),
+        body: formData,
+        // Do NOT set Content-Type — browser sets multipart boundary automatically
       });
 
       if (!res.ok) {
         if (res.status === 400) {
           const error = await res.json();
           throw new Error(error.message ?? "Validation failed");
+        }
+        if (res.status === 413) {
+          throw new Error("File too large. Maximum size is 5MB.");
         }
 
         throw new Error(`Request failed (${res.status})`);

@@ -5,8 +5,8 @@ import { useSendMessage } from "#src/hooks/use-portfolio";
 import { useSiteSettings } from "#src/hooks/use-site-settings";
 import { m, AnimatePresence } from "framer-motion";
 import { fadeLeft, fadeDown, fadeUp, fadeRight, scaleIn } from "#src/lib/animation";
-import { useState, useEffect } from "react";
-import { Mail, MapPin, Phone, Send, CheckCircle, Github, Linkedin, Terminal, Copy, Check } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Mail, MapPin, Phone, Send, CheckCircle, Github, Linkedin, Terminal, Copy, Check, Paperclip, X, FileText } from "lucide-react";
 import { Button } from "#src/components/ui/button";
 import { AvailabilityCalendar } from "./AvailabilityCalendar";
 import { trackEngagementMilestone } from "#src/lib/analytics";
@@ -135,6 +135,10 @@ const DataCard = ({ icon: Icon, label, value, href, delay }: { icon: React.Eleme
 export default function Contact() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [attachment, setAttachment] = useState<File | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { mutate: sendMessage, isPending, error: apiError } = useSendMessage();
   const { data: settings } = useSiteSettings();
@@ -156,11 +160,32 @@ export default function Contact() {
   });
 
 
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const ALLOWED_EXTENSIONS = [".pdf", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"];
+
+  const validateAndSetFile = useCallback((file: File | null) => {
+    setFileError(null);
+    if (!file) { setAttachment(null); return; }
+    const ext = "." + file.name.split(".").pop()?.toLowerCase();
+    if (!ALLOWED_EXTENSIONS.includes(ext)) {
+      setFileError("Invalid type. Allowed: PDF, JPG, PNG, WEBP, GIF, AVIF.");
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      setFileError(`File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max 5MB.`);
+      return;
+    }
+    setAttachment(file);
+  }, []);
+
   const onSubmit = (data: InsertMessage) => {
     if (cooldown > 0) return;
-    sendMessage(data, {
+    sendMessage({ data, attachment }, {
       onSuccess: () => {
         form.reset();
+        setAttachment(null);
+        setFileError(null);
+        if (fileInputRef.current) fileInputRef.current.value = "";
         setShowSuccess(true);
         setCooldown(60); // 60 seconds cooldown
         // ── Engagement Milestone: visitor successfully sent a message ──
@@ -384,7 +409,73 @@ export default function Contact() {
 
                     <CyberInput id="message" label="Packet Payload" isTextarea register={form.register} error={form.formState.errors.message?.message} required />
 
+                    {/* File Upload */}
+                    <div className="relative group">
+                      {/* Corner Accents */}
+                      <div className={`absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 transition-colors duration-300 ${isDragging ? "border-cyan-400" : "border-border"}`} />
+                      <div className={`absolute -top-1 -right-1 w-2 h-2 border-t-2 border-r-2 transition-colors duration-300 ${isDragging ? "border-cyan-400" : "border-border"}`} />
+                      <div className={`absolute -bottom-1 -left-1 w-2 h-2 border-b-2 border-l-2 transition-colors duration-300 ${isDragging ? "border-cyan-400" : "border-border"}`} />
+                      <div className={`absolute -bottom-1 -right-1 w-2 h-2 border-b-2 border-r-2 transition-colors duration-300 ${isDragging ? "border-cyan-400" : "border-border"}`} />
 
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.avif"
+                        className="hidden"
+                        onChange={(e) => validateAndSetFile(e.target.files?.[0] || null)}
+                      />
+
+                      {attachment ? (
+                        <div className="flex items-center gap-3 px-4 py-3 bg-card/50 border border-cyan-500/30 rounded-lg">
+                          <div className="p-2 bg-cyan-500/10 rounded-lg text-cyan-400 shrink-0">
+                            <FileText className="w-5 h-5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-mono text-foreground truncate">{attachment.name}</p>
+                            <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
+                              {(attachment.size / 1024 / 1024).toFixed(2)} MB · {attachment.type.split("/")[1]?.toUpperCase()}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => { setAttachment(null); setFileError(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}
+                            className="p-1.5 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-colors"
+                            aria-label="Remove attachment"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                          onDragLeave={() => setIsDragging(false)}
+                          onDrop={(e) => { e.preventDefault(); setIsDragging(false); validateAndSetFile(e.dataTransfer.files?.[0] || null); }}
+                          className={`w-full px-4 py-4 bg-card/50 border border-dashed rounded-lg transition-all duration-300 font-mono text-sm text-muted-foreground hover:border-cyan-500/50 hover:text-cyan-400 flex items-center gap-3 ${
+                            isDragging ? "border-cyan-400 bg-cyan-500/5 text-cyan-400" : "border-border"
+                          }`}
+                        >
+                          <Paperclip className="w-4 h-4 shrink-0" />
+                          <span className="text-[10px] uppercase tracking-wider">
+                            {isDragging ? "DROP_FILE_HERE" : "> ATTACH_FILE (PDF, IMG — MAX 5MB)"}
+                          </span>
+                        </button>
+                      )}
+
+                      <AnimatePresence>
+                        {fileError && (
+                          <m.p
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -10 }}
+                            className="mt-2 text-[10px] text-red-400 font-mono bg-red-950/30 px-2 py-0.5 rounded border border-red-500/30 inline-block"
+                          >
+                            ! ERROR: {fileError}
+                          </m.p>
+                        )}
+                      </AnimatePresence>
+                    </div>
                     {/* Honeypot field for spam protection */}
                     <div className="absolute left-[-9999px] opacity-0" aria-hidden="true">
                       <input type="text" tabIndex={-1} autoComplete="off" {...form.register("_bnt_id" as keyof InsertMessage)} />

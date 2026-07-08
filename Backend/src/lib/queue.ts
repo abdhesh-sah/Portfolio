@@ -70,7 +70,7 @@ interface EmailParams {
 
 /** Strategy Pattern for different email types */
 const EMAIL_STRATEGIES: Record<string, (payload: any) => Promise<EmailParams> | EmailParams> = { // eslint-disable-line @typescript-eslint/no-explicit-any
-    "contact-notification": (payload: { targetEmail: string; message: { subject?: string; name: string; email: string; message: string } }) => ({
+    "contact-notification": (payload: { targetEmail: string; message: { subject?: string; name: string; email: string; message: string; attachmentUrl?: string | null; attachmentName?: string | null } }) => ({
         from: env.CONTACT_EMAIL,
         to: payload.targetEmail,
         subject: `Portfolio Message: ${escapeHtml(payload.message.subject || "No Subject")}`,
@@ -82,6 +82,7 @@ const EMAIL_STRATEGIES: Record<string, (payload: any) => Promise<EmailParams> | 
             <hr/>
             <p><strong>Message:</strong></p>
             <p style="white-space: pre-wrap;">${escapeHtml(payload.message.message)}</p>
+            ${payload.message.attachmentUrl ? `<hr/><p><strong>Attachment:</strong> <a href="${escapeHtml(payload.message.attachmentUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(payload.message.attachmentName || "View Attachment")}</a></p>` : ""}
         `,
     }),
     "admin-reply": (payload) => ({

@@ -27,6 +27,7 @@ export class NotificationService {
                     <hr/>
                     <p><strong>Message:</strong></p>
                     <p style="white-space: pre-wrap;">${escapeHtml(payload.message.message)}</p>
+                    ${payload.message.attachmentUrl ? `<hr/><p><strong>Attachment:</strong> <a href="${escapeHtml(payload.message.attachmentUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(payload.message.attachmentName || "View Attachment")}</a></p>` : ""}
                     `
                 });
             } else if (type === "auto-reply") {

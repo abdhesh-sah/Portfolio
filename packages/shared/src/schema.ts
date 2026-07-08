@@ -97,6 +97,8 @@ export const messagesTable = pgTable("messages", {
   projectType: varchar("projectType", { length: 100 }), // Optional for project inquiries
   budget: varchar("budget", { length: 100 }),
   timeline: varchar("timeline", { length: 100 }),
+  attachmentUrl: varchar("attachmentUrl", { length: 500 }),
+  attachmentName: varchar("attachmentName", { length: 255 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 
   // PII & Retention Support (MF-4)
@@ -734,6 +736,8 @@ export const messageSchema = z.object({
   projectType: z.string().max(100).nullable().optional(),
   budget: z.string().max(100).nullable().optional(),
   timeline: z.string().max(100).nullable().optional(),
+  attachmentUrl: z.string().max(500).nullable().optional(),
+  attachmentName: z.string().max(255).nullable().optional(),
   retentionDate: z.coerce.date().nullable().optional(),
   expiresAt: z.coerce.date().nullable().optional(),
   deletedAt: z.coerce.date().nullable().optional(),
@@ -750,6 +754,8 @@ export const insertMessageApiSchema = z.object({
   projectType: z.string().max(100).optional(),
   budget: z.string().max(100).optional(),
   timeline: z.string().max(100).optional(),
+  attachmentUrl: z.string().max(500).optional(),
+  attachmentName: z.string().max(255).optional(),
   _bnt_id: z.string().optional(), // Honeypot field for spam prevention
 });
 

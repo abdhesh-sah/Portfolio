@@ -47,7 +47,12 @@ export class MessageService {
             name: this.sanitize(insertData.name),
             email: this.sanitize(insertData.email),
             message: this.sanitize(insertData.message),
-            subject: insertData.subject ? this.sanitize(insertData.subject) : ""
+            subject: insertData.subject ? this.sanitize(insertData.subject) : "",
+            projectType: insertData.projectType ? this.sanitize(insertData.projectType) : undefined,
+            budget: insertData.budget ? this.sanitize(insertData.budget) : undefined,
+            timeline: insertData.timeline ? this.sanitize(insertData.timeline) : undefined,
+            attachmentUrl: insertData.attachmentUrl ? this.sanitize(insertData.attachmentUrl) : undefined,
+            attachmentName: insertData.attachmentName ? this.sanitize(insertData.attachmentName) : undefined,
         };
         return await messageRepository.create(sanitizedData);
     }
