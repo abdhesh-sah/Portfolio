@@ -25,14 +25,17 @@ const contactUpload = multer({
         files: 1
     },
     fileFilter: (_req, file, cb) => {
-        const allowedTypes = [
-            "image/jpeg", "image/png", "image/webp", "image/gif", "image/avif",
-            "application/pdf"
+        const ext = file.originalname.split('.').pop()?.toLowerCase();
+        const allowedExtensions = [
+            "pdf", "jpg", "jpeg", "png", "webp", "gif", "avif",
+            "doc", "docx", "txt", "rtf", "xls", "xlsx", "csv",
+            "zip", "rar", "7z",
+            "js", "jsx", "ts", "tsx", "html", "css", "json", "py", "go", "rs", "cpp", "c", "h", "cs", "java", "sh", "md", "yaml", "yml", "xml"
         ];
-        if (allowedTypes.includes(file.mimetype)) {
+        if (ext && allowedExtensions.includes(ext)) {
             cb(null, true);
         } else {
-            cb(new Error("Invalid file type. Only JPG, PNG, WEBP, GIF, AVIF, and PDF are allowed."));
+            cb(new Error("Invalid file type. Allowed: Images, PDF, Word, Text, Spreadsheets, ZIP/Archives, and Source Code."));
         }
     }
 }).single("attachment");

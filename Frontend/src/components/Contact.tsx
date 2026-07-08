@@ -138,6 +138,7 @@ export default function Contact() {
   const [attachment, setAttachment] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [messageFocused, setMessageFocused] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { mutate: sendMessage, isPending, error: apiError } = useSendMessage();
@@ -161,14 +162,20 @@ export default function Contact() {
 
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-  const ALLOWED_EXTENSIONS = [".pdf", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"];
+  const ALLOWED_EXTENSIONS = [
+    ".pdf", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif",
+    ".doc", ".docx", ".txt", ".rtf",
+    ".xls", ".xlsx", ".csv",
+    ".zip", ".rar", ".7z",
+    ".js", ".jsx", ".ts", ".tsx", ".html", ".css", ".json", ".py", ".go", ".rs", ".cpp", ".c", ".h", ".cs", ".java", ".sh", ".md", ".yaml", ".yml", ".xml"
+  ];
 
   const validateAndSetFile = useCallback((file: File | null) => {
     setFileError(null);
     if (!file) { setAttachment(null); return; }
     const ext = "." + file.name.split(".").pop()?.toLowerCase();
     if (!ALLOWED_EXTENSIONS.includes(ext)) {
-      setFileError("Invalid type. Allowed: PDF, JPG, PNG, WEBP, GIF, AVIF.");
+      setFileError("Invalid type. Allowed: PDF, Images, Documents, Spreadsheets, Archives, Source Code.");
       return;
     }
     if (file.size > MAX_FILE_SIZE) {
@@ -407,75 +414,109 @@ export default function Contact() {
                       )}
                     </AnimatePresence>
 
-                    <CyberInput id="message" label="Packet Payload" isTextarea register={form.register} error={form.formState.errors.message?.message} required />
-
-                    {/* File Upload */}
                     <div className="relative group">
                       {/* Corner Accents */}
-                      <div className={`absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 transition-colors duration-300 ${isDragging ? "border-cyan-400" : "border-border"}`} />
-                      <div className={`absolute -top-1 -right-1 w-2 h-2 border-t-2 border-r-2 transition-colors duration-300 ${isDragging ? "border-cyan-400" : "border-border"}`} />
-                      <div className={`absolute -bottom-1 -left-1 w-2 h-2 border-b-2 border-l-2 transition-colors duration-300 ${isDragging ? "border-cyan-400" : "border-border"}`} />
-                      <div className={`absolute -bottom-1 -right-1 w-2 h-2 border-b-2 border-r-2 transition-colors duration-300 ${isDragging ? "border-cyan-400" : "border-border"}`} />
+                      <div className={`absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 transition-colors duration-300 ${messageFocused || isDragging ? "border-cyan-400" : "border-border"}`} />
+                      <div className={`absolute -top-1 -right-1 w-2 h-2 border-t-2 border-r-2 transition-colors duration-300 ${messageFocused || isDragging ? "border-cyan-400" : "border-border"}`} />
+                      <div className={`absolute -bottom-1 -left-1 w-2 h-2 border-b-2 border-l-2 transition-colors duration-300 ${messageFocused || isDragging ? "border-cyan-400" : "border-border"}`} />
+                      <div className={`absolute -bottom-1 -right-1 w-2 h-2 border-b-2 border-r-2 transition-colors duration-300 ${messageFocused || isDragging ? "border-cyan-400" : "border-border"}`} />
 
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.avif"
-                        className="hidden"
-                        onChange={(e) => validateAndSetFile(e.target.files?.[0] || null)}
+                      <textarea
+                        {...form.register("message")}
+                        id="message"
+                        rows={6}
+                        onFocus={() => setMessageFocused(true)}
+                        onBlur={() => setMessageFocused(false)}
+                        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                        onDragLeave={() => setIsDragging(false)}
+                        onDrop={(e) => { e.preventDefault(); setIsDragging(false); validateAndSetFile(e.dataTransfer.files?.[0] || null); }}
+                        className={`w-full px-4 pt-6 pb-14 bg-card/50 border rounded-lg outline-none transition-all duration-300 font-mono text-sm ${
+                          isDragging
+                            ? 'border-cyan-400 bg-cyan-500/5 ring-1 ring-cyan-500/20'
+                            : form.formState.errors.message
+                              ? 'border-red-500/50 focus:border-red-500'
+                              : 'border-border focus:border-cyan-500/50 hover:border-foreground/20'
+                        } placeholder-transparent text-foreground resize-none`}
                       />
 
-                      {attachment ? (
-                        <div className="flex items-center gap-3 px-4 py-3 bg-card/50 border border-cyan-500/30 rounded-lg">
-                          <div className="p-2 bg-cyan-500/10 rounded-lg text-cyan-400 shrink-0">
-                            <FileText className="w-5 h-5" />
+                      <label
+                        htmlFor="message"
+                        className={`absolute left-4 transition-all duration-300 pointer-events-none font-mono uppercase tracking-wider ${
+                          messageFocused || form.watch("message") || isDragging
+                            ? 'top-2 text-[10px] text-cyan-400'
+                            : 'top-4 text-xs text-muted-foreground'
+                        }`}
+                      >
+                        {'>'} Packet Payload <span className="text-red-400">*</span>
+                      </label>
+
+                      {/* File Uploader absolute icon in bottom right */}
+                      <div className="absolute right-3 bottom-3 flex items-center gap-2 z-10">
+                        {/* Hidden file input */}
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.avif,.doc,.docx,.txt,.rtf,.xls,.xlsx,.csv,.zip,.rar,.7z,.js,.jsx,.ts,.tsx,.html,.css,.json,.py,.go,.rs,.cpp,.c,.h,.cs,.java,.sh,.md,.yaml,.yml,.xml"
+                          className="hidden"
+                          onChange={(e) => validateAndSetFile(e.target.files?.[0] || null)}
+                        />
+
+                        {attachment ? (
+                          <div className="flex items-center gap-2 bg-cyan-950/60 border border-cyan-500/30 px-3 py-1 rounded-lg text-xs font-mono text-cyan-400 max-w-[220px] sm:max-w-xs animate-in fade-in zoom-in-95">
+                            <FileText className="w-3.5 h-3.5 shrink-0" />
+                            <span className="truncate">{attachment.name}</span>
+                            <span className="text-[9px] text-cyan-400/60 shrink-0">({(attachment.size / 1024 / 1024).toFixed(1)}MB)</span>
+                            <button
+                              type="button"
+                              onClick={() => { setAttachment(null); setFileError(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}
+                              className="p-0.5 rounded hover:bg-cyan-500/20 text-cyan-400 hover:text-red-400 transition-colors shrink-0"
+                              aria-label="Remove attachment"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-mono text-foreground truncate">{attachment.name}</p>
-                            <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
-                              {(attachment.size / 1024 / 1024).toFixed(2)} MB · {attachment.type.split("/")[1]?.toUpperCase()}
-                            </p>
-                          </div>
+                        ) : (
                           <button
                             type="button"
-                            onClick={() => { setAttachment(null); setFileError(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}
-                            className="p-1.5 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-colors"
-                            aria-label="Remove attachment"
+                            onClick={() => fileInputRef.current?.click()}
+                            className={`p-2 rounded-lg border transition-all duration-300 flex items-center justify-center ${
+                              isDragging
+                                ? "bg-cyan-500/20 border-cyan-400 text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.3)] animate-pulse"
+                                : "bg-foreground/5 border-border hover:border-cyan-500/50 text-muted-foreground hover:text-cyan-400"
+                            }`}
+                            title="Attach File (PDF, Image - Max 5MB)"
                           >
-                            <X className="w-4 h-4" />
+                            <Paperclip className="w-4 h-4" />
                           </button>
-                        </div>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-                          onDragLeave={() => setIsDragging(false)}
-                          onDrop={(e) => { e.preventDefault(); setIsDragging(false); validateAndSetFile(e.dataTransfer.files?.[0] || null); }}
-                          className={`w-full px-4 py-4 bg-card/50 border border-dashed rounded-lg transition-all duration-300 font-mono text-sm text-muted-foreground hover:border-cyan-500/50 hover:text-cyan-400 flex items-center gap-3 ${
-                            isDragging ? "border-cyan-400 bg-cyan-500/5 text-cyan-400" : "border-border"
-                          }`}
-                        >
-                          <Paperclip className="w-4 h-4 shrink-0" />
-                          <span className="text-[10px] uppercase tracking-wider">
-                            {isDragging ? "DROP_FILE_HERE" : "> ATTACH_FILE (PDF, IMG — MAX 5MB)"}
-                          </span>
-                        </button>
-                      )}
+                        )}
+                      </div>
 
                       <AnimatePresence>
-                        {fileError && (
+                        {form.formState.errors.message?.message && (
                           <m.p
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -10 }}
-                            className="mt-2 text-[10px] text-red-400 font-mono bg-red-950/30 px-2 py-0.5 rounded border border-red-500/30 inline-block"
+                            className="absolute right-2 top-2 text-[10px] text-red-400 font-mono bg-red-950/30 px-2 py-0.5 rounded border border-red-500/30"
                           >
-                            ! ERROR: {fileError}
+                            ! ERROR: {form.formState.errors.message.message}
                           </m.p>
                         )}
                       </AnimatePresence>
                     </div>
+
+                    <AnimatePresence>
+                      {fileError && (
+                        <m.p
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -5 }}
+                          className="text-[10px] text-red-400 font-mono bg-red-950/30 px-2 py-1 rounded border border-red-500/30 inline-block w-full text-center"
+                        >
+                          ! ATTACHMENT ERROR: {fileError}
+                        </m.p>
+                      )}
+                    </AnimatePresence>
                     {/* Honeypot field for spam protection */}
                     <div className="absolute left-[-9999px] opacity-0" aria-hidden="true">
                       <input type="text" tabIndex={-1} autoComplete="off" {...form.register("_bnt_id" as keyof InsertMessage)} />
