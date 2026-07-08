@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "tsx --watch --import ./src/instrument.ts src/index.ts",
+    "dev": "tsx watch --exclude drizzle --import ./src/instrument.ts src/index.ts",
     "lint": "eslint src --ext .ts --max-warnings 0",
     "type-check": "tsc --noEmit",
     "build": "npm run build --prefix .. -w @portfolio/shared && tsc --project tsconfig.json",
