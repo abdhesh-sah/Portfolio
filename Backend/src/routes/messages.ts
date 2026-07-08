@@ -115,6 +115,7 @@ export function registerMessageRoutes(app: Router) {
         "/messages",
         contactLimiter,
         (req, res, next) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             contactUpload(req as any, res as any, (err: any) => {
                 if (err) {
                     const multerErr = err as { code?: string };
