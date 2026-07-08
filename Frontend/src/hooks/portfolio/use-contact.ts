@@ -28,26 +28,33 @@ export function useSendMessage() {
     mutationFn: async ({ data, attachment }: { data: InsertMessage; attachment?: File | null }) => {
       const url = `${API_BASE_URL}${api.messages.create.path}`;
 
-      const formData = new FormData();
-      // Append all text fields
-      formData.append("name", data.name);
-      formData.append("email", data.email);
-      formData.append("subject", data.subject || "");
-      formData.append("message", data.message);
-      if (data.projectType) formData.append("projectType", data.projectType);
-      if (data.budget) formData.append("budget", data.budget);
-      if (data.timeline) formData.append("timeline", data.timeline);
-      if (data._bnt_id) formData.append("_bnt_id", data._bnt_id);
-      // Append file if present
+      let body: RequestInit["body"];
+      let headers: HeadersInit | undefined;
+
       if (attachment) {
+        const formData = new FormData();
+        formData.append("name", data.name);
+        formData.append("email", data.email);
+        formData.append("subject", data.subject || "");
+        formData.append("message", data.message);
+        if (data.projectType) formData.append("projectType", data.projectType);
+        if (data.budget) formData.append("budget", data.budget);
+        if (data.timeline) formData.append("timeline", data.timeline);
+        if (data._bnt_id) formData.append("_bnt_id", data._bnt_id);
         formData.append("attachment", attachment);
+        body = formData;
+      } else {
+        body = JSON.stringify(data);
+        headers = {
+          "Content-Type": "application/json",
+        };
       }
 
       const res = await fetch(url, {
         method: api.messages.create.method,
+        headers,
         credentials: 'include',
-        body: formData,
-        // Do NOT set Content-Type — browser sets multipart boundary automatically
+        body,
       });
 
       if (!res.ok) {

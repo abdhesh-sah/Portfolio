@@ -40,6 +40,8 @@ const contactUpload = multer({
     }
 }).single("attachment");
 
+
+
 export function registerMessageRoutes(app: Router) {
     // GET /messages/stream - SSE endpoint for real-time message notifications (admin only)
     app.get(
@@ -115,8 +117,9 @@ export function registerMessageRoutes(app: Router) {
         "/messages",
         contactLimiter,
         (req, res, next) => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            /* eslint-disable @typescript-eslint/no-explicit-any */
             contactUpload(req as any, res as any, (err: any) => {
+            /* eslint-enable @typescript-eslint/no-explicit-any */
                 if (err) {
                     const multerErr = err as { code?: string };
                     if (multerErr.code === "LIMIT_FILE_SIZE") {
