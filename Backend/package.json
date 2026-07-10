@@ -37,7 +37,7 @@
     "@types/nodemailer": "^8.0.0",
     "@types/react": "^19.2.10",
     "bcryptjs": "^3.0.3",
-    "bullmq": "^5.76.6",
+    "bullmq": "^5.80.0",
     "cloudinary": "^2.9.0",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
