@@ -7,18 +7,12 @@ import { pdfService } from "../services/pdf.service.js";
 import { emailService } from "../services/email.service.js";
 import type { ScopeRequest } from "@portfolio/shared";
 
-/** Strip HTML/XML tags and control chars to prevent prompt injection */
+/** Strip angle brackets and control chars to reduce prompt injection surface */
 function sanitizeForPrompt(text: string): string {
-    let previous: string;
-    let sanitized = text;
-
-    do {
-        previous = sanitized;
-        sanitized = sanitized
-            .replace(/<[^>]*>/g, "") // Remove HTML/XML tags
-            // eslint-disable-next-line no-control-regex
-            .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, ""); // Remove control chars
-    } while (sanitized !== previous);
+    const sanitized = text
+        .replace(/[<>]/g, "") // Remove tag delimiters to prevent HTML/script tag injection patterns
+        // eslint-disable-next-line no-control-regex
+        .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, ""); // Remove control chars
 
     return sanitized.trim();
 }
