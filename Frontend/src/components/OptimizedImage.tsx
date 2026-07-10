@@ -37,8 +37,19 @@ export function OptimizedImage({
 
     const optimizedSrc = src ? getOptimizedImageUrl(src, { width, height, quality, crop, gravity }) : src;
 
+    let isCloudinary = false;
+    if (src) {
+        try {
+            const base = typeof window !== "undefined" ? window.location.origin : "http://localhost";
+            const parsed = new URL(src, base);
+            isCloudinary = parsed.hostname === "cloudinary.com" || parsed.hostname.endsWith(".cloudinary.com");
+        } catch {
+            isCloudinary = false;
+        }
+    }
+
     let srcSet: string | undefined = undefined;
-    if (src && src.includes("cloudinary.com") && width) {
+    if (src && isCloudinary && width) {
         const src1x = optimizedSrc;
         const src2x = getOptimizedImageUrl(src, {
             width: width * 2,

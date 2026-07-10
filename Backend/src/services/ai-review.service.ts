@@ -8,8 +8,14 @@ import { env } from "../env.js";
 
 /** Strip HTML/XML tags and control chars to prevent prompt injection */
 function sanitizeForPrompt(text: string): string {
-    return text
-        .replace(/<[^>]*>/g, "")          // Remove HTML/XML tags
+    let previous: string;
+    let current = text;
+    do {
+        previous = current;
+        current = current.replace(/<[^>]*>/g, "");          // Remove HTML/XML tags
+    } while (current !== previous);
+
+    return current
         // eslint-disable-next-line no-control-regex
         .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "") // Remove control chars
         .trim();

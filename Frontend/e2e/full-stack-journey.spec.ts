@@ -105,9 +105,17 @@ test.describe('Full-Stack Journey (Layer 3)', () => {
         // Image Upload (Schema requires imageUrl to be not-null)
         console.warn('[E2E] Uploading project image...');
         const testImagePath = path.join(process.cwd(), 'e2e', 'test-image.png');
-        if (!fs.existsSync(testImagePath)) {
-            // Write a tiny 1x1 transparent PNG
-            fs.writeFileSync(testImagePath, Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64'));
+        try {
+            // Write a tiny 1x1 transparent PNG with 'wx' flag to fail atomically if it already exists
+            fs.writeFileSync(
+                testImagePath, 
+                Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64'), 
+                { flag: 'wx' }
+            );
+        } catch (err: any) {
+            if (err.code !== 'EEXIST') {
+                throw err;
+            }
         }
         
         // Find the hidden file input

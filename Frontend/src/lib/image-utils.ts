@@ -18,7 +18,17 @@ interface OptimizationOptions {
  */
 export function getOptimizedImageUrl(url: string | null | undefined, options: OptimizationOptions = {}) {
     if (!url) return "";
-    if (!url.includes("cloudinary.com")) return url;
+
+    let isCloudinary = false;
+    try {
+        const base = typeof window !== "undefined" ? window.location.origin : "http://localhost";
+        const parsed = new URL(url, base);
+        isCloudinary = parsed.hostname === "cloudinary.com" || parsed.hostname.endsWith(".cloudinary.com");
+    } catch {
+        isCloudinary = false;
+    }
+
+    if (!isCloudinary) return url;
 
     const {
         width,

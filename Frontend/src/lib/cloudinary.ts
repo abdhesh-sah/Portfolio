@@ -11,7 +11,18 @@ if (!CLOUD_NAME) {
  * It uses the featured image as a background and overlays the title for social sharing.
  */
 export function getDynamicOgImage(title: string, imageUrl?: string): string {
-    if (!imageUrl || !imageUrl.includes("cloudinary.com")) {
+    let isCloudinary = false;
+    if (imageUrl) {
+        try {
+            const base = typeof window !== "undefined" ? window.location.origin : "http://localhost";
+            const parsed = new URL(imageUrl, base);
+            isCloudinary = parsed.hostname === "cloudinary.com" || parsed.hostname.endsWith(".cloudinary.com");
+        } catch {
+            isCloudinary = false;
+        }
+    }
+
+    if (!imageUrl || !isCloudinary) {
         // Fallback if not a cloudinary image or no image provided
         // If no image is provided, we could use a solid color background from Cloudinary too
         const fallbackImage = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_1200,h_630,c_fill,q_auto,f_auto/e_brightness:-60/l_text:Arial_70_bold_center:${encodeURIComponent(title)},co_white,w_1000,c_fit,g_center/l_text:Arial_24_letter_spacing_2:PORTFOLIO%20OWNER%20%7C%20PORTFOLIO,co_white,g_south,y_50,o_60/v1/portfolio_uploads/fallback_og.jpg`;

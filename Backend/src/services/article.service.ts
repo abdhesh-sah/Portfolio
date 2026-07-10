@@ -14,7 +14,13 @@ export class ArticleService {
     private calculateReadTime(content: string): number {
         const wordsPerMinute = 200;
         // Strip HTML if any (though content is usually markdown or text)
-        const cleanContent = content.replace(/<[^>]*>/g, '');
+        let previous: string;
+        let cleanContent = content;
+        do {
+            previous = cleanContent;
+            cleanContent = cleanContent.replace(/<[^>]*>/g, '');
+        } while (cleanContent !== previous);
+
         const words = cleanContent.trim().split(/\s+/).length;
         return Math.ceil(words / wordsPerMinute) || 1;
     }

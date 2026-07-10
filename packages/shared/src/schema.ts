@@ -497,9 +497,14 @@ export const auditLogSchema = z.object({
 function isValidUrl(url: string | null | undefined): boolean {
   if (!url || url.trim() === "" || url === "#") return true;
 
-  // Allow relative paths and anchor links, but prevent javascript: protocol
+  // Allow relative paths and anchor links, but prevent javascript:, data:, and vbscript: protocols
   if (url.startsWith("/") || url.startsWith("#")) {
-    return !url.toLowerCase().trim().startsWith("javascript:");
+    const lower = url.toLowerCase().trim();
+    return (
+      !lower.startsWith("javascript:") &&
+      !lower.startsWith("data:") &&
+      !lower.startsWith("vbscript:")
+    );
   }
 
   try {
