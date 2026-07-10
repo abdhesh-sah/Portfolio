@@ -11,9 +11,9 @@
         "concurrently": "^10.0.3",
         "eslint": "^10.6.0",
         "jsdom": "^29.0.1",
-        "tinyexec": "^0.3.2",
-        "tsx": "^4.23.0",
-        "typescript": "^7.0.2"
+        "tinyexec": "^1.2.4",
+        "tsx": "^4.19.3",
+        "typescript": "^5.7.3"
     },
     "workspaces": [
         "Backend",
