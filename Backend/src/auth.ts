@@ -79,10 +79,10 @@ interface RefreshTokenPayload {
 }
 
 export async function validateRefreshToken(token: string): Promise<boolean> {
-    // 1. Verify signature and expiry
+    // 1. Verify signature and expiry — hardcode algorithm to prevent algorithm confusion
     let decoded: RefreshTokenPayload;
     try {
-        decoded = jwt.verify(token, env.JWT_REFRESH_SECRET) as RefreshTokenPayload;
+        decoded = jwt.verify(token, env.JWT_REFRESH_SECRET, { algorithms: ["HS256"] }) as RefreshTokenPayload;
     } catch {
         return false;
     }
@@ -150,7 +150,8 @@ export async function checkAuthStatus(req: Request): Promise<boolean> {
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith("Bearer ")) {
         token = authHeader.substring(7);
-    } else if (req.cookies && req.cookies.auth_token) {
+    } else if (req.cookies && typeof req.cookies.auth_token === "string") {
+        // Validate the cookie value is a string before using it in a security check
         token = req.cookies.auth_token;
     }
 
@@ -160,7 +161,7 @@ export async function checkAuthStatus(req: Request): Promise<boolean> {
             if (isBlacklisted) return false;
         }
         try {
-            jwt.verify(token, env.JWT_SECRET);
+            jwt.verify(token, env.JWT_SECRET, { algorithms: ["HS256"] });
             return true;
         } catch (_err) { // eslint-disable-line @typescript-eslint/no-unused-vars
             return false;
@@ -183,8 +184,8 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
     if (authHeader && authHeader.startsWith("Bearer ")) {
         token = authHeader.substring(7);
     }
-    // 2. Check for token in auth_token cookie
-    else if (req.cookies && req.cookies.auth_token) {
+    // 2. Check for token in auth_token cookie — validate it is a string
+    else if (req.cookies && typeof req.cookies.auth_token === "string") {
         token = req.cookies.auth_token;
     }
 
@@ -198,7 +199,8 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
         }
 
         try {
-            const result = jwt.verify(token, env.JWT_SECRET);
+            // Hardcode algorithm to HS256 to prevent JWT algorithm confusion attacks
+            const result = jwt.verify(token, env.JWT_SECRET, { algorithms: ["HS256"] });
 
             // Standard JWT payload schema
             const tokenSchema = z.object({

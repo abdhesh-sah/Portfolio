@@ -27,12 +27,18 @@ export type SeedDataType =
  */
 export function syncSeedData(type: SeedDataType, data: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   try {
-    if (!fs.existsSync(SEED_DATA_PATH)) {
-      logger.warn({ path: SEED_DATA_PATH }, "seed-data.json not found for sync");
-      return;
+    let fileContent: string;
+    try {
+      // Read atomically — catches ENOENT directly instead of existsSync + read (TOCTOU)
+      fileContent = fs.readFileSync(SEED_DATA_PATH, 'utf-8');
+    } catch (readErr: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+      if (readErr?.code === 'ENOENT') {
+        logger.warn({ path: SEED_DATA_PATH }, "seed-data.json not found for sync");
+        return;
+      }
+      throw readErr;
     }
 
-    const fileContent = fs.readFileSync(SEED_DATA_PATH, 'utf-8');
     let seedData: any; // eslint-disable-line @typescript-eslint/no-explicit-any
     try {
         seedData = JSON.parse(fileContent);

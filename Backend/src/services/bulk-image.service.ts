@@ -15,7 +15,7 @@ export interface OptimizationStats {
 }
 
 export class BulkImageService {
-    private static CLOUDINARY_REGEX = /res\.cloudinary\.com\/[^/]+\/image\/upload\/(?:v\d+\/)?(.+)/;
+    private static CLOUDINARY_REGEX = /^https?:\/\/(?:[^/]+\.)?cloudinary\.com\//;
     private static OPTIMIZATION_PARAMS = "q_auto,f_auto";
 
     /**

@@ -175,7 +175,8 @@ router.get("/status", asyncHandler(async (req: Request, res: Response) => {
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith("Bearer ")) {
         token = authHeader.substring(7);
-    } else if (req.cookies && req.cookies.auth_token) {
+    } else if (req.cookies && typeof req.cookies.auth_token === "string") {
+        // Validate cookie value is a string before using it in a security check
         token = req.cookies.auth_token;
     }
 
@@ -188,7 +189,8 @@ router.get("/status", asyncHandler(async (req: Request, res: Response) => {
     }
 
     try {
-        jwt.verify(token, env.JWT_SECRET);
+        // Hardcode algorithm to prevent JWT algorithm confusion attacks
+        jwt.verify(token, env.JWT_SECRET, { algorithms: ["HS256"] });
         return res.json({
             success: true,
             authenticated: true,
@@ -212,7 +214,8 @@ router.get("/status", asyncHandler(async (req: Request, res: Response) => {
 router.post("/refresh", asyncHandler(async (req: Request, res: Response) => {
     const refreshToken = req.cookies?.refresh_token;
 
-    if (!refreshToken) {
+    // Validate cookie value is a string before using it in a security check
+    if (!refreshToken || typeof refreshToken !== "string") {
         return res.json({ success: false, message: "No refresh token provided" });
     }
 
