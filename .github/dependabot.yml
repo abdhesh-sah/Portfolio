@@ -1,0 +1,153 @@
+# Dependabot configuration
+# Automatically opens PRs to update outdated/vulnerable dependencies.
+# Docs: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+
+updates:
+  # ─────────────────────────────────────────────────────────────────
+  # Root monorepo (shared devDependencies in the workspace root)
+  # ─────────────────────────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Asia/Kathmandu"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "security"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      # Keep TypeScript tooling updates together
+      typescript-tooling:
+        patterns:
+          - "typescript"
+          - "@typescript-eslint/*"
+          - "eslint*"
+          - "tsx"
+      # Keep testing libraries together
+      testing:
+        patterns:
+          - "vitest"
+          - "@testing-library/*"
+          - "jsdom"
+          - "playwright"
+
+  # ─────────────────────────────────────────────────────────────────
+  # Backend workspace
+  # ─────────────────────────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/Backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Asia/Kathmandu"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "backend"
+      - "security"
+    commit-message:
+      prefix: "chore(deps/backend)"
+      include: "scope"
+    groups:
+      # Group Express and its types together
+      express:
+        patterns:
+          - "express"
+          - "@types/express*"
+      # Group Drizzle ORM updates together
+      drizzle:
+        patterns:
+          - "drizzle-orm"
+          - "drizzle-kit"
+      # Group JWT / auth packages together
+      auth:
+        patterns:
+          - "jsonwebtoken"
+          - "@types/jsonwebtoken"
+          - "bcryptjs"
+          - "@types/bcryptjs"
+      # Group all Zod-related packages
+      zod:
+        patterns:
+          - "zod"
+
+  # ─────────────────────────────────────────────────────────────────
+  # Frontend workspace
+  # ─────────────────────────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/Frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Asia/Kathmandu"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "frontend"
+      - "security"
+    commit-message:
+      prefix: "chore(deps/frontend)"
+      include: "scope"
+    groups:
+      # Group React and React-DOM together
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      # Group Vite and its plugins together
+      vite:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+          - "vite-plugin-*"
+      # Group Framer Motion
+      framer:
+        patterns:
+          - "framer-motion"
+      # Group Radix UI primitives together
+      radix:
+        patterns:
+          - "@radix-ui/*"
+      # Group TanStack / React Query
+      tanstack:
+        patterns:
+          - "@tanstack/*"
+
+  # ─────────────────────────────────────────────────────────────────
+  # GitHub Actions
+  # ─────────────────────────────────────────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Asia/Kathmandu"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "security"
+    commit-message:
+      prefix: "chore(ci)"
+      include: "scope"
+    groups:
+      # Pin all actions/* updates together
+      actions-core:
+        patterns:
+          - "actions/*"
+      # Pin all github/* actions together
+      github-codeql:
+        patterns:
+          - "github/*"
