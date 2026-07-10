@@ -9,11 +9,18 @@ import type { ScopeRequest } from "@portfolio/shared";
 
 /** Strip HTML/XML tags and control chars to prevent prompt injection */
 function sanitizeForPrompt(text: string): string {
-    return text
-        .replace(/<[^>]*>/g, "")          // Remove HTML/XML tags
-        // eslint-disable-next-line no-control-regex
-        .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "") // Remove control chars
-        .trim();
+    let previous: string;
+    let sanitized = text;
+
+    do {
+        previous = sanitized;
+        sanitized = sanitized
+            .replace(/<[^>]*>/g, "") // Remove HTML/XML tags
+            // eslint-disable-next-line no-control-regex
+            .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, ""); // Remove control chars
+    } while (sanitized !== previous);
+
+    return sanitized.trim();
 }
 
 /**
