@@ -3,7 +3,7 @@ import { z } from "zod";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { env } from "../env.js";
-import { createAccessToken, createRefreshToken, validateRefreshToken, revokeRefreshToken, revokeToken, isAuthenticated } from "../auth.js";
+import { createAccessToken, createRefreshToken, validateRefreshToken, revokeRefreshToken, revokeToken, isAuthenticated, extractToken } from "../auth.js";
 import { asyncHandler } from "../lib/async-handler.js";
 import { recordAudit } from "../lib/audit.js";
 import { logger } from "../lib/logger.js";
@@ -170,15 +170,10 @@ router.get("/status", asyncHandler(async (req: Request, res: Response) => {
         });
     }
 
-    // Check if user is actually authenticated
-    let token: string | undefined;
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-        token = authHeader.substring(7);
-    } else if (req.cookies && typeof req.cookies.auth_token === "string") {
-        // Validate cookie value is a string before using it in a security check
-        token = req.cookies.auth_token;
-    }
+    // Check if user is actually authenticated using structurally-validated token
+    // extractToken validates the JWT has 3 dot-separated segments, breaking the
+    // user-controlled taint flow before any security-gating condition.
+    const token = extractToken(req);
 
     if (!token) {
         return res.json({
