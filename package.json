@@ -9,7 +9,7 @@
         "@typescript-eslint/eslint-plugin": "^8.63.0",
         "@typescript-eslint/parser": "^8.63.0",
         "concurrently": "^10.0.3",
-        "eslint": "^10.6.0",
+        "eslint": "^10.7.0",
         "jsdom": "^29.0.1",
         "tinyexec": "^1.2.4",
         "tsx": "^4.19.3",
