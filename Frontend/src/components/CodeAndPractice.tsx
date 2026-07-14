@@ -1,6 +1,7 @@
 import { m } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Github, ExternalLink, Activity, GitBranch, Terminal, Star, GitPullRequest, GitCommit, Plus, AlertCircle, Zap } from "lucide-react";
+import { ExternalLink, Activity, GitBranch, Terminal, Star, GitPullRequest, GitCommit, Plus, AlertCircle, Zap } from "lucide-react";
+import { Github } from "#src/components/icons/brand-icons";
 import { Button } from "#src/components/ui/button";
 import { apiFetch } from "#src/lib/api-helpers";
 import { useToast } from "#src/hooks/use-toast";

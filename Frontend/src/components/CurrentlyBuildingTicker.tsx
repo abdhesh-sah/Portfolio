@@ -1,7 +1,8 @@
 import React from "react";
 import { useLatestCommit } from "../hooks/use-latest-commit";
 import { useProjects } from "../hooks/use-portfolio";
-import { Github, ExternalLink, Cpu, Terminal, Sparkles } from "lucide-react";
+import { ExternalLink, Cpu, Terminal, Sparkles } from "lucide-react";
+import { Github } from "#src/components/icons/brand-icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 

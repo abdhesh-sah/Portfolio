@@ -2,7 +2,8 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { motion } from "framer-motion";
-import { Github, Info, ExternalLink } from "lucide-react";
+import { Info, ExternalLink } from "lucide-react";
+import { Github } from "#src/components/icons/brand-icons";
 
 import { useSiteSettings } from "#src/hooks/use-site-settings";
 import { QUERY_KEYS } from "#src/lib/query-keys";

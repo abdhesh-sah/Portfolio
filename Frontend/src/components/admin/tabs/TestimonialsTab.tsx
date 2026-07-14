@@ -6,9 +6,10 @@ import type { Testimonial } from "#shared/schema";
 import { useToast } from "#src/hooks/use-toast";
 import {
     Quote, Plus, Trash2, Edit3, X, User,
-    Linkedin, Building2, Briefcase,
+    Building2, Briefcase,
     Save, Hash, Users, MessageSquareQuote, Mail
 } from "lucide-react";
+import { Linkedin } from "#src/components/icons/brand-icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { FormField, FormTextarea, EmptyState, AdminButton, LoadingSkeleton, FormSelect } from "#src/components/admin/AdminShared";
 import { OptimizedImage } from "#src/components/OptimizedImage";

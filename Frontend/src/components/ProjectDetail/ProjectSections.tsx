@@ -2,7 +2,8 @@ import { m } from "framer-motion";
 import { fadeUp, scaleInSubtle, fadeLeft, fadeIn, hoverScale, hoverLift, fadeUpLarge } from "#src/lib/animation";
 import { useTheme } from "#src/components/theme-provider";
 import React from "react";
-import { ArrowLeft, ChevronRight, Sparkles, Github, ExternalLink, Share2, Twitter, Linkedin, MessageCircle, Layers } from "lucide-react";
+import { ArrowLeft, ChevronRight, Sparkles, ExternalLink, Share2, MessageCircle, Layers } from "lucide-react";
+import { Github, Twitter, Linkedin } from "#src/components/icons/brand-icons";
 import { Link } from "wouter";
 import { OptimizedImage } from "#src/components/OptimizedImage";
 

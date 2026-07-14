@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { m } from "framer-motion";
-import { Mail, Globe, Github, Linkedin, MapPin, Printer } from "lucide-react";
+import { Mail, Globe, MapPin, Printer } from "lucide-react";
+import { Github, Linkedin } from "#src/components/icons/brand-icons";
 import { useProjects, useSkills, useExperiences } from "#src/hooks/use-portfolio";
 import { useSiteSettings } from "#src/hooks/use-site-settings";
 import { useToast } from "#src/hooks/use-toast";

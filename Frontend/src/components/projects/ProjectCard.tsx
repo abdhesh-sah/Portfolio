@@ -3,7 +3,8 @@ import { m, useReducedMotion } from "framer-motion";
 import { type Project } from "#shared/schema";
 import { OptimizedImage } from "#src/components/OptimizedImage";
 import { staggerChild } from "#src/lib/animation";
-import { ExternalLink, Github, ArrowRight, Folder, Eye, Sparkles, Flame } from "lucide-react";
+import { ExternalLink, ArrowRight, Folder, Eye, Sparkles, Flame } from "lucide-react";
+import { Github } from "#src/components/icons/brand-icons";
 import { Link } from "wouter";
 import { CodeRoastModal } from "./CodeRoastModal";
 

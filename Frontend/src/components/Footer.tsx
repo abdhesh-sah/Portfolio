@@ -1,4 +1,5 @@
-import { Github, Linkedin, Twitter, Facebook, Instagram, Mail, Code2, Globe, Youtube, MessageCircle, MapPin } from "lucide-react";
+import { Mail, Code2, Globe, MessageCircle, MapPin } from "lucide-react";
+import { Github, Linkedin, Twitter, Facebook, Instagram, Youtube } from "#src/components/icons/brand-icons";
 import { useLocation } from "wouter";
 import { useSiteSettings } from "#src/hooks/use-site-settings";
 import { useVisitorCount } from "#src/hooks/use-visitor-count";

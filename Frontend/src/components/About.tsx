@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import { m, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { fadeUp, fadeUpLarge, fadeDown, scaleIn, staggerContainer, staggerChild } from "#src/lib/animation";
-import { GraduationCap, MapPin, Mail, Github, Code, Calendar, Zap, Target, Layers, Terminal, Cpu } from "lucide-react";
+import { GraduationCap, MapPin, Mail, Code, Calendar, Zap, Target, Layers, Terminal, Cpu } from "lucide-react";
+import { Github } from "#src/components/icons/brand-icons";
 import { useProjects, useSkills, useExperiences } from "#src/hooks/use-portfolio";
 import { useSiteSettings } from "#src/hooks/use-site-settings";
 import { OptimizedImage } from "#src/components/OptimizedImage";

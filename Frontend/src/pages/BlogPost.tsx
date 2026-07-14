@@ -13,7 +13,8 @@ import { m, useScroll, useSpring } from "framer-motion";
 import { Badge } from "#src/components/ui/badge";
 import { Skeleton } from "#src/components/ui/skeleton.tsx";
 import { Button } from "#src/components/ui/button";
-import { ArrowLeft, Link2, Check, Eye, Share2, Twitter, Linkedin, MessageCircle } from "lucide-react";
+import { ArrowLeft, Link2, Check, Eye, Share2, MessageCircle } from "lucide-react";
+import { Twitter, Linkedin } from "#src/components/icons/brand-icons";
 import { Link } from "wouter";
 import { useArticle, useReactToArticle } from "#src/hooks/use-portfolio";
 
