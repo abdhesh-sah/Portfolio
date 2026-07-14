@@ -63,7 +63,7 @@
     "react": "^19.2.3",
     "resend": "^6.7.0",
     "satori": "^0.26.0",
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/pg": "^8.20.0",
