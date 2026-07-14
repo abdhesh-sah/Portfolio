@@ -7,6 +7,7 @@
         "@eslint/js": "^10.0.1",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.2",
+        "@types/node": "^26.1.1",
         "@typescript-eslint/eslint-plugin": "^8.64.0",
         "@typescript-eslint/parser": "^8.64.0",
         "concurrently": "^10.0.3",
