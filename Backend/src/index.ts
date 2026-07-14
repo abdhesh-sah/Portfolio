@@ -218,6 +218,11 @@ app.get("/ping", (_req: Request, res: Response) => {
   res.status(200).json({ status: "ok" });
 });
 
+// Fallback legacy health check for manual Render configurations
+app.get("/health", (_req: Request, res: Response) => {
+  res.status(200).json({ status: "ok" });
+});
+
 // Keep-alive endpoint — intentionally DB-FREE.
 // Any external cron (UptimeRobot, cron-job.org) pointing here gets a 200
 // without touching Postgres, so Neon can suspend between real requests.
