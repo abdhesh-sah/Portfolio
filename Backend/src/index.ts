@@ -36,15 +36,16 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 // Guard all routes except /ping and /health/deep until server is fully ready
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req: Request, res: Response, next: NextFunction): void => {
   if (!isReady && req.path !== "/ping" && !req.path.startsWith("/health/deep")) {
-    return res.status(503).json({
+    res.status(503).json({
       error: {
         message: "Server is initializing",
         status: 503,
         context: "startup"
       }
     });
+    return;
   }
   next();
 });
@@ -211,9 +212,10 @@ app.get("/", (_req: Request, res: Response) => {
 
 // Lightweight liveness probe — used by Render's deploy health check.
 // Must NOT touch the database so it stays fast even when Neon is cold.
-app.get("/ping", (_req: Request, res: Response) => {
+app.get("/ping", (_req: Request, res: Response): void => {
   if (!isReady && process.env.NODE_ENV === "test") {
-    return res.status(503).json({ status: "starting" });
+    res.status(503).json({ status: "starting" });
+    return;
   }
   res.status(200).json({ status: "ok" });
 });

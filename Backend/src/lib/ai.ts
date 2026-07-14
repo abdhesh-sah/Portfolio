@@ -29,7 +29,7 @@ export const aiClient = {
             return JSON.parse(cleanJson) as T;
         } catch (error) {
             logger.error({ error, text }, "Failed to parse AI JSON response");
-            throw new Error("Invalid AI response format");
+            throw new Error("Invalid AI response format", { cause: error });
         }
     }
 };

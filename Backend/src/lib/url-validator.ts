@@ -66,7 +66,7 @@ export async function validateSafeUrl(urlStr: string): Promise<SafeUrlResult> {
             try {
                 lookup = await dns.lookup(hostname);
             } catch (dnsErr) {
-                throw new Error(`DNS lookup failed for ${hostname}: ${dnsErr instanceof Error ? dnsErr.message : "Unknown"}`);
+                throw new Error(`DNS lookup failed for ${hostname}: ${dnsErr instanceof Error ? dnsErr.message : "Unknown"}`, { cause: dnsErr });
             }
 
             // Perform private IP check OUTSIDE the lookup catch block
@@ -78,6 +78,6 @@ export async function validateSafeUrl(urlStr: string): Promise<SafeUrlResult> {
 
         return { url: urlStr, resolvedIp };
     } catch (err) {
-        throw new Error(`SSRF Validation Failed: ${err instanceof Error ? err.message : "Unknown error"}`);
+        throw new Error(`SSRF Validation Failed: ${err instanceof Error ? err.message : "Unknown error"}`, { cause: err });
     }
 }

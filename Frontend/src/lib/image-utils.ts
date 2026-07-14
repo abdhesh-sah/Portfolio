@@ -19,7 +19,7 @@ interface OptimizationOptions {
 export function getOptimizedImageUrl(url: string | null | undefined, options: OptimizationOptions = {}) {
     if (!url) return "";
 
-    let isCloudinary = false;
+    let isCloudinary: boolean;
     try {
         const base = typeof window !== "undefined" ? window.location.origin : "http://localhost";
         const parsed = new URL(url, base);

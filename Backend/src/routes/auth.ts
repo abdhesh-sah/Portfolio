@@ -73,10 +73,8 @@ router.post("/login", authLimiter, asyncHandler(async (req: Request, res: Respon
         }
     }
 
-    let isValid = false;
-
     // Verify password (best-effort bcrypt support)
-    let isMatch = false;
+    let isMatch: boolean;
     try {
         if (env.ADMIN_PASSWORD.startsWith('$2b$') || env.ADMIN_PASSWORD.startsWith('$2a$')) {
             isMatch = await bcrypt.compare(password, env.ADMIN_PASSWORD);
@@ -93,12 +91,6 @@ router.post("/login", authLimiter, asyncHandler(async (req: Request, res: Respon
     }
 
     if (!isMatch) {
-        isValid = false;
-    } else {
-        isValid = true;
-    }
-
-    if (!isValid) {
         if (redis && env.NODE_ENV !== "test") {
             const currentCount = await redis.incr(countKey);
             if (currentCount === 1) await redis.expire(countKey, 900); // 15 min window

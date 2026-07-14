@@ -90,7 +90,7 @@
     "globals": "^17.4.0",
     "playwright": "^1.58.2",
     "sharp": "^0.35.3",
-    "typescript": "^7.0.2",
+    "typescript": "^5.7.3",
     "typescript-eslint": "^8.56.1",
     "vite": "^8.0.10",
     "vite-plugin-pwa": "^1.2.0",

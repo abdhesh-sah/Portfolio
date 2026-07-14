@@ -7,7 +7,7 @@ import { logger } from "../lib/logger.js";
 
 const feedRoutes = Router();
 
-feedRoutes.get("/feed.xml", async (req: Request, res: Response) => {
+feedRoutes.get("/feed.xml", async (req: Request, res: Response): Promise<void> => {
   try {
     const [articles, settings] = await Promise.all([
       articleService.getAll("published"),
@@ -17,7 +17,8 @@ feedRoutes.get("/feed.xml", async (req: Request, res: Response) => {
     const siteUrl = process.env.FRONTEND_URL || process.env.PUBLIC_URL;
     if (!siteUrl) {
       logger.error({ context: "feed" }, "FRONTEND_URL / PUBLIC_URL not set — cannot generate feed");
-      return res.status(500).json({ error: "Feed URL not configured" });
+      res.status(500).json({ error: "Feed URL not configured" });
+      return;
     }
 
     const ownerName = settings?.personalName || "Portfolio Owner";

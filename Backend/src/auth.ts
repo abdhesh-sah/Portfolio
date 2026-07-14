@@ -193,7 +193,7 @@ export async function checkAuthStatus(req: Request): Promise<boolean> {
  */
 
 
-export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
+export const isAuthenticated = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const token = extractToken(req);
 
     if (token) {
@@ -201,7 +201,8 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
         if (redis) {
             const isBlacklisted = await redis.get(`blacklist:${token}`);
             if (isBlacklisted) {
-                return res.status(401).json({ message: "Token has been revoked. Please login again." });
+                res.status(401).json({ message: "Token has been revoked. Please login again." });
+                return;
             }
         }
 
@@ -219,7 +220,8 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
 
             const parsed = tokenSchema.safeParse(result);
             if (!parsed.success) {
-                return res.status(401).json({ message: "Invalid token payload" });
+                res.status(401).json({ message: "Invalid token payload" });
+                return;
             }
 
             const decoded = parsed.data;
@@ -230,10 +232,11 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
                     const currentVersion = await redis.get("glob:admin_token_version");
                     const targetVersion = currentVersion ? parseInt(currentVersion, 10) : 1;
                     if (decoded.v < targetVersion) {
-                        return res.status(401).json({ 
+                        res.status(401).json({ 
                             message: "Session has been revoked by admin. Please login again.",
                             code: "SESSION_REVOKED"
                         });
+                        return;
                     }
                 } catch (redisErr) {
                     logger.warn({ context: "auth", error: redisErr }, "Redis down during version check — failing open");
@@ -246,12 +249,15 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
                 token: token,
                 via: req.headers.authorization?.startsWith("Bearer ") ? "bearer" : "cookie"
             };
-            return next();
+            next();
+            return;
         } catch (_err) {
             if (_err instanceof jwt.TokenExpiredError || _err instanceof jwt.JsonWebTokenError) {
-                return res.status(401).json({ message: "Invalid or expired token" });
+                res.status(401).json({ message: "Invalid or expired token" });
+                return;
             } else {
-                return res.status(401).json({ message: "Token verification failed" });
+                res.status(401).json({ message: "Token verification failed" });
+                return;
             }
         }
     }
@@ -263,7 +269,7 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
  * Middleware to strictly enforce admin role.
  * MUST be used after isAuthenticated.
  */
-export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+export const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
     if (!req.user || req.user.role !== "admin") {
         logger.warn({ 
             context: "auth", 
@@ -271,9 +277,10 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
             user: req.user?.role || "anonymous" 
         }, "Unauthorized access attempt to admin resource");
         
-        return res.status(403).json({ 
+        res.status(403).json({ 
             message: "Forbidden: You do not have permission to access this resource." 
         });
+        return;
     }
     next();
 };

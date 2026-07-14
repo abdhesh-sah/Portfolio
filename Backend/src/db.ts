@@ -32,7 +32,7 @@ export const pool = new pg.Pool({
 
 // A necessary event listener to prevent idle client errors from crashing the Node.js process.
 // See: https://node-postgres.com/api/pool#poolonerror
-pool.on('error', (err) => {
+pool.on('error', (err: Error) => {
     logger.error({ context: "database", error: err.message }, 'Unexpected error on idle client');
 });
 
