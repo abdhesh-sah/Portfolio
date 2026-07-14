@@ -35,9 +35,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Guard all routes except /ping until server is fully ready
+// Guard all routes except /ping and /health/deep until server is fully ready
 app.use((req: Request, res: Response, next: NextFunction) => {
-  if (!isReady && req.path !== "/ping" && !req.path.startsWith("/health")) {
+  if (!isReady && req.path !== "/ping" && !req.path.startsWith("/health/deep")) {
     return res.status(503).json({
       error: {
         message: "Server is initializing",
@@ -218,21 +218,12 @@ app.get("/ping", (_req: Request, res: Response) => {
   res.status(200).json({ status: "ok" });
 });
 
-// Keep-alive endpoint — designed for external cron ping services
-// (e.g., UptimeRobot, cron-job.org) to prevent free-tier sleep on
-// Render (backend) and Neon/Supabase (database cold starts).
-// Pings DB to keep the connection pool warm.
-app.get("/api/v1/keep-alive", async (_req: Request, res: Response) => {
-  try {
-    const dbHealth = await checkDatabaseHealth();
-    res.status(200).json({
-      status: "alive",
-      db: dbHealth.healthy ? "warm" : "cold",
-      timestamp: Date.now()
-    });
-  } catch {
-    res.status(200).json({ status: "alive", db: "unreachable", timestamp: Date.now() });
-  }
+// Keep-alive endpoint — intentionally DB-FREE.
+// Any external cron (UptimeRobot, cron-job.org) pointing here gets a 200
+// without touching Postgres, so Neon can suspend between real requests.
+// To keep Render's web service awake, point crons at /ping instead.
+app.get("/api/v1/keep-alive", (_req: Request, res: Response) => {
+  res.status(200).json({ status: "alive", timestamp: Date.now() });
 });
 
 // Sentry debug route (for verifying error capture pipeline)
@@ -273,10 +264,11 @@ async function getHealthStatus() {
   };
 }
 
-app.get("/health", async (_req: Request, res: Response) => {
+// Deep health check — queries the DB and Redis.
+// NOT used by Render's health probe (that hits /ping which is DB-free).
+// Available for manual debugging / on-demand monitoring only.
+app.get("/health/deep", async (_req: Request, res: Response) => {
   const health = await getHealthStatus();
-  // Always return 200 in production to prevent Render restart loops during cold starts.
-  // Health status (healthy/degraded) is provided in the JSON body.
   res.status(200).json(health);
 });
 

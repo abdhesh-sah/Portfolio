@@ -10,7 +10,7 @@ services:
       node -e "import('vite').then(() => console.log('✓ Vite loaded OK'), (e) => { console.error('✗', e.message); process.exit(1); })" || npm install --no-save @rolldown/binding-linux-x64-gnu lightningcss-linux-x64-gnu @tailwindcss/oxide-linux-x64-gnu
       npm run build:backend
     startCommand: npm run start -w Backend
-    healthCheckPath: /health
+    healthCheckPath: /ping
     envVars:
       - key: NODE_ENV
         value: production

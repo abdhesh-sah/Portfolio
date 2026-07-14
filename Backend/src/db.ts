@@ -12,14 +12,21 @@ logger.info({ context: "database" }, `Connecting to database: ${process.env.DATA
 // Configure Pool for Production
 // Neon free-tier databases hibernate after ~5 min of inactivity.
 // Cold starts take 3-7 s, so connectionTimeoutMillis must be generous.
+//
+// max: 3 in prod — a low-traffic portfolio rarely needs more than 1-2
+//   concurrent DB clients. Keeping this small means fewer idle connections
+//   that could prevent Neon from suspending compute.
+// idleTimeoutMillis: 120 000 (2 min) — with no artificial keep-alive pings,
+//   idle clients will genuinely reach this timeout and be released, allowing
+//   Neon to see zero open connections and suspend the compute endpoint.
 export const pool = new pg.Pool({
     connectionString: env.DATABASE_URL,
-    max: env.NODE_ENV === 'production' ? 20 : 5,
-    idleTimeoutMillis: 30000,
+    max: env.NODE_ENV === 'production' ? 3 : 5,
+    idleTimeoutMillis: 120000,
     connectionTimeoutMillis: 15000, // 15 s — handles Neon cold starts (increased from 10s)
     query_timeout: 15000, // Per-query timeout
-    ssl: env.NODE_ENV === 'production' || env.DATABASE_URL.includes("neon.tech") 
-        ? { rejectUnauthorized: false } 
+    ssl: env.NODE_ENV === 'production' || env.DATABASE_URL.includes("neon.tech")
+        ? { rejectUnauthorized: false }
         : false,
 });
 
