@@ -117,7 +117,7 @@ githubRoutes.get("/latest-commit", cachePublic(3600), asyncHandler(async (_req, 
         try {
             const openrouter = getOpenRouterClient();
             const response = await openrouter.chat.send({
-                chatGenerationParams: {
+                chatRequest: {
                     model: "google/gemma-3-1b-it:free",
                     messages: [
                         {

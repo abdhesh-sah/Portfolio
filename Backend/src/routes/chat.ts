@@ -179,7 +179,7 @@ export const registerChatRoutes = (router: Router) => {
         for (const model of CHAT_MODELS) {
             try {
                 const response = await openrouter.chat.send({
-                    chatGenerationParams: {
+                    chatRequest: {
                         model,
                         messages: finalMessages,
                         stream: false,
@@ -308,7 +308,7 @@ RULES:
         for (const model of CHAT_MODELS) {
             try {
                 const response = await openrouter.chat.send({
-                    chatGenerationParams: {
+                    chatRequest: {
                         model,
                         messages: finalMessages,
                         stream: false,
