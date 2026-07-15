@@ -14,10 +14,7 @@ declare global {
             (command: string, ...args: unknown[]): void;
             q?: unknown[][]; // Ensure support for the script initialization queue
         };
-        reb2b?: {
-            loaded: boolean;
-            track?: (event: string, properties?: Record<string, unknown>) => void;
-        };
+
         dataLayer?: unknown[];
     }
 }
