@@ -14,6 +14,9 @@ import type { EmailTemplate } from "@portfolio/shared";
 // BullMQ requires dedicated ioredis connections with maxRetriesPerRequest: null.
 // Queue and Worker each need their own connection (BullMQ internal requirement).
 // These are intentionally separate from the app-level redis singleton in redis.ts.
+// WARNING: Calling this function multiple times (for each queue and worker)
+// creates multiple TCP connections. In environments with strict connection limits
+// (like free-tier managed Redis), this can exhaust connection limits quickly.
 function getRedisConnection() {
     return new Redis(env.REDIS_URL || "redis://localhost:6379", {
         maxRetriesPerRequest: null, // BullMQ requires this to be null

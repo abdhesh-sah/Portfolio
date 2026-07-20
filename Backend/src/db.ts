@@ -42,9 +42,10 @@ export const db = drizzle(pool, { schema });
  * Checks database connectivity
  */
 export async function checkDatabaseHealth(): Promise<{ healthy: boolean; message: string }> {
-    const timeout = new Promise<{ healthy: boolean; message: string }>((_, reject) =>
-        setTimeout(() => reject(new Error('Database health check timed out')), 20000)
-    );
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const timeout = new Promise<{ healthy: boolean; message: string }>((_, reject) => {
+        timer = setTimeout(() => reject(new Error('Database health check timed out')), 20000);
+    });
 
     try {
         const check = async () => {
@@ -60,6 +61,9 @@ export async function checkDatabaseHealth(): Promise<{ healthy: boolean; message
         return await Promise.race([check(), timeout]) as { healthy: boolean; message: string };
     } catch (error: unknown) {
         return { healthy: false, message: error instanceof Error ? error.message : "Database health check failed" };
+    } finally {
+        // Clear the timeout timer to prevent leaks
+        if (timer) clearTimeout(timer);
     }
 }
 

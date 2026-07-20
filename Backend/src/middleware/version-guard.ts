@@ -12,8 +12,6 @@ import { logger } from "../lib/logger.js";
 
 const ALLOWED_V1_PREFIXES = [
     "/v1/",
-    "/health",
-    "/ping",
     "/v1/debug-sentry"
 ];
 

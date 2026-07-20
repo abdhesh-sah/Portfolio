@@ -21,7 +21,8 @@ export const API_BASE_URL = (() => {
         console.warn("⚠️ VITE_API_URL not configured. Falling back to relative path or placeholder.");
         // Fallback to relative or a safe default if available, 
         // but don't throw to avoid total boot failure.
-        return window.location.origin;
+        // Guard against SSR / non-browser contexts where window doesn't exist.
+        return typeof window !== "undefined" ? window.location.origin : "";
     }
 
     // Strip any trailing slashes to prevent //api/v1 double-slash 404s
@@ -71,6 +72,9 @@ let refreshPromise: Promise<boolean> | null = null;
 
 async function attemptRefresh(): Promise<boolean> {
     try {
+        // NOTE: This call does not send X-CSRF-Token headers. It relies on the
+        // /auth/refresh endpoint being CSRF-exempt in the backend routes.
+        // If that exemption is ever removed, this silent refresh flow will fail.
         const res = await fetch(`${API_BASE_URL}/api/v1/auth/refresh`, {
             method: "POST",
             credentials: "include",

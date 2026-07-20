@@ -94,6 +94,9 @@ export async function seedDatabase() {
 
     const skillList = seedData.skills;
 
+    // Reset counters for skills (they were accumulating from projects above)
+    successCount = 0;
+    failCount = 0;
     const existingSkills = await skillService.getAll();
     for (const skill of skillList) {
       try {

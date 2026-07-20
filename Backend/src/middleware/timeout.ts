@@ -21,6 +21,9 @@ export function timeoutGuard(req: Request, res: Response, next: NextFunction): v
                 requestId: req.id,
             }, "Request timed out after 10s");
 
+            // Set flag so downstream handlers can check and abort
+            (req as any).timedout = true;
+
             res.status(503).json({
                 error: {
                     message: "Request timed out. The server took too long to respond.",
@@ -28,6 +31,9 @@ export function timeoutGuard(req: Request, res: Response, next: NextFunction): v
                     context: "timeout"
                 }
             });
+
+            // Destroy the request socket to abort connection and stop processing
+            req.destroy();
         }
     }, REQUEST_TIMEOUT_MS);
 

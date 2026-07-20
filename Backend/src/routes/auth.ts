@@ -57,6 +57,9 @@ router.post("/login", authLimiter, asyncHandler(async (req: Request, res: Respon
         return;
     }
 
+    // WARNING: If the email is omitted, we default to the admin email.
+    // This allows password-only logins for simplicity, but could be unexpected
+    // if client requests are misconfigured.
     if (!email) {
         email = env.ADMIN_EMAIL;
     }

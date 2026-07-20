@@ -23,8 +23,10 @@ export async function revokeToken(token: string) {
         if (decoded?.exp) {
             const ttl = Math.max(0, decoded.exp - Math.floor(Date.now() / 1000));
             if (ttl > 0) {
-                // Store in Redis with TTL so it expires automatically
-                await redis.set(`blacklist:${token}`, "1", "EX", ttl);
+                // Hash the token to avoid storing large JWTs as Redis keys
+                // and to prevent timing-based key-length analysis
+                const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+                await redis.set(`blacklist:${tokenHash}`, "1", "EX", ttl);
             }
         }
     } catch (_err) {
@@ -174,7 +176,8 @@ export async function checkAuthStatus(req: Request): Promise<boolean> {
 
     if (token) {
         if (redis) {
-            const isBlacklisted = await redis.get(`blacklist:${token}`);
+            const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+            const isBlacklisted = await redis.get(`blacklist:${tokenHash}`);
             if (isBlacklisted) return false;
         }
         try {
@@ -199,7 +202,8 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
     if (token) {
         // Check if token is blacklisted in Redis
         if (redis) {
-            const isBlacklisted = await redis.get(`blacklist:${token}`);
+            const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+            const isBlacklisted = await redis.get(`blacklist:${tokenHash}`);
             if (isBlacklisted) {
                 res.status(401).json({ message: "Token has been revoked. Please login again." });
                 return;

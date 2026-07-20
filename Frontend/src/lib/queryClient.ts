@@ -38,7 +38,12 @@ export function getQueryFn<T>(options: {
   const { on401: unauthorizedBehavior } = options;
   return async ({ queryKey }) => {
     try {
-      const url = queryKey.join("/") as string;
+      let url = queryKey.join("/") as string;
+      // Normalize double slashes and ensure a leading slash
+      url = url.replace(/\/+/g, "/");
+      if (!url.startsWith("/")) {
+        url = "/" + url;
+      }
       // apiFetch returns parsed JSON directly and handles 401 refresh
       return await apiFetch(url);
     } catch (err) {

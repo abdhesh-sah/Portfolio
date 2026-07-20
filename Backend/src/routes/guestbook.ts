@@ -52,6 +52,10 @@ guestbookRoutes.patch("/:id/approve", isAuthenticated, isAdmin, asyncHandler(asy
 }));
 
 // POST /guestbook/:id/react - Add a reaction to an entry
+// NOTE: Since this is a public POST route, it is exempt from CSRF protection if the user
+// is not logged in. However, if a logged-in admin accesses the public guestbook, the presence
+// of the auth_token cookie will trigger the CSRF middleware. The client must ensure that 
+// X-CSRF-Token is included if an authenticated session cookie exists.
 guestbookRoutes.post("/:id/react", guestbookLimiter, asyncHandler(async (req, res) => {
     const id = parseIntParam(res, req.params.id, "guestbook entry ID");
     if (id === null) return;

@@ -61,9 +61,6 @@ test-report*.txt
 stats.html
 stats.json
 
-# Tooling
-.qodo/
-
 # Portfolio Specific
 Portfolio_Review_v*.md
 Frontend/*_lint_output.txt
@@ -74,6 +71,3 @@ create_test_client.ts
 get_tokens.ts
 *.test_client.ts
 *.txt
-
-ADMIN_TROUBLESHOOTING.md
-CLEANUP_COMPLETED.md

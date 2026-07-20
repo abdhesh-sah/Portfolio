@@ -126,16 +126,14 @@ import { useSiteSettings } from "#src/hooks/use-site-settings";
 // Only show PlexusBackground on public routes
 function ConditionalBackground() {
   const [isAdmin] = useRoute("/admin/*?");
-  const [isAdminLogin] = useRoute("/admin/login");
-  if (isAdmin || isAdminLogin) return null;
+  if (isAdmin) return null;
   return <PlexusBackground />;
 }
 
 // Only show floating public controls on public routes
 function ConditionalPublicFloaters() {
   const [isAdmin] = useRoute("/admin/*?");
-  const [isAdminLogin] = useRoute("/admin/login");
-  if (isAdmin || isAdminLogin) return null;
+  if (isAdmin) return null;
 
   return (
     <></>
@@ -272,19 +270,23 @@ function DeferredBackground() {
   );
 }
 
-// Only show ChatBot on public routes — load on idle, not fixed timeout
+// Only show ChatBot on public routes — load on idle
 function DeferredChatbot() {
   const [isAdmin] = useRoute("/admin/*?");
-  const [isAdminLogin] = useRoute("/admin/login");
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    if (isAdmin || isAdminLogin) return;
-    const id = setTimeout(() => setShow(true), 100);
-    return () => clearTimeout(id);
-  }, [isAdmin, isAdminLogin]);
+    if (isAdmin) return;
+    if (typeof requestIdleCallback === "function") {
+      const id = requestIdleCallback(() => setShow(true));
+      return () => cancelIdleCallback(id);
+    } else {
+      const id = setTimeout(() => setShow(true), 1000);
+      return () => clearTimeout(id);
+    }
+  }, [isAdmin]);
 
-  if (isAdmin || isAdminLogin || !show) return null;
+  if (isAdmin || !show) return null;
 
   return (
     <Suspense fallback={null}>

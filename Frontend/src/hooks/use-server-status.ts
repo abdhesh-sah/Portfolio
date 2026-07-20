@@ -55,6 +55,12 @@ async function pingHealth(signal?: AbortSignal): Promise<{ ok: boolean; slow: bo
 export function useServerStatus() {
   const [status, setStatus] = useState<ServerStatus>("checking");
   const queryClient = useQueryClient();
+  const queryClientRef = useRef(queryClient);
+
+  useEffect(() => {
+    queryClientRef.current = queryClient;
+  }, [queryClient]);
+
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const wasOfflineRef = useRef(false); // tracks if we ever left "online"
@@ -98,7 +104,7 @@ export function useServerStatus() {
       // If we were previously in a degraded state, refetch all queries
       if (wasOfflineRef.current) {
         wasOfflineRef.current = false;
-        queryClient.invalidateQueries();
+        queryClientRef.current.invalidateQueries();
       }
     } else {
       // Server is unreachable — mark degraded and start polling
@@ -118,7 +124,7 @@ export function useServerStatus() {
       });
       startPolling();
     }
-  }, [queryClient, stopPolling, startPolling]);
+  }, [stopPolling, startPolling]);
 
   // Keep the ref in sync with the latest `check`
   useEffect(() => {
