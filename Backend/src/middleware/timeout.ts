@@ -18,10 +18,10 @@ export function timeoutGuard(req: Request, res: Response, next: NextFunction): v
                 context: "timeout-guard",
                 path: req.path,
                 method: req.method,
-                requestId: req.id,
+                requestId: (req as any).id,
             }, "Request timed out after 10s");
 
-            // Set flag so downstream handlers can check and abort
+            // Set flag so downstream handlers can check and abort slow operations
             (req as any).timedout = true;
 
             res.status(503).json({
@@ -31,16 +31,21 @@ export function timeoutGuard(req: Request, res: Response, next: NextFunction): v
                     context: "timeout"
                 }
             });
-
-            // Destroy the request socket to abort connection and stop processing
-            req.destroy();
         }
     }, REQUEST_TIMEOUT_MS);
 
-    // Clear timeout when request finishes successfully
-    res.on("finish", () => clearTimeout(timer));
-    // Clear timeout if connection is closed early by client
-    res.on("close", () => clearTimeout(timer));
+    // Clear timeout when request finishes successfully so memory is freed instantly
+    res.on("finish", () => {
+        clearTimeout(timer);
+    });
+
+    // Clear timeout if client closes connection early
+    res.on("close", () => {
+        clearTimeout(timer);
+        if (!res.writableEnded) {
+            (req as any).timedout = true;
+        }
+    });
 
     next();
 }
