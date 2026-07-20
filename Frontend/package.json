@@ -42,7 +42,7 @@
     "@tiptap/extension-code-block-lowlight": "^3.27.3",
     "@tiptap/extension-image": "^3.27.3",
     "@tiptap/extension-link": "^3.19.0",
-    "@tiptap/react": "^3.19.0",
+    "@tiptap/react": "^3.28.0",
     "@tiptap/starter-kit": "^3.19.0",
     "@types/dompurify": "^3.0.5",
     "@types/node": "^22.0.0",
