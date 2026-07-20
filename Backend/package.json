@@ -51,7 +51,7 @@
     "file-type": "^22.0.0",
     "helmet": "^8.1.0",
     "ioredis": "^5.10.0",
-    "isomorphic-dompurify": "^3.12.0",
+    "isomorphic-dompurify": "^3.19.0",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.2.0",
     "multer-storage-cloudinary": "^4.0.0",
