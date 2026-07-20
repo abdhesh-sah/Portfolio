@@ -70,13 +70,15 @@ export function dbGuard(req: Request, res: Response, next: NextFunction): void {
     // an unhandled 500 error while the database is actually healthy.
     res.on("finish", () => {
         if (res.statusCode >= 500) {
+            const safeMethod = req.method.replace(/[\r\n]/g, "");
+            const safePath = req.path.replace(/[\r\n]/g, "");
             logger.error({
                 context: "db-guard",
-                path: req.path,
-                method: req.method,
+                path: safePath,
+                method: safeMethod,
                 statusCode: res.statusCode,
                 requestId: req.id,
-            }, `Circuit breaker: recording failure for ${req.method} ${req.path} → ${res.statusCode}`);
+            }, `Circuit breaker: recording failure for ${safeMethod} ${safePath} → ${res.statusCode}`);
             recordFailure();
         } else {
             recordSuccess();
