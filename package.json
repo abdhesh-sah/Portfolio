@@ -57,7 +57,7 @@
         "uuid": "^11.1.1"
     },
     "dependencies": {
-        "axios": "^1.14.0"
+        "axios": "^1.20.0"
     },
     "optionalDependencies": {
         "@esbuild/linux-x64": "0.28.1",
