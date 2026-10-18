@@ -39,7 +39,7 @@
     "bcryptjs": "^3.0.3",
     "bullmq": "^5.80.2",
     "cloudinary": "^2.9.0",
-    "compression": "^1.8.1",
+    "compression": "^1.8.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "cross-env": "^10.1.0",
