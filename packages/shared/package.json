@@ -39,15 +39,17 @@
         "clean": "rimraf dist"
     },
     "dependencies": {
+        "drizzle-orm": "^0.45.1",
         "drizzle-zod": "^0.8.3",
-        "drizzle-orm": "^0.45.1"
+        "satori": "0.63.2",
+        "workbox-build": "7.4.1"
     },
     "peerDependencies": {
         "zod": "^4.6.7"
     },
     "devDependencies": {
-        "typescript": "^5.7.3",
-        "eslint": "^10.6.0",
-        "rimraf": "^5.0.5"
+        "eslint": "^9.39.5",
+        "rimraf": "^6.1.4",
+        "typescript": "^5.7.3"
     }
 }
