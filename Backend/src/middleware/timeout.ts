@@ -18,11 +18,11 @@ export function timeoutGuard(req: Request, res: Response, next: NextFunction): v
                 context: "timeout-guard",
                 path: req.path,
                 method: req.method,
-                requestId: (req as any).id,
+                requestId: req.id,
             }, "Request timed out after 10s");
 
             // Set flag so downstream handlers can check and abort slow operations
-            (req as any).timedout = true;
+            req.timedout = true;
 
             res.status(503).json({
                 error: {
@@ -43,7 +43,7 @@ export function timeoutGuard(req: Request, res: Response, next: NextFunction): v
     res.on("close", () => {
         clearTimeout(timer);
         if (!res.writableEnded) {
-            (req as any).timedout = true;
+            req.timedout = true;
         }
     });
 

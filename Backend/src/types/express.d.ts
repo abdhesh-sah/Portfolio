@@ -5,6 +5,7 @@ declare global {
     namespace Express {
         interface Request {
             id: string;
+            timedout?: boolean;
             rawBody?: Buffer;
             user?: {
                 role: string;
