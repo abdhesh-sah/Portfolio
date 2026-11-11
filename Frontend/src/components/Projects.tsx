@@ -2,7 +2,7 @@ import { m, AnimatePresence } from "framer-motion";
 import { useProjects, useAuth, useProjectVitals } from "#src/hooks/use-portfolio";
 import { useSiteSettings } from "#src/hooks/use-site-settings";
 import { ProjectCard } from "#src/components/projects/ProjectCard";
-import { ArrowRight, Folder, Zap } from "lucide-react";
+import { ArrowRight, Folder } from "lucide-react";
 import { staggerContainer } from "#src/lib/animation";
 import { Link } from "wouter";
 
@@ -158,4 +158,3 @@ export default function Projects() {
     </section>
   );
 }
-
