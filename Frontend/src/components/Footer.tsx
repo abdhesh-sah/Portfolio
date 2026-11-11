@@ -20,7 +20,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   const [location, setLocation] = useLocation();
   const { data: settings } = useSiteSettings();
-  const visitorCount = useVisitorCount();
+  useVisitorCount();
 
   // Build social links from settings
   const socialLinks = [
