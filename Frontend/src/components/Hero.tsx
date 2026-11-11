@@ -89,7 +89,6 @@ const RotatingText = ({ strings }: { strings: string[] }) => {
   );
 };
 
-
 const CharacterReveal = ({ text, delay = 0, className = "" }: { text: string; delay?: number, className?: string }) => {
   const words = text.split(" ");
   let charIndex = 0;

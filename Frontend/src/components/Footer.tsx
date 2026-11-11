@@ -2,7 +2,6 @@ import { Mail, Code2, Globe, MessageCircle, MapPin } from "lucide-react";
 import { Github, Linkedin, Twitter, Facebook, Instagram, Youtube } from "#src/components/icons/brand-icons";
 import { useLocation } from "wouter";
 import { useSiteSettings } from "#src/hooks/use-site-settings";
-import { useVisitorCount } from "#src/hooks/use-visitor-count";
 import { TextHoverEffect, FooterBackgroundGradient } from "#src/components/ui/hover-footer";
 
 const defaultFooterNavItems = [
@@ -20,9 +19,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   const [location, setLocation] = useLocation();
   const { data: settings } = useSiteSettings();
-  const _visitorCount = useVisitorCount();
 
-  // Build social links from settings
   const socialLinks = [
     settings?.socialGithub && { href: settings.socialGithub, icon: <Github size={20} />, label: "GitHub" },
     settings?.socialLinkedin && { href: settings.socialLinkedin, icon: <Linkedin size={20} />, label: "LinkedIn" },
