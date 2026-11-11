@@ -1,5 +1,3 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { API_BASE_URL } from "#src/lib/api-helpers";
 
 /**
@@ -11,16 +9,16 @@ import { API_BASE_URL } from "#src/lib/api-helpers";
  */
 export type ServerStatus = "checking" | "online" | "waking" | "offline";
 
-const HEALTH_URL = `${API_BASE_URL}/api/v1/health`;
-const COLD_START_TIMEOUT_MS = 10_000; // 10s — Render cold starts can be slow
-const POLL_INTERVAL_MS = 5_000;      // retry every 5 s when not online
+const _HEALTH_URL = `${API_BASE_URL}/api/v1/health`;
+const _COLD_START_TIMEOUT_MS = 10_000; // 10s — Render cold starts can be slow
+const _POLL_INTERVAL_MS = 5_000;      // retry every 5 s when not online
 
 /**
  * Fetch with an AbortController-based timeout.
  * Returns { ok, slow } where `slow` is true when the response took longer
  * than `COLD_START_TIMEOUT_MS` (but eventually succeeded).
  */
-async function pingHealth(signal?: AbortSignal): Promise<{ ok: boolean; slow: boolean }> {
+async function _pingHealth(signal?: AbortSignal): Promise<{ ok: boolean; slow: boolean }> {
   const controller = new AbortController();
 
   const onExternalAbort = () => controller.abort();
@@ -30,10 +28,10 @@ async function pingHealth(signal?: AbortSignal): Promise<{ ok: boolean; slow: bo
   const slowTimer = setTimeout(() => {
     slow = true;
     controller.abort(); // Actually abort the request on timeout
-  }, COLD_START_TIMEOUT_MS);
+  }, _COLD_START_TIMEOUT_MS);
 
   try {
-    const res = await fetch(HEALTH_URL, {
+    const res = await fetch(_HEALTH_URL, {
       method: "GET",
       signal: controller.signal,
       cache: "no-store",
@@ -51,4 +49,3 @@ async function pingHealth(signal?: AbortSignal): Promise<{ ok: boolean; slow: bo
     signal?.removeEventListener("abort", onExternalAbort);
   }
 }
-

@@ -487,8 +487,8 @@ export const auditLogSchema = z.object({
   ipAddress: z.string().max(45).nullable().optional(),
   userAgent: z.string().max(500).nullable().optional(),
   requestId: z.string().max(255).nullable().optional(),
-  oldValues: z.record(z.unknown()).nullable().optional(),
-  newValues: z.record(z.unknown()).nullable().optional(),
+  oldValues: z.record(z.string(), z.unknown()).nullable().optional(),
+  newValues: z.record(z.string(), z.unknown()).nullable().optional(),
   createdAt: z.coerce.date(),
 }).strict();
 
@@ -943,7 +943,7 @@ const siteSettingsBaseSchema = z.object({
 
   // Section Ordering & Visibility
   sectionOrder: z.array(z.string()).optional(),
-  sectionVisibility: z.record(z.boolean()).nullish(),
+  sectionVisibility: z.record(z.string(), z.boolean()).nullish(),
 
   // Availability
   availabilitySlots: z.array(z.object({
@@ -1003,7 +1003,7 @@ export const articleSchema = z.object({
   metaDescription: z.string().nullable().optional(),
   authorId: z.number().nullable().optional(),
   featuredImageAlt: z.string().max(500).nullable().optional(),
-  reactions: z.record(z.number()).default({}),
+  reactions: z.record(z.string(), z.number()).default({}),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   tags: z.array(z.string()).optional(),
@@ -1175,7 +1175,7 @@ export const insertCaseStudyApiSchema = z.object({
 export const sketchpadSessionSchema = z.object({
   id: z.number(),
   title: z.string(),
-  canvasData: z.record(z.unknown()).default({}),
+  canvasData: z.record(z.string(), z.unknown()).default({}),
   status: z.enum(["active", "archived"]),
   createdBy: z.string().nullable().optional(),
   createdAt: z.coerce.date(),

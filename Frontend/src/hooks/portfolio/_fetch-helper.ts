@@ -7,7 +7,7 @@ import { apiFetch } from "#src/lib/api-helpers";
  */
 export async function fetchAndParse<T>(
   path: string,
-  schema: { safeParse: (data: unknown) => { success: boolean; data?: T; error?: { issues: Array<{ path: (string | number)[]; message: string }> } } },
+  schema: { safeParse: (data: unknown) => { success: boolean; data?: T; error?: { issues: Array<{ path: PropertyKey[]; message: string }> } } },
   errorMessage: string
 ): Promise<T> {
   try {
@@ -25,4 +25,3 @@ export async function fetchAndParse<T>(
     throw new Error(`${errorMessage}: ${String(error)}`, { cause: error });
   }
 }
-

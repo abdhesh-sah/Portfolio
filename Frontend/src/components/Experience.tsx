@@ -250,16 +250,16 @@ export default function Experience() {
                   key="edu-fallback-1"
                   role="B.E. in Electronics & Communication"
                   org="Tribhuvan University"
-                  period="2023 - Present"
+                  period="2024 - Present"
                   desc="Pursuing Bachelor's degree focusing on Embedded Systems, Signal Processing, Digital Electronics, and Software Engineering principles. Building strong foundation in both hardware and software development."
                   delay={0.1}
                   type="education"
                 />
                 <TimelineItem
                   key="edu-fallback-2"
-                  role="+2 Science (PCM)"
+                  role="+2 Science (PCMB)"
                   org="Higher Secondary"
-                  period="2021 - 2023"
+                  period="2022 - 2024"
                   desc="Completed higher secondary education with focus on Physics, Chemistry, and Mathematics. Developed strong analytical and problem-solving skills."
                   delay={0.2}
                   type="education"

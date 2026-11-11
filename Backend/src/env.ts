@@ -48,7 +48,7 @@ if (envPath) {
 
 const envSchema = z.object({
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
-    PORT: z.string().transform(Number).default("5000"),
+    PORT: z.string().default("5000").transform(Number),
     DATABASE_URL: z.string().url("Valid DATABASE_URL is required"),
     RESEND_API_KEY: z.string().optional(),
     REDIS_URL: z.string().optional(),
@@ -70,7 +70,7 @@ const envSchema = z.object({
     BACKEND_RENDER_URL: z.string().url().optional(),
     GITHUB_USERNAME: z.string().optional(),
     GITHUB_TOKEN: z.string().optional(),
-    TRUST_PROXY: z.string().transform(Number).default("1"),
+    TRUST_PROXY: z.string().default("1").transform(Number),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -88,7 +88,7 @@ function validateEnv(): Env {
         return parsed;
     } catch (err) {
         if (err instanceof z.ZodError) {
-            const missing = err.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
+            const missing = err.issues.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
             process.stderr.write(`[ENV] Environment validation failed: ${missing}\n`);
             process.stderr.write("[ENV] Please check your .env file and ensure all required variables are set correctly.\n");
             process.exit(1);

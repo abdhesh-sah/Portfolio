@@ -120,6 +120,16 @@ export function getOpenRouterClient() {
     return openRouterClient;
 }
 
+type ChatResponse = Awaited<ReturnType<OpenRouter["chat"]["send"]>>;
+
+export function getChatResponseContent(response: ChatResponse): string | undefined {
+    if (!("choices" in response)) return undefined;
+
+    const content = response.choices?.[0]?.message?.content;
+    if (typeof content === "string") return content;
+    return content == null ? undefined : JSON.stringify(content);
+}
+
 /**
  * Chat Rate Limiter: 20 requests per minute per IP
  */
@@ -188,7 +198,7 @@ export const registerChatRoutes = (router: Router) => {
                     }
                 });
 
-                const text = response.choices?.[0]?.message?.content || "No response generated.";
+                const text = getChatResponseContent(response) || "No response generated.";
 
                 return res.json({ message: text });
             } catch (modelErr: unknown) {
@@ -317,7 +327,7 @@ RULES:
                     }
                 });
 
-                const text = response.choices?.[0]?.message?.content || "No response generated.";
+                const text = getChatResponseContent(response) || "No response generated.";
                 return res.json({ message: text });
             } catch (modelErr: unknown) {
                 lastError = modelErr;

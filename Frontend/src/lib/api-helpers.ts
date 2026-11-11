@@ -105,7 +105,7 @@ async function attemptRefresh(): Promise<boolean> {
 export async function apiFetch<T = any>(
     path: string, 
     opts: RequestInit = {},
-    schema?: { safeParse: (data: unknown) => { success: boolean; data?: T; error?: { issues: Array<{ path: (string | number)[]; message: string }> } } }
+    schema?: { safeParse: (data: unknown) => { success: boolean; data?: T; error?: { issues: Array<{ path: PropertyKey[]; message: string }> } } }
 ): Promise<T> {
     const headers = { ...authHeaders(), ...(opts.headers as Record<string, string> ?? {}) };
     if (opts.body instanceof FormData) {
@@ -177,7 +177,7 @@ export async function apiFetch<T = any>(
 function validateResponse<T>(
     data: unknown, 
     path: string,
-    schema?: { safeParse: (data: unknown) => { success: boolean; data?: T; error?: { issues: Array<{ path: (string | number)[]; message: string }> } } }
+    schema?: { safeParse: (data: unknown) => { success: boolean; data?: T; error?: { issues: Array<{ path: PropertyKey[]; message: string }> } } }
 ): T {
     if (!schema) return data as T;
 
@@ -205,4 +205,3 @@ function validateResponse<T>(
         issues,
     });
 }
-

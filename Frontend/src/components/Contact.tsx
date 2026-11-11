@@ -221,15 +221,7 @@ export default function Contact() {
     <section id="contact" className="section-container relative overflow-hidden py-16 md:py-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <m.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-xs font-mono mb-4"
-          >
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            COMM_LINK_OPEN
-          </m.div>
+         
 
           <m.h2
             initial={fadeDown.initial}
@@ -308,9 +300,7 @@ export default function Contact() {
                   <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
                   <div className="w-3 h-3 rounded-full bg-green-500/50" />
                 </div>
-                <div className="text-[10px] font-mono text-muted-foreground">
-                  contact_terminal.exe
-                </div>
+                
               </div>
 
               <div className="p-6 md:p-8 relative">
@@ -562,10 +552,7 @@ export default function Contact() {
               </div>
 
               {/* Footer Bar */}
-              <div className="bg-foreground/5 px-4 py-2 rounded-b-xl border-t border-border/50 flex justify-between items-center text-[10px] font-mono text-muted-foreground">
-                <span>SECURE_CONNECTION: TLS_v1.3</span>
-                <span>LATENCY: 12ms</span>
-              </div>
+              
             </div>
           </m.div>
         </div>

@@ -7,11 +7,8 @@ import { Github, Linkedin, Twitter, Instagram, Youtube } from "#src/components/i
 import { Button } from "#src/components/ui/button";
 import { useProjects, useSkills, useExperiences } from "#src/hooks/use-portfolio";
 import { useSiteSettings } from "#src/hooks/use-site-settings";
-import { useLatestCommit } from "#src/hooks/use-latest-commit";
-import { formatTimeAgo } from "#src/lib/utils/date";
 
 import { LiveCodeEditor } from "./LiveCodeEditor";
-import type { SiteSettings } from "#shared";
 
 // Mouse Follower Gradient
 const MouseGradient = () => {
@@ -91,43 +88,6 @@ const RotatingText = ({ strings }: { strings: string[] }) => {
     </span>
   );
 };
-
-
-const OpenToWorkBanner = ({ settings }: { settings: SiteSettings | undefined | null }) => {
-  return (
-    <m.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2, duration: 0.8 }}
-      className="relative group mb-8 inline-block"
-    >
-      {/* Dynamic Background Glow */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-primary/50 to-secondary/50 rounded-full blur-md opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt" />
-
-      {/* Banner Body */}
-      <div className="relative flex items-center gap-3 px-6 py-2 bg-background/60 backdrop-blur-xl border border-border/50 rounded-full leading-none transition duration-200 shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)] group-hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.3)]">
-        <span className="flex items-center gap-2">
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-primary shadow-[0_0_8px_var(--primary)]"></span>
-          </span>
-          <span className="text-primary/90 font-mono text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase whitespace-nowrap">
-            Status: {settings?.availabilityStatus || "Open for opportunities"}
-          </span>
-        </span>
-
-        <div className="h-4 w-[1px] bg-foreground/20 mx-1" />
-
-        {/* Diagonal Scanline Overlay */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-full">
-          <div className="absolute inset-x-0 h-full w-[200%] bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-30deg] translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
-        </div>
-      </div>
-    </m.div>
-  );
-};
-
-
 
 
 const CharacterReveal = ({ text, delay = 0, className = "" }: { text: string; delay?: number, className?: string }) => {
@@ -213,8 +173,6 @@ export default function Hero() {
   const { data: skills } = useSkills();
   const { data: experiences } = useExperiences();
   const { data: settings } = useSiteSettings();
-
-  const showBanner = settings?.isOpenToWork ?? true;
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
@@ -418,33 +376,6 @@ export default function Hero() {
     </section>
   );
 }
-
-const GitHubStatusBadge = () => {
-  const { data: commitData, isLoading } = useLatestCommit();
-
-  if (isLoading || !commitData || commitData.repo === "N/A") return null;
-
-  return (
-    <m.a
-      href={commitData.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 1.1 }}
-      className="px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold tracking-[0.2em] uppercase flex items-center gap-2 group/gh-status transition-colors hover:bg-blue-500/20"
-    >
-      <span className="relative flex h-1.5 w-1.5">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
-      </span>
-      <span>
-        Last Commit: {formatTimeAgo(commitData.date)} in {commitData.repo}
-      </span>
-      <ExternalLink className="w-2.5 h-2.5 opacity-50 group-hover/gh-status:opacity-100 transition-opacity" />
-    </m.a>
-  );
-};
 
 function SocialLink({ href, icon: Icon, label }: { href: string, icon: React.ElementType, label: string }) {
   return (

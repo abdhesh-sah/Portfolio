@@ -43,7 +43,6 @@
         "build": "npm run build:backend && npm run build:frontend"
     },
     "overrides": {
-        "zod": "^3.25.76",
         "ioredis": "5.10.0",
         "multer-storage-cloudinary": {
             "cloudinary": "^2.0.0"

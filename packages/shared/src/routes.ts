@@ -719,7 +719,7 @@ export const api = {
             description: "Add reaction to article (public)",
             input: z.object({ emoji: z.string().min(1) }),
             responses: {
-                200: createSuccessResponse(z.record(z.number())),
+                200: createSuccessResponse(z.record(z.string(), z.number())),
                 400: errorSchemas.validation,
                 500: errorSchemas.internal,
             },

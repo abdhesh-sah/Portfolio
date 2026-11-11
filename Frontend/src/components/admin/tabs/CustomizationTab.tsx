@@ -212,7 +212,7 @@ export function CustomizationTab() {
         const parseResult = insertSiteSettingsApiSchema.safeParse(imported);
 
         if (!parseResult.success) {
-          const errorMsg = parseResult.error.errors.map(err => `${err.path.join('.')}: ${err.message}`).join(", ");
+          const errorMsg = parseResult.error.issues.map(err => `${err.path.join('.')}: ${err.message}`).join(", ");
           throw new Error(`Invalid format: ${errorMsg}`);
         }
 

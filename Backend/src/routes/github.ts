@@ -3,7 +3,7 @@ import { env } from "../env.js";
 import { logger } from "../lib/logger.js";
 import { asyncHandler } from "../lib/async-handler.js";
 import { cachePublic } from "../middleware/cache.js";
-import { getOpenRouterClient } from "./chat.js";
+import { getOpenRouterClient, getChatResponseContent } from "./chat.js";
 
 interface GitHubEvent {
     type: string;
@@ -132,7 +132,7 @@ githubRoutes.get("/latest-commit", cachePublic(3600), asyncHandler(async (_req, 
                     maxTokens: 30
                 }
             });
-            aiSummary = response.choices?.[0]?.message?.content?.trim();
+            aiSummary = getChatResponseContent(response)?.trim();
         } catch (aiError) {
             logger.warn({ context: "github-summary", error: aiError }, "AI summarization failed, skipping");
         }
