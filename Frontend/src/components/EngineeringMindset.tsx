@@ -173,15 +173,7 @@ export default function EngineeringMindset() {
     <section id="mindset" className="section-container bg-transparent relative overflow-hidden">
       {/* Header */}
       <div className="text-center mb-16">
-        <m.div
-          initial={{ opacity: 0, y: -10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-medium mb-4"
-        >
-          <Brain className="w-4 h-4" />
-          Philosophy
-        </m.div>
+       
         <m.h2
           initial={fadeDown.initial}
           whileInView={fadeDown.animate}

@@ -182,28 +182,11 @@ export default function Footer() {
 
         {/* Footer bottom bar */}
         <div className="flex flex-col md:flex-row justify-between items-center text-sm pt-8 border-t border-border/50 gap-6">
-          {/* Status Pill (New placement) */}
-          <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-emerald-500/5 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.05)]">
-            <div className="relative flex h-2.5 w-2.5">
-              <div className={`absolute inset-0 rounded-full animate-ping opacity-75 ${visitorCount.count > 0 ? 'bg-emerald-500' : 'bg-gray-500'}`} />
-              <div className={`relative rounded-full h-2.5 w-2.5 ${visitorCount.count > 0 ? 'bg-emerald-500' : 'bg-gray-500'}`} />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest leading-none mb-1">
-                Live Status
-              </span>
-              <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-tighter leading-none">
-                {visitorCount.count} Active {visitorCount.count === 1 ? 'Visitor' : 'Visitors'}
-              </span>
-            </div>
-          </div>
-
+                     
+            
           {/* Copyright (Centralized) */}
           <div className="text-center text-muted-foreground font-medium">
-            <p>{settings?.footerCopyright ? settings.footerCopyright.replace('{year}', currentYear.toString()) : `© ${currentYear} ${settings?.personalName || 'Portfolio Owner'}. All rights reserved.`}</p>
-            <p className="text-[10px] text-muted-foreground/50 mt-1">
-              This site uses anonymous traffic analytics (company-level only). No personal data is collected or stored.
-            </p>
+            <p>{settings?.footerCopyright ? settings.footerCopyright.replace('{year}', currentYear.toString()) : `© ${currentYear} ${settings?.personalName || 'Name'}. All rights reserved.`}</p>
           </div>
 
           {/* Tech Credit (Right) */}

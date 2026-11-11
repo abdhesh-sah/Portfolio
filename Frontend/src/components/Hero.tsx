@@ -6,7 +6,6 @@ import { ArrowRight, Mail, ChevronDown, Sparkles, Code2, ExternalLink, Globe } f
 import { Github, Linkedin, Twitter, Instagram, Youtube } from "#src/components/icons/brand-icons";
 import { Button } from "#src/components/ui/button";
 import { useProjects, useSkills, useExperiences } from "#src/hooks/use-portfolio";
-import { useServerStatus } from "#src/hooks/use-server-status";
 import { useSiteSettings } from "#src/hooks/use-site-settings";
 import { useLatestCommit } from "#src/hooks/use-latest-commit";
 import { formatTimeAgo } from "#src/lib/utils/date";
@@ -119,12 +118,6 @@ const OpenToWorkBanner = ({ settings }: { settings: SiteSettings | undefined | n
 
         <div className="h-4 w-[1px] bg-foreground/20 mx-1" />
 
-        <span className="flex items-center gap-1.5 text-secondary font-display text-xs font-semibold group-hover:text-secondary/80 transition-colors">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Hiring? Let's Talk</span>
-          <span className="sm:hidden text-[10px]">Hiring?</span>
-        </span>
-
         {/* Diagonal Scanline Overlay */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-full">
           <div className="absolute inset-x-0 h-full w-[200%] bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-30deg] translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
@@ -134,7 +127,7 @@ const OpenToWorkBanner = ({ settings }: { settings: SiteSettings | undefined | n
   );
 };
 
-import { LiveVisitorCount } from "./LiveVisitorCount";
+
 
 
 const CharacterReveal = ({ text, delay = 0, className = "" }: { text: string; delay?: number, className?: string }) => {
@@ -216,7 +209,6 @@ const Magnetic = ({ children }: { children: React.ReactNode }) => {
 
 export default function Hero() {
   const [, setLocation] = useLocation();
-  const status = useServerStatus();
   const { data: projects } = useProjects();
   const { data: skills } = useSkills();
   const { data: experiences } = useExperiences();
@@ -238,28 +230,6 @@ export default function Hero() {
             className="space-y-8 text-center lg:text-left"
           >
 
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-              {showBanner && <OpenToWorkBanner settings={settings} />}
-              <GitHubStatusBadge />
-              <LiveVisitorCount />
-            </div>
-
-            {/* Status Pill */}
-            <m.div
-              initial={fadeUp.initial}
-              animate={fadeUp.animate}
-              transition={{ delay: 0.2 }}
-              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono backdrop-blur-sm mx-auto lg:mx-0 transition-colors duration-500 ${status === "online"
-                ? "bg-primary/10 border-primary/20 text-primary"
-                : status === "waking"
-                  ? "bg-yellow-500/10 border-yellow-500/20 text-yellow-500"
-                  : "bg-red-500/10 border-red-500/20 text-red-500"
-                }`}
-            >
-              <div className={`w-2 h-2 rounded-full animate-pulse shadow-glow ${status === "online" ? "bg-primary" : status === "waking" ? "bg-yellow-500" : "bg-red-500"
-                }`} />
-              {status === "online" ? "SYSTEM_ACTIVE" : status === "checking" ? "SEARCHING_FOR_UPLINK" : status === "waking" ? "WAKING_UP" : "SYSTEM_DEGRADED"}
-            </m.div>
 
             <div className="space-y-4">
               <m.h1
@@ -276,7 +246,6 @@ export default function Hero() {
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 1.5, type: "spring" }}
                   >
-                    <Sparkles className="w-8 h-8 text-yellow-400 absolute -top-4 -right-8 animate-pulse" />
                   </m.div>
                 </span>
               </m.h1>

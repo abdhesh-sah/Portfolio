@@ -440,11 +440,11 @@ export const siteSettingsTable = pgTable("site_settings", {
 
   // Section Headings
   aboutHeading: varchar("aboutHeading", { length: 255 }).default("About Me"),
-  projectsHeading: varchar("projectsHeading", { length: 255 }).default("Flagship Projects"),
   skillsHeading: varchar("skillsHeading", { length: 255 }).default("Technical Arsenal"),
   whyHireMeHeading: varchar("whyHireMeHeading", { length: 255 }).default("Why Hire Me"),
   servicesHeading: varchar("servicesHeading", { length: 255 }).default("What I Do"),
   mindsetHeading: varchar("mindsetHeading", { length: 255 }).default("Engineering Mindset"),
+  projectsHeading: varchar("projectsHeading", { length: 255 }).default("Flagship Projects"),
   practiceHeading: varchar("practiceHeading", { length: 255 }).default("Disciplined Practice"),
   experienceHeading: varchar("experienceHeading", { length: 255 }).default("Professional Journey"),
   testimonialsHeading: varchar("testimonialsHeading", { length: 255 }).default("Client Feedback"),

@@ -87,4 +87,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-Designed and Developed by [Abdhesh Sah](mailto:abdheshshah111@gmail.com)
+Designed and Developed by [Abdhesh Sah](mailto:contact@abdheshsah.com.np)

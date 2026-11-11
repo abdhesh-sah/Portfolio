@@ -167,14 +167,7 @@ export default function About() {
   return (
     <section id="about" className="section-container scroll-mt-20 overflow-hidden py-16 md:py-24 relative">
       <div className="text-center mb-20 relative z-10">
-        <m.div
-          initial={scaleIn.initial}
-          whileInView={scaleIn.animate}
-          viewport={{ once: true }}
-          className="inline-block px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-sm font-mono mb-4 backdrop-blur-md"
-        >
-          {/* SYSTEM_PROFILE_LOADED */}
-        </m.div>
+       
 
         <m.h2
           initial={fadeDown.initial}
@@ -277,14 +270,7 @@ export default function About() {
               viewport={{ once: true }}
               className="space-y-6 relative"
             >
-              {/* Decorative Corner */}
-              <div className="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-cyan-500/30 rounded-tl-lg" />
-
-              <h3 className="text-2xl font-bold text-white flex items-center gap-2 mb-2">
-                <Terminal className="w-6 h-6 text-cyan-400" />
-                <span className="font-mono text-lg text-cyan-500">./bio_init</span>
-              </h3>
-
+           
               <div className="prose prose-invert max-w-none text-muted-foreground leading-relaxed font-light space-y-4">
                 {settings?.aboutDescription ? (
                   settings.aboutDescription.split('\n\n').map((para: string, i: number) => (

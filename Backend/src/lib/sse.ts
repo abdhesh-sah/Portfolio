@@ -62,6 +62,3 @@ class SSEEmitter {
 
 // Singleton instance for message notifications
 export const messageSSE = new SSEEmitter();
-
-// Singleton instance for visitor counting
-export const visitorSSE = new SSEEmitter();

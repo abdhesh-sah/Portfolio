@@ -37,19 +37,7 @@ export default function Projects() {
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-12">
-          <m.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6"
-            style={{
-              background: 'rgba(0, 212, 255, 0.1)',
-              border: '1px solid rgba(0, 212, 255, 0.3)'
-            }}
-          >
-            <Zap className="w-4 h-4 text-cyan-400" />
-            <span className="text-sm font-medium text-cyan-400">Featured Work</span>
-          </m.div>
+         
 
           <m.h2
             initial={{ opacity: 0, y: -20 }}

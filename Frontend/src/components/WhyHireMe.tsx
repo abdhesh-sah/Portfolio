@@ -108,15 +108,7 @@ export default function WhyHireMe() {
       <div className="absolute inset-0 bg-background/20 pointer-events-none -z-10" />
       {/* Header */}
       <div className="text-center mb-16">
-        <m.div
-          initial={{ opacity: 0, y: -10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-medium mb-4"
-        >
-          <Sparkles className="w-4 h-4" />
-          Why Choose Me
-        </m.div>
+        
         <m.h2
           initial={fadeDown.initial}
           whileInView={fadeDown.animate}

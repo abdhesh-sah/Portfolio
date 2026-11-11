@@ -57,18 +57,7 @@ export default function Services() {
           viewport={{ once: true }}
           className="text-center mb-10"
         >
-          <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-4"
-            style={{
-              background: "rgba(6,182,212,0.1)",
-              border: "1px solid rgba(6,182,212,0.3)",
-            }}
-          >
-            <Sparkles className="w-4 h-4 text-cyan-400" />
-            <span className="text-sm font-medium text-cyan-400">
-              How I can help
-            </span>
-          </div>
+          
           <h2
             className="text-3xl md:text-4xl font-bold mb-3"
             style={{

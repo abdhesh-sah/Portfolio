@@ -118,7 +118,6 @@ function PageLoader() {
 }
 
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import { ServerStatusBanner } from "./components/ServerStatusBanner";
 import { useSiteSettings } from "#src/hooks/use-site-settings";
 
 
@@ -355,7 +354,6 @@ function App() {
               >
                 Skip to main content
               </a>
-              <ServerStatusBanner />
               <DeferredAnalytics />
               <DeferredChatbot />
               <Router />

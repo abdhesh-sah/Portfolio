@@ -61,38 +61,8 @@ function isBotRequest(req: Request): boolean {
     return botPatterns.some(pattern => userAgent.includes(pattern));
 }
 
-import { visitorSSE } from "../lib/sse.js";
 
 export function registerAnalyticsRoutes(app: Router) {
-    // GET /analytics/live-visitors - SSE endpoint for live visitor count
-    app.get(
-        "/analytics/live-visitors",
-        asyncHandler(async (req, res) => {
-            res.setHeader("Content-Type", "text/event-stream");
-            res.setHeader("Cache-Control", "no-cache");
-            res.setHeader("Connection", "keep-alive");
-
-            const clientId = `visitor-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-            visitorSSE.addClient(clientId, res);
-
-            // Immediately broadcast new count to all
-            visitorSSE.emit("count", { count: visitorSSE.clientCount });
-
-            req.on("close", () => {
-                visitorSSE.removeClient(clientId);
-                // Broadcast update count when someone leaves
-                visitorSSE.emit("count", { count: visitorSSE.clientCount });
-            });
-        })
-    );
-    // GET /analytics/live-visitors/count - Lightweight endpoint for polling fallback
-    app.get(
-        "/analytics/live-visitors/count",
-        asyncHandler(async (_req, res) => {
-            res.json({ count: visitorSSE.clientCount });
-        })
-    );
-
     // POST /analytics/track - Log an analytics event
     app.post(
         "/analytics/track",
